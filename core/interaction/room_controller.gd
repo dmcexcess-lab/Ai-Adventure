@@ -123,6 +123,7 @@ func _complete_primary_action(hotspot: Node, serial: int) -> void:
 	if serial != _interaction_serial or not is_instance_valid(hotspot):
 		return
 
+	var evidence_feedback := _grant_hotspot_evidence(hotspot)
 	var transition_room := String(hotspot.get("transition_room"))
 	if not transition_room.is_empty():
 		var transition_spawn := String(hotspot.get("transition_spawn"))
@@ -137,7 +138,34 @@ func _complete_primary_action(hotspot: Node, serial: int) -> void:
 	var primary_text := String(hotspot.get("primary_text"))
 	if primary_text.is_empty():
 		primary_text = "There is nothing more to do here yet."
+	if not evidence_feedback.is_empty():
+		primary_text += "  " + evidence_feedback
 	status_requested.emit(primary_text)
+
+
+func _grant_hotspot_evidence(hotspot: Node) -> String:
+	var clue_id := String(hotspot.get("evidence_id"))
+	if clue_id.is_empty():
+		return ""
+
+	var service := get_node_or_null("/root/EvidenceService")
+	if service == null:
+		return ""
+
+	var detail_level := int(hotspot.get("evidence_detail_level"))
+	var result: Dictionary = service.call("acquire_clue", clue_id, detail_level)
+	if not bool(result.get("ok", false)):
+		return ""
+
+	var clue: Dictionary = result.get("clue", {})
+	var title := String(clue.get("title", clue_id))
+	match String(result.get("status", "")):
+		"added":
+			return "Evidence recorded: %s." % title
+		"upgraded":
+			return "Evidence updated: %s." % title
+		_:
+			return ""
 
 
 func _clear_pending_interaction() -> void:

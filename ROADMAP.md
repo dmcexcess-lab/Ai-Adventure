@@ -35,7 +35,7 @@ The user only says **next slice** / **continue**. The assistant executes the nex
   - Browser persistence.
   - Serialization tests.
 
-- [ ] **Slice 5 — Evidence notebook**
+- [x] **Slice 5 — Evidence notebook**
   - Clue definitions.
   - Evidence acquisition.
   - Notebook UI.
