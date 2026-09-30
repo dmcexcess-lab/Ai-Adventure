@@ -43,7 +43,7 @@ The user only says **next slice** / **continue**. The assistant executes the nex
   - Evidence filtering.
   - Tests.
 
-- [ ] **Slice 6 — Deduction engine**
+- [x] **Slice 6 — Deduction engine**
   - Hypothesis selection.
   - Authored rule evaluator.
   - Established/refuted/unsupported states.
