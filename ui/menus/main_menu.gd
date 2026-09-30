@@ -1,6 +1,7 @@
 extends Control
 
 @onready var start_button: Button = %StartButton
+@onready var demo_button: Button = %DemoButton
 @onready var about_button: Button = %AboutButton
 @onready var about_panel: PanelContainer = %AboutPanel
 @onready var background_panel: PanelContainer = %BackgroundPanel
@@ -10,6 +11,7 @@ extends Control
 
 func _ready() -> void:
 	start_button.pressed.connect(_on_start_pressed)
+	demo_button.pressed.connect(_on_demo_pressed)
 	about_button.pressed.connect(_on_about_pressed)
 	background_back_button.pressed.connect(_close_backgrounds)
 	_build_background_choices()
@@ -20,9 +22,14 @@ func _on_start_pressed() -> void:
 	about_panel.visible = false
 	background_panel.visible = true
 	start_button.disabled = true
+	demo_button.disabled = true
 	about_button.disabled = true
 	if background_choices.get_child_count() > 0:
 		(background_choices.get_child(0) as Control).grab_focus()
+
+
+func _on_demo_pressed() -> void:
+	get_tree().change_scene_to_file("res://ui/demo/ui_demo.tscn")
 
 
 func _on_about_pressed() -> void:
@@ -73,5 +80,6 @@ func _choose_background(background_id: String) -> void:
 func _close_backgrounds() -> void:
 	background_panel.visible = false
 	start_button.disabled = false
+	demo_button.disabled = false
 	about_button.disabled = false
 	start_button.grab_focus()

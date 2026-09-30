@@ -56,6 +56,9 @@ jobs:
       - name: RPG smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/rpg_smoke.gd
 
+      - name: UI demo smoke test
+        run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/ui_demo_smoke.gd
+
       - name: Persistence smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/persistence_smoke.gd
 
