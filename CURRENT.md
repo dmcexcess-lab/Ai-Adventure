@@ -2,98 +2,114 @@
 
 ## Status
 
-**Slice 6 — Deduction engine: COMPLETE**
+**Slice 7 — Dialogue and witness framework: COMPLETE**
 
-The investigation loop now supports authored hypotheses, rule-based support/refutation, persistent player conclusions, and established deductions inside the existing case notebook.
+The project now has a reusable authored conversation system with persistent trust/topics/reactions, conditional dialogue, filtered evidence presentation, and a playable seed witness in the corridor.
 
 ## Implemented
 
-### Authored deduction definitions
+### Authored witness graphs
 
-Chapter One deduction rules now live under `content/ch01/deductions/`.
+Chapter One witness data now lives under `content/ch01/dialogue/`.
 
-Definitions support:
+A witness definition supports:
 
-- stable deduction ID;
-- title;
-- description;
-- required clue IDs;
-- required evidence tags;
-- minimum support count;
-- prerequisite deductions;
-- refuting evidence tags;
-- refuting contradiction tags;
-- optional skill-insight metadata.
+- stable witness ID;
+- display name and role;
+- authored start node;
+- conversation nodes;
+- numbered player choices;
+- topic IDs;
+- conditional visibility;
+- terminal choices;
+- once-only choice reactions;
+- evidence reactions keyed by clue IDs and/or clue tags.
 
-The seed set exercises the framework without beginning full Act I content.
+The seed witness is **Mara Bell**, the building manager in the apartment corridor.
 
-### DeductionService
+### DialogueService
 
-`DeductionService` is now an autoload.
+`DialogueService` is now an autoload.
 
-It evaluates authored rules against discovered evidence and canonical GameState only.
+It evaluates dialogue conditions against canonical state including:
 
-Evaluation states are:
+- discovered clues;
+- established deductions;
+- selected hypotheses;
+- witness trust;
+- chapter flags;
+- skill values;
+- opened topics;
+- consumed reactions.
 
-- **unsupported** — insufficient discovered support and/or unmet prerequisites;
-- **supported** — the authored rule is satisfied, but the player has not yet committed to it;
-- **established** — the player selected the hypothesis while it was supported;
-- **refuted** — discovered evidence matches an authored refutation condition.
+It applies authored effects for:
 
-The service never generates conclusions from free text.
+- evidence acquisition/upgrades;
+- witness trust changes;
+- chapter flags;
+- topic opening;
+- once-only reaction recording.
 
-### Player hypothesis flow
+### Persistent dialogue state
 
-Selecting a hypothesis always records the player's choice in `GameState.hypotheses`, even when unsupported or refuted.
+`GameState` now canonically stores:
 
-A supported hypothesis becomes established only when the player explicitly selects it.
+- `witness_trust`;
+- `dialogue_topics`;
+- `dialogue_reactions`.
 
-Established deduction state persists in `GameState.deductions`.
+These fields normalize safely when loading older schema-1 saves, so the save schema remains version **1**.
 
-Re-selecting an established deduction is idempotent.
+The save content version is now **ch01-slice7**.
 
-Wrong hypotheses remain part of the case record rather than destroying progression.
+### Evidence presentation
 
-### Evidence privacy / anti-spoiler behavior
+Evidence is a first-class conversation action.
 
-The evaluator reports only discovered evidence as:
+The conversation UI only lists discovered clues that have an eligible authored reaction for the current witness.
 
-- visible supporting evidence;
-- visible contradicting evidence.
+This prevents classic inventory-combination spam and does not reveal undiscovered clue names.
 
-It does not expose names of undiscovered clues required by a rule.
+Once-only reactions disappear from the relevant-evidence list after use.
 
-The notebook can therefore show how strong the current case is without leaking future evidence.
+### Conversation UI
 
-### Notebook hypothesis view
+The reusable modal conversation panel provides:
 
-The case notebook now has two modes:
+- witness name;
+- role;
+- trust value;
+- current authored line;
+- topic/response choices;
+- **PRESENT EVIDENCE** mode;
+- choices numbered 1-9;
+- keyboard 1-9 selection;
+- clean exit back to room play.
 
-1. **Evidence**
-2. **Hypotheses**
+Room interaction is paused while a conversation is open.
 
-The hypothesis view shows:
+### Generic witness hotspot hook
 
-- every authored hypothesis;
-- current evaluation status;
-- whether the player has recorded it;
-- visible support count;
-- prerequisite state;
-- discovered supporting evidence;
-- discovered contradicting evidence;
-- a **TEST / RECORD HYPOTHESIS** action.
+Hotspots now support optional `witness_id`.
 
-The room remains paused while either notebook mode is open.
+The reusable room controller emits a conversation request after the approach completes. The game shell opens ConversationUI without any witness-specific room code.
 
-### Autosave
+The corridor's building-office hotspot is wired to `mara_bell`.
 
-Establishing a deduction triggers the existing autosave path, matching the project rule that major investigative breakthroughs are protected automatically.
+### Seed conversation behavior
 
-### Persistence
+Mara's framework conversation exercises:
 
-Hypothesis selections and established deduction state survive the existing GameState save/load path.
+- a public maintenance topic;
+- trust gain;
+- a packet topic unlocked by discovered evidence;
+- a conditional service-record branch;
+- a once-only question;
+- presenting the impossible timestamp;
+- a once-only evidence reaction;
+- an alternate route to acquire the physical service record.
 
-The save content version is now **ch01-slice6**. Schema version remains **1** because the canonical state already contained the required `hypotheses` and `deductions` fields.
+This remains framework seed content rather than the full Act I conversation pass.
 
 ## Validation
 
@@ -101,79 +117,69 @@ Godot 4.7.2 CI passes:
 
 1. project/autoload/resource validation;
 2. protected movement/hotspot regression suite;
-3. protected evidence acquisition/filtering regression suite;
-4. insufficient-evidence evaluation;
-5. minimum support-count rules;
-6. unsupported hypothesis persistence;
-7. supported-to-established transition;
-8. established deduction idempotence;
-9. prerequisite gates;
-10. refutation conditions;
-11. visible discovered contradiction reporting;
-12. hypothesis/deduction serialization through GameState;
-13. protected persistence/migration regression suite;
-14. real main-scene startup.
+3. protected evidence regression suite;
+4. protected deduction regression suite;
+5. witness catalog loading;
+6. public topic visibility;
+7. evidence-unlocked topic visibility;
+8. combined clue/deduction/hypothesis/trust/flag/skill/topic conditions;
+9. trust effects;
+10. chapter-flag effects;
+11. topic persistence;
+12. dialogue evidence acquisition;
+13. filtered relevant-evidence presentation;
+14. once-only choice behavior;
+15. once-only evidence reaction behavior;
+16. dialogue-state GameState serialization;
+17. generic witness hotspot wiring;
+18. protected persistence/migration regression suite;
+19. real main-scene startup.
 
 ## Scope discipline
 
-Slice 6 does not implement witness conversations or evidence presentation to NPCs. Deduction state is now ready for dialogue conditions/effects, which belongs to Slice 7.
+Slice 7 consumes existing skill values in dialogue conditions but does not yet establish the Chapter One skill/background-choice experience or deterministic skill-routing rules. That belongs to Slice 8.
 
 ## NEXT OPERATION
 
-**Slice 7 — Dialogue and witness framework**
+**Slice 8 — Light RPG layer**
 
 Execute without requesting design decisions:
 
-1. Implement authored dialogue/witness definitions with:
-   - stable witness ID;
-   - conversation nodes;
-   - player choices;
-   - topic IDs;
-   - conditional visibility;
-   - once-only reactions;
-   - terminal/return behavior.
-2. Implement `DialogueService` that can evaluate conditions against:
-   - discovered clues;
-   - established deductions;
-   - selected hypotheses;
-   - witness trust;
-   - chapter flags;
-   - skill values.
-3. Implement dialogue effects for:
-   - acquiring/upgrading evidence;
-   - changing witness trust;
-   - setting chapter flags;
-   - opening topics;
-   - recording once-only reactions.
-4. Implement evidence presentation as a first-class dialogue action:
-   - show only discovered/relevant evidence;
-   - let witness definitions react to specific evidence IDs/tags;
-   - preserve the existing anti-combinatorial design.
-5. Implement a reusable conversation UI with:
-   - witness name;
-   - current line;
-   - topic/choice list;
-   - evidence-present mode;
-   - keyboard 1-9 choice support;
-   - clean exit back to room play.
-6. Add at least one seed Chapter One witness/conversation sufficient to exercise:
-   - public topic;
-   - evidence-unlocked topic;
-   - trust change;
-   - conditional branch;
-   - once-only reaction.
-7. Add generic room/hotspot hooks to start a witness conversation without hardcoding dialogue logic into individual rooms.
-8. Persist trust, flags, opened topics/reaction state through the existing GameState path.
-9. Add tests for:
-   - condition evaluation;
-   - effect application;
-   - evidence presentation;
-   - trust changes;
-   - once-only behavior;
-   - persisted dialogue state.
-10. Protect all Slice 3-6 regression suites.
-11. Run Godot validation and main-scene startup regression.
-12. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
-13. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
+1. Implement the four locked skills:
+   - Observation;
+   - Reasoning;
+   - Empathy;
+   - Resolve.
+2. Implement a small opening background-choice flow that assigns a fixed, authored Chapter One skill profile without a min-max/stat-allocation screen.
+3. Implement a reusable deterministic check service:
+   - skill value;
+   - authored threshold;
+   - contextual modifier;
+   - explicit pass/fail result;
+   - no random rolls.
+4. Implement condition/effect hooks so skill checks can:
+   - expose alternate observations;
+   - expose dialogue choices;
+   - unlock stronger clue detail;
+   - record failed approaches;
+   - expose authored alternate routes rather than dead ends.
+5. Implement the Character panel showing:
+   - Her's current background;
+   - all four skill values;
+   - concise skill descriptions;
+   - recorded failed approaches where useful.
+6. Integrate skill-gated seed behavior with the existing evidence/deduction/dialogue framework without beginning the full Act I content pass.
+7. Preserve background, skill values, and failed-approach state through GameState/save/load.
+8. Add tests for:
+   - each background profile;
+   - deterministic threshold pass/fail;
+   - contextual modifiers;
+   - failed-approach recording;
+   - skill-gated dialogue/evidence behavior;
+   - persistence.
+9. Protect all Slice 3-7 regression suites.
+10. Run Godot validation and main-scene startup regression.
+11. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
+12. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
 
-Do not start Slice 8 in the same turn unless the user explicitly asks for multiple slices.
+Do not start Slice 9 in the same turn unless the user explicitly asks for multiple slices.

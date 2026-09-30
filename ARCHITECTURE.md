@@ -68,6 +68,8 @@ Owns the canonical serializable state:
 - deductions;
 - hypotheses;
 - witness trust;
+- opened dialogue topics;
+- consumed/once-only dialogue reactions;
 - chapter flags;
 - skill values;
 - inventory;
@@ -161,20 +163,46 @@ The service never guesses deductions from free text.
 
 ### DialogueService
 
-Runs graph-based authored conversations.
+`DialogueService` is an autoload backed by authored witness definitions under `content/ch01/dialogue/`.
 
-Node conditions can inspect:
-- clue/deduction state;
-- trust;
-- skills;
-- chapter flags.
+Each witness definition provides:
+- stable witness ID and display identity;
+- start node;
+- graph nodes with authored witness lines;
+- player choices/topics;
+- conditional visibility;
+- terminal choices;
+- once-only choice reactions;
+- evidence reactions keyed by clue IDs and/or evidence tags.
 
-Node effects can:
-- add clue;
-- change trust;
-- set flag;
-- open topic;
-- transition conversation.
+Conditions can inspect:
+- discovered clue IDs;
+- established deductions;
+- selected hypotheses;
+- witness trust thresholds;
+- chapter flag values;
+- skill thresholds;
+- opened topics;
+- unseen reactions.
+
+Effects can:
+- acquire/upgrade evidence through EvidenceService;
+- change or set witness trust;
+- set chapter flags;
+- open topics;
+- record once-only reactions.
+
+Canonical dialogue state lives in GameState:
+- `witness_trust`;
+- `dialogue_topics`;
+- `dialogue_reactions`;
+- ordinary `chapter_flags`.
+
+Active conversation node position is intentionally ephemeral; closing/reopening a witness begins from the authored start node while all investigation consequences remain persistent.
+
+Evidence presentation is filtered. The UI receives only discovered evidence for which that witness currently has an eligible authored reaction. Once-only evidence reactions are removed from the presentable list after consumption.
+
+The service never performs generic clue-on-NPC matching or free-text inference.
 
 ### SaveService
 
@@ -192,7 +220,7 @@ Supported slots:
 - `manual_3`;
 - `autosave`.
 
-The game shell currently exposes manual slot 1 through simple **SAVE** / **LOAD** controls; the service already supports the remaining manual slots for later UI expansion. The content version is now **ch01-slice6**; the save schema remains version 1 because hypothesis and deduction state already fit the canonical `hypotheses` and `deductions` fields.
+The game shell currently exposes manual slot 1 through simple **SAVE** / **LOAD** controls; the service already supports the remaining manual slots for later UI expansion. The content version is now **ch01-slice7**; the save schema remains version 1 because dialogue state is represented by normalized optional GameState dictionaries and older schema-1 saves default them safely.
 
 SaveService responsibilities:
 - validate slot names;
@@ -240,10 +268,11 @@ A hotspot declares:
 - primary-action feedback;
 - optional approach point;
 - optional evidence ID + evidence detail level;
+- optional witness ID;
 - optional destination room + destination spawn;
 - enabled/disabled state.
 
-Hotspots emit primary/inspect actions and hover changes. Evidence-bearing primary actions delegate acquisition to EvidenceService through the room controller; hotspots never mutate GameState directly.
+Hotspots emit primary/inspect actions and hover changes. Evidence-bearing primary actions delegate acquisition to EvidenceService through the room controller. Witness-bearing primary actions emit a generic conversation request consumed by the game shell/ConversationUI. Hotspots never mutate GameState directly.
 
 ## Movement
 
