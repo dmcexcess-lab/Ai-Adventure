@@ -4,9 +4,9 @@
 [ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
 [ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
 [ext_resource type="Theme" path="res://ui/theme/comic_noir_theme.tres" id="4_theme"]
-[ext_resource type="Texture2D" path="res://art/demo/community_center_lobby_noir.webp" id="5_bg"]
-[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.webp" id="6_player"]
-[ext_resource type="Texture2D" path="res://art/demo/alex_portrait_noir.webp" id="7_alex"]
+[ext_resource type="Texture2D" path="res://art/demo/community_center_lobby_noir.svg" id="5_bg"]
+[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="6_player"]
+[ext_resource type="Texture2D" path="res://art/demo/alex_portrait_noir.svg" id="7_alex"]
 
 [node name="UIDemo" type="Control"]
 layout_mode = 3

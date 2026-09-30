@@ -64,9 +64,9 @@ jobs:
         shell: bash
         run: |
           test -s build/web/index.pck
-          grep -a -q "community_center_lobby_noir.webp" build/web/index.pck
-          grep -a -q "demo_player_noir.webp" build/web/index.pck
-          grep -a -q "alex_portrait_noir.webp" build/web/index.pck
+          grep -a -q "community_center_lobby_noir.svg" build/web/index.pck
+          grep -a -q "demo_player_noir.svg" build/web/index.pck
+          grep -a -q "alex_portrait_noir.svg" build/web/index.pck
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

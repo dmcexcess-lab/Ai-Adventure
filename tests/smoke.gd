@@ -18,9 +18,6 @@ const REQUIRED_SCRIPTS := [
 
 const REQUIRED_VISUALS := [
 	"res://ui/theme/comic_noir_theme.tres",
-	"res://art/demo/community_center_lobby_noir.webp",
-	"res://art/demo/demo_player_noir.webp",
-	"res://art/demo/alex_portrait_noir.webp",
 ]
 
 const REQUIRED_ART_FILES := [
