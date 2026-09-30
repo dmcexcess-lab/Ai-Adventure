@@ -32,14 +32,17 @@ res://
     dialogue/
     menus/
   rooms/
+    demo/
     ch01/
   content/
+    demo/
     ch01/
       clues/
       deductions/
       dialogue/
       rooms/
   art/
+    demo/
   audio/
   tests/
 ```
@@ -363,3 +366,27 @@ The project should remain modest enough for ordinary desktop Firefox:
 - Main remains playable after implementation slices once the first playable scaffold exists.
 - Every slice updates `CURRENT.md`.
 - Do not expand scope during implementation unless a concrete blocker demands it.
+
+
+## Umbrella Quest vertical-slice contract
+
+Before Chapter One content production resumes, the non-canon Umbrella Quest must prove the final gameplay and presentation language.
+
+It is allowed to use separate demo-local state/content where that protects canon-state isolation, but reusable systems should continue to use the same interaction, notebook, dialogue, RPG, persistence, and later combat contracts intended for Chapter One.
+
+### Visual architecture
+
+`VISUAL_DIRECTION.md` is authoritative for:
+- room composition;
+- palette;
+- lighting;
+- sprite/portrait language;
+- UI skin;
+- dialogue/notebook presentation;
+- later combat presentation.
+
+The visual pipeline favors static 2D illustrated assets, SVG/texture-based authored elements, and lightweight Godot UI styling compatible with Web export. It must not require dynamic 3D, compute shaders, or heavy runtime effects.
+
+The current reference room stores source illustrations as raw SVG files under `art/demo/`. The demo runtime reads those files with `FileAccess`, rasterizes them through `Image.load_svg_from_string()`, and creates lightweight `ImageTexture` instances. This avoids depending on editor-import metadata in headless/Web validation while preserving resolution-independent authored source art.
+
+The reusable UI skin lives at `ui/theme/comic_noir_theme.tres` and is applied to the Umbrella Quest reference scene.

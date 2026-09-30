@@ -108,7 +108,9 @@ Chapter One tracks:
 - chapter flags;
 - save metadata.
 
-No hunger, crafting, combat, equipment stats, or economy.
+No hunger, crafting, loot treadmill, or economy.
+
+Combat exists as a bounded authored system rather than a dominant loop. Umbrella Quest must prove its final gameplay grammar before Chapter One production resumes. Combat should return cleanly to investigation state and should not visually detach into an unrelated arcade/JRPG presentation.
 
 ## Inventory
 

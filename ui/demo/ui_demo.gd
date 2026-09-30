@@ -3,7 +3,9 @@ extends Control
 const MAIN_MENU := "res://ui/menus/main_menu.tscn"
 const WALK_BOUNDS := Rect2(26.0, 236.0, 588.0, 154.0)
 
+@onready var art_background: TextureRect = $ArtBackground
 @onready var player: Control = %DemoPlayer
+@onready var player_sprite: TextureRect = %DemoPlayer/Sprite
 @onready var hotspots: Control = %Hotspots
 @onready var context_label: Label = %ContextLabel
 @onready var status_label: Label = %StatusLabel
@@ -44,6 +46,7 @@ const WALK_BOUNDS := Rect2(26.0, 236.0, 588.0, 154.0)
 @onready var dialogue_trust: Label = %DialogueTrust
 @onready var dialogue_choices: VBoxContainer = %DialogueChoices
 @onready var present_button: Button = %PresentButton
+@onready var alex_portrait: TextureRect = $DialoguePanel/Margin/Stack/DialogueRow/PortraitFrame/Portrait
 
 var _pending_hotspot: Node
 var _demo_clues: Dictionary = {
@@ -68,6 +71,10 @@ var _saved_trust := 0
 
 
 func _ready() -> void:
+	art_background.texture = _svg_texture("res://art/demo/community_center_lobby_noir.svg")
+	player_sprite.texture = _svg_texture("res://art/demo/demo_player_noir.svg")
+	alex_portrait.texture = _svg_texture("res://art/demo/alex_portrait_noir.svg")
+
 	player.call("place_at_foot", Vector2(318, 365))
 	if player.has_signal("arrived"):
 		player.connect("arrived", Callable(self, "_on_player_arrived"))
@@ -96,7 +103,7 @@ func _ready() -> void:
 	_setup_filters()
 	_refresh_notebook()
 	_refresh_hypotheses()
-	_set_status("UI sandbox ready. Click to walk; hover objects; right-click to inspect.")
+	_set_status("Visual reference room ready. Click to walk; hover objects; right-click to inspect.")
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -155,7 +162,7 @@ func _register_hotspots() -> void:
 
 
 func _on_hotspot_hover(label: String) -> void:
-	context_label.text = "UI DEMO // COMMUNITY CENTER" if label.is_empty() else label.to_upper()
+	context_label.text = "UMBRELLA QUEST // COMMUNITY CENTER" if label.is_empty() else label.to_upper()
 
 
 func _on_hotspot_action(hotspot: Node, action: StringName) -> void:
@@ -205,7 +212,7 @@ func _activate_hotspot(hotspot: Node) -> void:
 		"vending_machine":
 			_set_status("The vending machine offers six kinds of soda and no investigative insight.")
 		"exit_door":
-			_set_status("This is only a UI sandbox. Use EXIT in the bottom bar to return to the title screen.")
+			_set_status("The visual reference slice currently ends at this lobby. Use EXIT to return to the title screen.")
 		_:
 			_set_status(String(hotspot.get("primary_text")))
 
@@ -231,7 +238,7 @@ func _open_notebook(mode: String) -> void:
 		_show_hypothesis_tab()
 	else:
 		_show_evidence_tab()
-	context_label.text = "UI DEMO // NOTEBOOK"
+	context_label.text = "UMBRELLA QUEST // CASE FILE"
 
 
 func _show_evidence_tab() -> void:
@@ -375,7 +382,7 @@ func _record_hypothesis() -> void:
 func _open_character() -> void:
 	_close_all_modals()
 	character_panel.visible = true
-	context_label.text = "UI DEMO // CHARACTER"
+	context_label.text = "UMBRELLA QUEST // CHARACTER"
 
 
 func _open_dialogue() -> void:
@@ -386,7 +393,7 @@ func _open_dialogue() -> void:
 	dialogue_mode.text = "TOPICS / RESPONSES"
 	present_button.text = "PRESENT EVIDENCE"
 	_refresh_dialogue_choices()
-	context_label.text = "UI DEMO // CONVERSATION"
+	context_label.text = "UMBRELLA QUEST // CONVERSATION"
 
 
 func _refresh_dialogue_choices() -> void:
@@ -485,14 +492,14 @@ func _set_reveal(value: bool) -> void:
 	for hotspot in hotspots.get_children():
 		if hotspot.has_method("set_reveal"):
 			hotspot.call("set_reveal", value)
-	context_label.text = "INTERACTABLES" if value else "UI DEMO // COMMUNITY CENTER"
+	context_label.text = "INTERACTABLES" if value else "UMBRELLA QUEST // COMMUNITY CENTER"
 
 
 func _close_all_modals() -> void:
 	notebook_panel.visible = false
 	character_panel.visible = false
 	dialogue_panel.visible = false
-	context_label.text = "UI DEMO // COMMUNITY CENTER"
+	context_label.text = "UMBRELLA QUEST // COMMUNITY CENTER"
 
 
 func _modal_open() -> bool:
@@ -535,3 +542,19 @@ func _number_key_index(keycode: Key) -> int:
 		KEY_9, KEY_KP_9:
 			return 8
 	return -1
+
+
+func _svg_texture(path: String) -> Texture2D:
+	if not FileAccess.file_exists(path):
+		push_error("Umbrella visual asset missing: %s" % path)
+		return null
+	var svg_text := FileAccess.get_file_as_string(path)
+	if svg_text.is_empty():
+		push_error("Umbrella visual asset is empty: %s" % path)
+		return null
+	var image := Image.new()
+	var error := image.load_svg_from_string(svg_text)
+	if error != OK:
+		push_error("Umbrella SVG failed to rasterize: %s" % path)
+		return null
+	return ImageTexture.create_from_image(image)

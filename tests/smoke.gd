@@ -16,6 +16,16 @@ const REQUIRED_SCRIPTS := [
 	"res://core/interaction/hotspot.gd",
 ]
 
+const REQUIRED_VISUALS := [
+	"res://ui/theme/comic_noir_theme.tres",
+]
+
+const REQUIRED_ART_FILES := [
+	"res://art/demo/community_center_lobby_noir.svg",
+	"res://art/demo/demo_player_noir.svg",
+	"res://art/demo/alex_portrait_noir.svg",
+]
+
 const REQUIRED_SCENES := [
 	"res://ui/menus/main_menu.tscn",
 	"res://ui/demo/ui_demo.tscn",
@@ -48,13 +58,23 @@ func _init() -> void:
 		elif not script.can_instantiate():
 			failures.append("script cannot instantiate: %s" % path)
 
+	for path in REQUIRED_VISUALS:
+		if load(path) == null:
+			failures.append("failed to load visual resource %s" % path)
+
+	for path in REQUIRED_ART_FILES:
+		if not FileAccess.file_exists(path):
+			failures.append("missing visual art file %s" % path)
+		elif FileAccess.get_file_as_string(path).is_empty():
+			failures.append("visual art file is empty %s" % path)
+
 	for path in REQUIRED_SCENES:
 		var scene := load(path) as PackedScene
 		if scene == null:
 			failures.append("failed to load scene %s" % path)
 
 	if failures.is_empty():
-		print("SMOKE_OK: project settings, evidence/deduction/dialogue/RPG/persistence services, scripts, and room resources are valid")
+		print("SMOKE_OK: project settings, visual assets/theme, services, scripts, and room resources are valid")
 		quit(0)
 		return
 

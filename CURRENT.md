@@ -2,226 +2,179 @@
 
 ## Status
 
-**Slice 8 — Light RPG layer: COMPLETE**
+**Umbrella Quest Slice 9 — Visual direction foundation: COMPLETE**
 
-Phase A foundation/engine work is complete. The project now has the locked four-skill system, fixed Chapter One background selection, deterministic checks, persistent failed approaches, skill-routed evidence/dialogue behavior, and a Character panel.
+Chapter One production remains paused.
 
-## Implemented
+Umbrella Quest is now the project's non-canon **visual and mechanical vertical slice** and the repository roadmap has been re-baselined around it.
 
-### Locked skills
+## Authoritative visual target
 
-The four Chapter One skills are live:
+The finished-product direction is now locked as:
 
-- **Observation** — physical/visual irregularities;
-- **Reasoning** — technical/documentary inference;
-- **Empathy** — emotional mismatch and human routes;
-- **Resolve** — pressure/evasion resistance.
+**polished comic-book adventure presentation with dark, gritty cityscapes.**
 
-Skills remain bounded to the authored Chapter One profiles rather than a point-buy system.
+`VISUAL_DIRECTION.md` is authoritative for:
 
-### Opening background choice
+- comic-panel composition;
+- dark urban palette;
+- environment wear/material language;
+- practical lighting;
+- character silhouette/sprite treatment;
+- portrait treatment;
+- case-file/noir UI;
+- later combat presentation.
 
-Starting Chapter One now opens a one-sentence background-choice panel before the game shell.
+The visual target is intentionally much higher than the original rectangle/greybox demo.
 
-Four fixed profiles exist:
+## Reference room
 
-- **The Watcher** — OBS 3 / REA 2 / EMP 1 / RES 1;
-- **The Analyst** — OBS 2 / REA 3 / EMP 1 / RES 1;
-- **The Reader** — OBS 2 / REA 1 / EMP 3 / RES 1;
-- **The Anchor** — OBS 1 / REA 2 / EMP 1 / RES 3.
+The Umbrella Quest community-center lobby is now the first visual reference room.
 
-The selected background ID and exact skill values become canonical GameState.
+The old primitive room blocks have been replaced by an authored illustrated lobby containing:
 
-### Deterministic checks
+- rain-streaked city windows;
+- exterior skyline and reflected city light;
+- worn civic-building architecture;
+- physical lost-and-found board;
+- vending machine;
+- umbrella rack;
+- front desk;
+- exit door;
+- floor perspective/tile staging;
+- cool exterior versus warm practical-light contrast;
+- heavy comic outline/shadow language.
 
-`SkillService` now resolves authored checks with:
+Existing hotspot positions and interaction behavior remain intact over the illustration.
 
-`skill + contextual modifier >= threshold`
+## Character visual language
 
-Every result exposes:
+The demo player is now represented by a full-body comic-noir sprite instead of geometric body blocks.
 
-- base skill;
-- modifier;
-- total;
-- threshold;
-- pass/fail;
-- margin.
+The visual language uses:
 
-There are no hidden/random dice rolls.
+- heavy outer contour;
+- broad shadow shapes;
+- muted urban clothing;
+- restrained warm skin tone;
+- limited high-value detail;
+- readable silhouette at room scale.
 
-### Failed approaches
+This is the baseline for later production sprites rather than a claim that the Slice 9 sprite is final animation-quality art.
 
-Failed checks can be recorded canonically in `GameState.failed_approaches`.
+## Dialogue portrait language
 
-Each entry stores:
+Alex now has a dedicated comic-book portrait integrated into the conversation panel.
 
-- check ID;
-- skill;
-- threshold;
-- last total;
-- last modifier;
-- context;
-- attempt count.
+The dialogue layout now provides a portrait-capable composition with:
 
-Dialogue/content conditions can query these failures to expose authored fallback routes.
+- identity header;
+- role line;
+- trust state;
+- large portrait area;
+- larger authored dialogue-line area;
+- numbered topic/evidence actions.
 
-### Skill-routed seed behavior
+## Comic-noir UI skin
 
-The existing framework content now demonstrates both physical and social skill routes without beginning the full Act I content pass.
+A reusable `comic_noir_theme.tres` now styles the reference slice.
 
-**Workstation Observation**
+The skin establishes:
 
-The packet hotspot always records the basic Impossible Timestamp clue.
+- near-black/charcoal panels;
+- restrained teal/cyan interactive accent;
+- warm amber evidence/focus accent;
+- off-white body text;
+- hard rectangular borders;
+- stronger hover/pressed/focus states;
+- designed ItemList selections;
+- consistent separators.
 
-An Observation 3 check can additionally recognize the same impossible time in a second packet field and upgrade the clue to detail level 2.
+The notebook, hypotheses, character panel, dialogue panel, and bottom interaction strip now share the same visual family.
 
-Failure records the attempted observation but does not remove the base clue.
+## Web-safe art pipeline
 
-**Mara Empathy**
+Source art is stored as raw SVG under `art/demo/`.
 
-After the timestamp clue is known, Mara has an authored Empathy 3 attempt.
+At runtime the reference scene:
 
-Success:
-- enters a distinct success node;
-- gains trust;
-- upgrades the timestamp clue to detail level 2.
+1. reads the SVG text;
+2. rasterizes it through Godot `Image.load_svg_from_string()`;
+3. creates an `ImageTexture`;
+4. applies it to the room/background/sprite/portrait controls.
 
-Failure:
-- enters a distinct failure node;
-- records the failed approach;
-- preserves progression;
-- can unlock a direct paper-trail fallback route after the maintenance topic has been opened.
+This keeps authored source art resolution-independent while avoiding reliance on editor-generated SVG import metadata during headless and Web validation.
 
-### Dialogue integration
+## Roadmap re-baseline
 
-Dialogue choices can now carry an explicit deterministic `skill_check`.
+The authoritative production order is now:
 
-The choice remains player-visible. Selecting it resolves the check and then follows authored:
+1. Slice 9 — visual direction foundation — **complete**
+2. Slice 10 — multi-room Umbrella Quest world skeleton
+3. Slice 11 — Umbrella investigation loop
+4. Slice 12 — Umbrella RPG integration
+5. Slice 13 — Umbrella combat slice
+6. Slice 14 — Umbrella full graphics production pass
+7. Slice 15 — Umbrella polish/usability closure
+8. Slice 16+ — return to Chapter One
 
-- success node/effects; or
-- failure node/effects.
-
-Dialogue conditions can also require recorded failed approaches.
-
-This keeps skill failures visible and consequential rather than hiding routes behind invisible checks.
-
-### Character panel
-
-The lower HUD now exposes **CHAR**, and **C** opens the Character panel.
-
-It shows:
-
-- Her's selected background;
-- the background sentence;
-- all four current skill values;
-- concise skill descriptions;
-- recorded failed approaches.
-
-Room interaction pauses while the Character panel is open.
-
-### Persistence
-
-GameState now persists:
-
-- `background_id`;
-- `skill_values`;
-- `failed_approaches`.
-
-The save content version is **ch01-slice8**.
-
-Schema version remains **1** because the new fields normalize safely when absent from older schema-1 saves.
+Combat is now explicitly part of the finished concept, but remains bounded rather than replacing investigation as the primary gameplay grammar.
 
 ## Validation
 
 Godot 4.7.2 CI passes:
 
-1. project/autoload/resource validation;
-2. all four fixed background profiles;
-3. deterministic threshold pass/fail;
-4. contextual modifiers;
-5. failed-approach recording;
-6. Observation success evidence upgrade;
-7. Observation failure preservation;
-8. Empathy dialogue success branch;
-9. Empathy dialogue failure branch;
-10. failure-conditioned alternate route;
-11. alternate-route evidence acquisition;
-12. RPG state serialization/persistence;
-13. four-choice opening background UI;
-14. protected movement/hotspot regression suite;
-15. protected evidence regression suite;
-16. protected deduction regression suite;
-17. protected dialogue regression suite;
-18. protected persistence/migration regression suite;
-19. real main-scene startup.
-
-## Scope discipline
-
-The reusable engine layer is now complete enough to begin Chapter One assembly.
-
-Slice 8 does not build the remaining primary locations or the full chapter flag/progression graph. Those belong to Slice 9.
-
-## UI feedback demo
-
-A completely non-canon UI sandbox is available from the title screen through **PLAY NON-CANON UI DEMO**.
-
-The sandbox uses an unrelated missing-umbrella scenario and exists only for interface/play-feel review. It exercises:
-
-- point-and-click movement;
-- hotspot hover/inspect/primary interaction;
-- held Space hotspot reveal;
-- bottom interaction bar;
-- notebook evidence and hypothesis views;
-- evidence filters;
-- character panel;
-- dialogue choices and keyboard 1-9;
-- evidence presentation;
-- local demo SAVE/LOAD feedback;
-- modal close/back behavior.
-
-The sandbox keeps its state local to the demo scene and does not mutate Chapter One canonical GameState.
-
-Slice 9 remains the next production operation.
+1. visual-direction/theme resource validation;
+2. raw SVG art-file validation;
+3. runtime SVG rasterization;
+4. reference-room background texture creation;
+5. player sprite texture creation;
+6. dialogue portrait texture creation;
+7. comic-noir theme application;
+8. preserved Umbrella Quest movement/hotspots;
+9. hotspot reveal;
+10. notebook modal;
+11. character modal;
+12. dialogue modal;
+13. local demo save/load;
+14. canonical ANAMNESIS state isolation;
+15. all protected interaction/evidence/deduction/dialogue/RPG/persistence regressions;
+16. real main-scene startup.
 
 ## NEXT OPERATION
 
-**Slice 9 — Chapter One content skeleton**
+**Umbrella Quest Slice 10 — Multi-room world skeleton**
 
 Execute without requesting design decisions:
 
-1. Build greybox versions of all remaining primary Chapter One locations so the repository contains the full 9-scene route:
-   - Her's room/workstation;
-   - apartment corridor/building office;
-   - systems archive;
-   - transit concourse;
-   - café;
-   - records office;
-   - observation overlook;
-   - restricted utility room;
-   - threshold site.
-2. Add the three planned close-up scenes where needed:
-   - workstation terminal;
-   - evidence table/notebook;
-   - threshold instrument panel.
-3. Establish authored navigation/transitions among the primary locations without creating item-key puzzle chains.
-4. Create the complete Chapter One progression/flag skeleton:
-   - Act I through Act V boundaries;
-   - required scene-entry flags;
-   - required deduction gates;
-   - final-threshold eligibility;
-   - chapter-complete flag;
-   - optional/deep-understanding flags reserved for later Acts.
-5. Add placeholder actors/hotspots sufficient to exercise every required location and route.
-6. Create a start-to-ending **greybox route** that can be traversed using placeholder progression hooks even though Acts I-V content is not yet authored.
-7. Add a protected scripted progression test proving:
-   - all required locations load;
-   - all transitions resolve;
-   - the chapter flag graph can advance from fresh state to the threshold ending skeleton;
-   - no scene in the required route is orphaned.
-8. Preserve all Phase A systems and tests.
-9. Keep the skeleton content clearly separated from later Act-specific prose/evidence so Slices 10-14 can fill it without architectural rewrites.
-10. Run Godot validation and main-scene startup regression.
-11. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
-12. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
+1. Expand Umbrella Quest from the reference lobby into the complete compact demo map:
+   - exterior entry / awning;
+   - lobby;
+   - front desk;
+   - Lost & Found hall;
+   - staff office;
+   - storage room;
+   - maintenance corridor;
+   - loading bay / service exit.
+2. Build each room with final-art composition in mind from the start:
+   - comic-noir palette;
+   - authored focal areas;
+   - clear walkable staging;
+   - foreground/midground/background separation;
+   - readable interaction silhouettes.
+3. Reuse the Slice 9 comic-noir theme, sprite scale, and portrait language.
+4. Establish all room transitions and spawn points.
+5. Keep the umbrella story content lightweight/placeholding in this slice; full investigation content belongs to Slice 11.
+6. Add representative hotspots/NPC positions sufficient to evaluate navigation and visual readability.
+7. Keep Umbrella Quest state isolated from canonical Chapter One state.
+8. Add protected tests proving:
+   - every demo room loads;
+   - every required transition target exists;
+   - the whole room graph is traversable;
+   - no primary room is orphaned;
+   - Slice 9 visual assets/theme still load.
+9. Run all existing regressions and main-scene startup.
+10. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
+11. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
 
-Do not start Slice 10 in the same turn unless the user explicitly asks for multiple slices.
+Do not start Slice 11 in the same turn unless the user explicitly asks for multiple slices.

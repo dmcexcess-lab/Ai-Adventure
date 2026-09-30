@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="422" viewBox="0 0 640 422">
+<defs>
+  <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#18232a"/><stop offset="1" stop-color="#0b1115"/></linearGradient>
+  <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#273039"/><stop offset="1" stop-color="#101419"/></linearGradient>
+  <linearGradient id="window" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#183449"/><stop offset="0.55" stop-color="#0b1d2b"/><stop offset="1" stop-color="#071018"/></linearGradient>
+  <linearGradient id="amber" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c4955c"/><stop offset="1" stop-color="#6b4931"/></linearGradient>
+  <linearGradient id="desk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#49392d"/><stop offset="1" stop-color="#211a18"/></linearGradient>
+</defs>
+<rect width="640" height="422" fill="#070b0e"/>
+<rect x="10" y="18" width="620" height="390" rx="2" fill="url(#wall)" stroke="#020406" stroke-width="8"/>
+<!-- rainy street windows -->
+<rect x="22" y="36" width="304" height="184" fill="url(#window)" stroke="#05080a" stroke-width="6"/>
+<path d="M124 38v180M224 38v180" stroke="#111a20" stroke-width="6"/>
+<path d="M24 146h300" stroke="#111a20" stroke-width="4"/>
+<g fill="#0b1218" stroke="#020405" stroke-width="3">
+  <path d="M28 143V96l42-19 25 11v55z"/><path d="M92 143V72l48-19 38 16v74z"/>
+  <path d="M171 143V90l43-20 47 18v55z"/><path d="M255 143V60l65-25v108z"/>
+</g>
+<g fill="#d77b45">
+  <rect x="42" y="107" width="10" height="7"/><rect x="112" y="88" width="9" height="7"/>
+  <rect x="146" y="96" width="8" height="6"/><rect x="277" y="75" width="10" height="7"/>
+</g>
+<g stroke="#7ba8b8" stroke-width="2" opacity=".55">
+  <path d="M34 48l-16 54M64 42L45 118M91 40L74 103M118 45L99 126M152 39l-19 75M187 48l-17 70M214 43l-15 79M249 41l-18 88M287 42l-16 73M315 47l-12 48"/>
+</g>
+<!-- wall architecture -->
+<path d="M334 26h286v205H334z" fill="#171a1d" stroke="#050607" stroke-width="5"/>
+<path d="M346 42h180v90H346z" fill="#101518" stroke="#050607" stroke-width="4"/>
+<path d="M356 52h160v70H356z" fill="#24323a"/>
+<path d="M356 52h160v70" fill="none" stroke="#6d8591" stroke-width="2"/>
+<text x="436" y="74" font-family="sans-serif" font-size="12" fill="#dac69f" text-anchor="middle" font-weight="bold">WESTSIDE COMMUNITY CENTER</text>
+<text x="436" y="96" font-family="sans-serif" font-size="9" fill="#7c8c91" text-anchor="middle">OPEN 06:00 — 22:00</text>
+<path d="M348 146h112v66H348z" fill="#30271d" stroke="#080706" stroke-width="4"/>
+<g stroke="#b49662" stroke-width="1.5" opacity=".8">
+  <path d="M360 160h84M360 174h66M360 188h76"/>
+</g>
+<text x="404" y="205" font-family="sans-serif" font-size="8" fill="#d4bd8f" text-anchor="middle">LOST + FOUND / EVENTS / WEATHER</text>
+<!-- vending -->
+<path d="M334 126h72v132H334z" fill="#0b1115" stroke="#030405" stroke-width="5"/>
+<rect x="342" y="136" width="56" height="72" fill="#173146" stroke="#456778" stroke-width="2"/>
+<path d="M351 144h38v14H351z" fill="#8f2f36"/><path d="M351 166h38v14H351z" fill="#355d6c"/><path d="M351 188h38v12H351z" fill="#b98246"/>
+<circle cx="384" cy="226" r="5" fill="#c9b06d"/><rect x="346" y="238" width="32" height="9" fill="#111"/>
+<text x="370" y="122" font-family="sans-serif" font-size="7" fill="#81959d" text-anchor="middle">VENDING</text>
+<!-- exit door -->
+<path d="M548 50h68v128H548z" fill="#171411" stroke="#030303" stroke-width="5"/>
+<path d="M556 58h52v112H556z" fill="#25201b" stroke="#6e5742" stroke-width="2"/>
+<rect x="558" y="64" width="48" height="29" fill="#122331" stroke="#364c57" stroke-width="2"/>
+<g stroke="#7597a3" stroke-width="1.5" opacity=".55"><path d="M563 67l-8 22M577 66l-8 25M592 66l-8 23"/></g>
+<circle cx="598" cy="130" r="3.5" fill="#b48e56"/>
+<path d="M552 42h60l-8-15h-44z" fill="#6f2d31" stroke="#17090a" stroke-width="3"/>
+<text x="582" y="39" font-family="sans-serif" font-size="9" fill="#ead6b8" text-anchor="middle" font-weight="bold">EXIT</text>
+<!-- umbrella rack -->
+<g stroke="#050607" stroke-width="4" stroke-linejoin="round">
+  <path d="M48 182h92l-8 84H58z" fill="#141b1f"/>
+  <path d="M54 196h80M64 180v-24M124 180v-24" fill="none"/>
+</g>
+<g stroke-width="5" fill="none" stroke-linecap="round">
+  <path d="M69 252q-6-43 3-78q15-17 29 0" stroke="#243e4d"/>
+  <path d="M91 250q-1-38 7-67q17-18 30 1" stroke="#5a2c35"/>
+  <path d="M116 252q-3-28 3-49" stroke="#8b744e"/>
+</g>
+<path d="M73 162h44" stroke="#9db0b1" stroke-width="3"/>
+<path d="M72 162h18" stroke="#d4ad72" stroke-width="3"/>
+<!-- desk -->
+<path d="M414 182l188-20v103l-172 5z" fill="url(#desk)" stroke="#050404" stroke-width="6"/>
+<path d="M430 194l154-14v25l-154 12z" fill="#6a4d35" stroke="#21150f" stroke-width="3"/>
+<path d="M447 223h126" stroke="#b48652" stroke-width="2"/>
+<rect x="511" y="145" width="51" height="38" fill="#0c1011" stroke="#030303" stroke-width="4"/>
+<rect x="516" y="150" width="41" height="27" fill="#173340"/>
+<path d="M521 158h25M521 164h31M521 170h19" stroke="#77a6a8" stroke-width="2"/>
+<path d="M470 173h27l4 18h-35z" fill="#b9a886" stroke="#342b21" stroke-width="2"/>
+<!-- alex silhouette behind desk -->
+<path d="M455 188q2-36 29-42q25 6 28 39l-9 15h-40z" fill="#151515" stroke="#030303" stroke-width="4"/>
+<ellipse cx="483" cy="142" rx="17" ry="21" fill="#8a5e47" stroke="#060404" stroke-width="4"/>
+<path d="M466 137q4-25 23-21q15 6 13 23q-9-9-17-10q-8 7-19 8z" fill="#171210" stroke="#030303" stroke-width="3"/>
+<path d="M471 145l8 2M488 147l8-2" stroke="#24120f" stroke-width="2"/>
+<path d="M480 158q7 3 13-1" stroke="#3d2018" stroke-width="2" fill="none"/>
+<path d="M466 171q17 12 37 0l10 27h-57z" fill="#283239" stroke="#050606" stroke-width="4"/>
+<!-- floor -->
+<path d="M16 228h608v176H16z" fill="url(#floor)" stroke="#050607" stroke-width="4"/>
+<path d="M16 228h608" stroke="#80929a" stroke-width="2" opacity=".45"/>
+<g stroke="#3c474e" stroke-width="1.5" opacity=".7">
+  <path d="M74 228L24 404M152 228l-18 176M230 228l12 176M308 228l40 176M386 228l70 176M464 228l100 176M542 228l128 176"/>
+  <path d="M18 270h604M18 318h604M18 370h604"/>
+</g>
+<!-- warm light pools -->
+<path d="M396 207l220-39v143l-232-8z" fill="#aa6e39" opacity=".10"/>
+<path d="M30 225h120l-20 132H40z" fill="#4e8d98" opacity=".10"/>
+<!-- grime and ink accents -->
+<g stroke="#050708" stroke-width="3" opacity=".7">
+  <path d="M18 286q72 17 132 2M281 386q112-31 224-2M331 91q20 5 32-4M525 242q45 10 84 1"/>
+</g>
+<g fill="#8da0a4" opacity=".35">
+  <circle cx="174" cy="245" r="2"/><circle cx="204" cy="289" r="1.5"/><circle cx="320" cy="340" r="2"/><circle cx="406" cy="281" r="1.5"/>
+</g>
+<!-- foreground vignette -->
+<path d="M0 0h640v422H0z" fill="none" stroke="#020304" stroke-width="20" opacity=".85"/>
+<path d="M0 406h640v16H0z" fill="#030405" opacity=".75"/>
+</svg>
