@@ -147,8 +147,10 @@ script = ExtResource("3_hotspot")
 hotspot_id = "workstation_monitor"
 display_name = "Workstation"
 inspect_text = "The machine finished writing a packet that claims to be from a time that has not happened."
-primary_text = "The packet is intact enough to investigate, but the evidence system is not online yet."
+primary_text = "The packet is intact enough to enter into the case notebook."
 approach_point = Vector2(212, 326)
+evidence_id = "packet_impossible_timestamp"
+evidence_detail_level = 1
 
 [node name="WindowHotspot" type="Control" parent="Hotspots"]
 layout_mode = 0

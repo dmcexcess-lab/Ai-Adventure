@@ -11,6 +11,8 @@ signal action_requested(hotspot: Node, action: StringName)
 @export var transition_room := ""
 @export var transition_spawn := ""
 @export var approach_point := Vector2(-1.0, -1.0)
+@export var evidence_id := ""
+@export var evidence_detail_level := 1
 @export var enabled := true
 
 var _hovered := false
