@@ -9,6 +9,7 @@ const REQUIRED_SCRIPTS := [
 	"res://autoload/save_service.gd",
 	"res://autoload/scene_router.gd",
 	"res://ui/menus/main_menu.gd",
+	"res://ui/demo/ui_demo.gd",
 	"res://core/game_shell/game_shell.gd",
 	"res://core/interaction/room_controller.gd",
 	"res://core/interaction/player_actor.gd",
@@ -17,6 +18,7 @@ const REQUIRED_SCRIPTS := [
 
 const REQUIRED_SCENES := [
 	"res://ui/menus/main_menu.tscn",
+	"res://ui/demo/ui_demo.tscn",
 	"res://core/game_shell/game_shell.tscn",
 	"res://ui/notebook/evidence_notebook.tscn",
 	"res://ui/dialogue/conversation_ui.tscn",
