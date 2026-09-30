@@ -2,184 +2,204 @@
 
 ## Status
 
-**Slice 7 — Dialogue and witness framework: COMPLETE**
+**Slice 8 — Light RPG layer: COMPLETE**
 
-The project now has a reusable authored conversation system with persistent trust/topics/reactions, conditional dialogue, filtered evidence presentation, and a playable seed witness in the corridor.
+Phase A foundation/engine work is complete. The project now has the locked four-skill system, fixed Chapter One background selection, deterministic checks, persistent failed approaches, skill-routed evidence/dialogue behavior, and a Character panel.
 
 ## Implemented
 
-### Authored witness graphs
+### Locked skills
 
-Chapter One witness data now lives under `content/ch01/dialogue/`.
+The four Chapter One skills are live:
 
-A witness definition supports:
+- **Observation** — physical/visual irregularities;
+- **Reasoning** — technical/documentary inference;
+- **Empathy** — emotional mismatch and human routes;
+- **Resolve** — pressure/evasion resistance.
 
-- stable witness ID;
-- display name and role;
-- authored start node;
-- conversation nodes;
-- numbered player choices;
-- topic IDs;
-- conditional visibility;
-- terminal choices;
-- once-only choice reactions;
-- evidence reactions keyed by clue IDs and/or clue tags.
+Skills remain bounded to the authored Chapter One profiles rather than a point-buy system.
 
-The seed witness is **Mara Bell**, the building manager in the apartment corridor.
+### Opening background choice
 
-### DialogueService
+Starting Chapter One now opens a one-sentence background-choice panel before the game shell.
 
-`DialogueService` is now an autoload.
+Four fixed profiles exist:
 
-It evaluates dialogue conditions against canonical state including:
+- **The Watcher** — OBS 3 / REA 2 / EMP 1 / RES 1;
+- **The Analyst** — OBS 2 / REA 3 / EMP 1 / RES 1;
+- **The Reader** — OBS 2 / REA 1 / EMP 3 / RES 1;
+- **The Anchor** — OBS 1 / REA 2 / EMP 1 / RES 3.
 
-- discovered clues;
-- established deductions;
-- selected hypotheses;
-- witness trust;
-- chapter flags;
-- skill values;
-- opened topics;
-- consumed reactions.
+The selected background ID and exact skill values become canonical GameState.
 
-It applies authored effects for:
+### Deterministic checks
 
-- evidence acquisition/upgrades;
-- witness trust changes;
-- chapter flags;
-- topic opening;
-- once-only reaction recording.
+`SkillService` now resolves authored checks with:
 
-### Persistent dialogue state
+`skill + contextual modifier >= threshold`
 
-`GameState` now canonically stores:
+Every result exposes:
 
-- `witness_trust`;
-- `dialogue_topics`;
-- `dialogue_reactions`.
+- base skill;
+- modifier;
+- total;
+- threshold;
+- pass/fail;
+- margin.
 
-These fields normalize safely when loading older schema-1 saves, so the save schema remains version **1**.
+There are no hidden/random dice rolls.
 
-The save content version is now **ch01-slice7**.
+### Failed approaches
 
-### Evidence presentation
+Failed checks can be recorded canonically in `GameState.failed_approaches`.
 
-Evidence is a first-class conversation action.
+Each entry stores:
 
-The conversation UI only lists discovered clues that have an eligible authored reaction for the current witness.
+- check ID;
+- skill;
+- threshold;
+- last total;
+- last modifier;
+- context;
+- attempt count.
 
-This prevents classic inventory-combination spam and does not reveal undiscovered clue names.
+Dialogue/content conditions can query these failures to expose authored fallback routes.
 
-Once-only reactions disappear from the relevant-evidence list after use.
+### Skill-routed seed behavior
 
-### Conversation UI
+The existing framework content now demonstrates both physical and social skill routes without beginning the full Act I content pass.
 
-The reusable modal conversation panel provides:
+**Workstation Observation**
 
-- witness name;
-- role;
-- trust value;
-- current authored line;
-- topic/response choices;
-- **PRESENT EVIDENCE** mode;
-- choices numbered 1-9;
-- keyboard 1-9 selection;
-- clean exit back to room play.
+The packet hotspot always records the basic Impossible Timestamp clue.
 
-Room interaction is paused while a conversation is open.
+An Observation 3 check can additionally recognize the same impossible time in a second packet field and upgrade the clue to detail level 2.
 
-### Generic witness hotspot hook
+Failure records the attempted observation but does not remove the base clue.
 
-Hotspots now support optional `witness_id`.
+**Mara Empathy**
 
-The reusable room controller emits a conversation request after the approach completes. The game shell opens ConversationUI without any witness-specific room code.
+After the timestamp clue is known, Mara has an authored Empathy 3 attempt.
 
-The corridor's building-office hotspot is wired to `mara_bell`.
+Success:
+- enters a distinct success node;
+- gains trust;
+- upgrades the timestamp clue to detail level 2.
 
-### Seed conversation behavior
+Failure:
+- enters a distinct failure node;
+- records the failed approach;
+- preserves progression;
+- can unlock a direct paper-trail fallback route after the maintenance topic has been opened.
 
-Mara's framework conversation exercises:
+### Dialogue integration
 
-- a public maintenance topic;
-- trust gain;
-- a packet topic unlocked by discovered evidence;
-- a conditional service-record branch;
-- a once-only question;
-- presenting the impossible timestamp;
-- a once-only evidence reaction;
-- an alternate route to acquire the physical service record.
+Dialogue choices can now carry an explicit deterministic `skill_check`.
 
-This remains framework seed content rather than the full Act I conversation pass.
+The choice remains player-visible. Selecting it resolves the check and then follows authored:
+
+- success node/effects; or
+- failure node/effects.
+
+Dialogue conditions can also require recorded failed approaches.
+
+This keeps skill failures visible and consequential rather than hiding routes behind invisible checks.
+
+### Character panel
+
+The lower HUD now exposes **CHAR**, and **C** opens the Character panel.
+
+It shows:
+
+- Her's selected background;
+- the background sentence;
+- all four current skill values;
+- concise skill descriptions;
+- recorded failed approaches.
+
+Room interaction pauses while the Character panel is open.
+
+### Persistence
+
+GameState now persists:
+
+- `background_id`;
+- `skill_values`;
+- `failed_approaches`.
+
+The save content version is **ch01-slice8**.
+
+Schema version remains **1** because the new fields normalize safely when absent from older schema-1 saves.
 
 ## Validation
 
 Godot 4.7.2 CI passes:
 
 1. project/autoload/resource validation;
-2. protected movement/hotspot regression suite;
-3. protected evidence regression suite;
-4. protected deduction regression suite;
-5. witness catalog loading;
-6. public topic visibility;
-7. evidence-unlocked topic visibility;
-8. combined clue/deduction/hypothesis/trust/flag/skill/topic conditions;
-9. trust effects;
-10. chapter-flag effects;
-11. topic persistence;
-12. dialogue evidence acquisition;
-13. filtered relevant-evidence presentation;
-14. once-only choice behavior;
-15. once-only evidence reaction behavior;
-16. dialogue-state GameState serialization;
-17. generic witness hotspot wiring;
+2. all four fixed background profiles;
+3. deterministic threshold pass/fail;
+4. contextual modifiers;
+5. failed-approach recording;
+6. Observation success evidence upgrade;
+7. Observation failure preservation;
+8. Empathy dialogue success branch;
+9. Empathy dialogue failure branch;
+10. failure-conditioned alternate route;
+11. alternate-route evidence acquisition;
+12. RPG state serialization/persistence;
+13. four-choice opening background UI;
+14. protected movement/hotspot regression suite;
+15. protected evidence regression suite;
+16. protected deduction regression suite;
+17. protected dialogue regression suite;
 18. protected persistence/migration regression suite;
 19. real main-scene startup.
 
 ## Scope discipline
 
-Slice 7 consumes existing skill values in dialogue conditions but does not yet establish the Chapter One skill/background-choice experience or deterministic skill-routing rules. That belongs to Slice 8.
+The reusable engine layer is now complete enough to begin Chapter One assembly.
+
+Slice 8 does not build the remaining primary locations or the full chapter flag/progression graph. Those belong to Slice 9.
 
 ## NEXT OPERATION
 
-**Slice 8 — Light RPG layer**
+**Slice 9 — Chapter One content skeleton**
 
 Execute without requesting design decisions:
 
-1. Implement the four locked skills:
-   - Observation;
-   - Reasoning;
-   - Empathy;
-   - Resolve.
-2. Implement a small opening background-choice flow that assigns a fixed, authored Chapter One skill profile without a min-max/stat-allocation screen.
-3. Implement a reusable deterministic check service:
-   - skill value;
-   - authored threshold;
-   - contextual modifier;
-   - explicit pass/fail result;
-   - no random rolls.
-4. Implement condition/effect hooks so skill checks can:
-   - expose alternate observations;
-   - expose dialogue choices;
-   - unlock stronger clue detail;
-   - record failed approaches;
-   - expose authored alternate routes rather than dead ends.
-5. Implement the Character panel showing:
-   - Her's current background;
-   - all four skill values;
-   - concise skill descriptions;
-   - recorded failed approaches where useful.
-6. Integrate skill-gated seed behavior with the existing evidence/deduction/dialogue framework without beginning the full Act I content pass.
-7. Preserve background, skill values, and failed-approach state through GameState/save/load.
-8. Add tests for:
-   - each background profile;
-   - deterministic threshold pass/fail;
-   - contextual modifiers;
-   - failed-approach recording;
-   - skill-gated dialogue/evidence behavior;
-   - persistence.
-9. Protect all Slice 3-7 regression suites.
+1. Build greybox versions of all remaining primary Chapter One locations so the repository contains the full 9-scene route:
+   - Her's room/workstation;
+   - apartment corridor/building office;
+   - systems archive;
+   - transit concourse;
+   - café;
+   - records office;
+   - observation overlook;
+   - restricted utility room;
+   - threshold site.
+2. Add the three planned close-up scenes where needed:
+   - workstation terminal;
+   - evidence table/notebook;
+   - threshold instrument panel.
+3. Establish authored navigation/transitions among the primary locations without creating item-key puzzle chains.
+4. Create the complete Chapter One progression/flag skeleton:
+   - Act I through Act V boundaries;
+   - required scene-entry flags;
+   - required deduction gates;
+   - final-threshold eligibility;
+   - chapter-complete flag;
+   - optional/deep-understanding flags reserved for later Acts.
+5. Add placeholder actors/hotspots sufficient to exercise every required location and route.
+6. Create a start-to-ending **greybox route** that can be traversed using placeholder progression hooks even though Acts I-V content is not yet authored.
+7. Add a protected scripted progression test proving:
+   - all required locations load;
+   - all transitions resolve;
+   - the chapter flag graph can advance from fresh state to the threshold ending skeleton;
+   - no scene in the required route is orphaned.
+8. Preserve all Phase A systems and tests.
+9. Keep the skeleton content clearly separated from later Act-specific prose/evidence so Slices 10-14 can fill it without architectural rewrites.
 10. Run Godot validation and main-scene startup regression.
 11. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
 12. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
 
-Do not start Slice 9 in the same turn unless the user explicitly asks for multiple slices.
+Do not start Slice 10 in the same turn unless the user explicitly asks for multiple slices.

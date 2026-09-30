@@ -58,7 +58,7 @@ The user only says **next slice** / **continue**. The assistant executes the nex
   - Conversation UI.
   - Tests.
 
-- [ ] **Slice 8 — Light RPG layer**
+- [x] **Slice 8 — Light RPG layer**
   - Observation, Reasoning, Empathy, Resolve.
   - Opening background choice.
   - Deterministic checks.

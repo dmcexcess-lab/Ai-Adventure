@@ -71,7 +71,9 @@ Owns the canonical serializable state:
 - opened dialogue topics;
 - consumed/once-only dialogue reactions;
 - chapter flags;
+- selected background ID;
 - skill values;
+- failed approaches;
 - inventory;
 - visited locations;
 - playtime.
@@ -204,6 +206,37 @@ Evidence presentation is filtered. The UI receives only discovered evidence for 
 
 The service never performs generic clue-on-NPC matching or free-text inference.
 
+Dialogue choices may also declare a deterministic `skill_check`. The choice remains visible; selecting it resolves through SkillService. Authored success/failure nodes and effects then determine the route. Failed checks can therefore expose alternate topics instead of disappearing behind invisible gates.
+
+### SkillService
+
+`SkillService` is an autoload and owns the light-RPG rule layer.
+
+Locked skills:
+- Observation;
+- Reasoning;
+- Empathy;
+- Resolve.
+
+Chapter One begins with one of four fixed authored backgrounds:
+
+- **The Watcher** — Observation 3, Reasoning 2, Empathy 1, Resolve 1;
+- **The Analyst** — Observation 2, Reasoning 3, Empathy 1, Resolve 1;
+- **The Reader** — Observation 2, Reasoning 1, Empathy 3, Resolve 1;
+- **The Anchor** — Observation 1, Reasoning 2, Empathy 1, Resolve 3.
+
+There is no point-buy screen.
+
+Checks are deterministic:
+
+`skill value + contextual modifier >= authored threshold`
+
+The service returns the explicit base value, modifier, total, threshold, pass/fail result, and margin. It never rolls random numbers.
+
+Failed authored approaches can be recorded in `GameState.failed_approaches` with check ID, skill, last total, threshold, modifier, context, and attempt count. Content can condition alternate routes on that persistent failure state.
+
+Background application writes both `background_id` and the fixed skill profile into GameState.
+
 ### SaveService
 
 Versioned JSON save schema stored under Godot `user://`.
@@ -220,7 +253,7 @@ Supported slots:
 - `manual_3`;
 - `autosave`.
 
-The game shell currently exposes manual slot 1 through simple **SAVE** / **LOAD** controls; the service already supports the remaining manual slots for later UI expansion. The content version is now **ch01-slice7**; the save schema remains version 1 because dialogue state is represented by normalized optional GameState dictionaries and older schema-1 saves default them safely.
+The game shell currently exposes manual slot 1 through simple **SAVE** / **LOAD** controls; the service already supports the remaining manual slots for later UI expansion. The content version is now **ch01-slice8**; the save schema remains version 1 because background and failed-approach state are normalized optional GameState fields and older schema-1 saves default them safely.
 
 SaveService responsibilities:
 - validate slot names;
@@ -269,6 +302,8 @@ A hotspot declares:
 - optional approach point;
 - optional evidence ID + evidence detail level;
 - optional witness ID;
+- optional deterministic skill-check metadata;
+- optional skill-success evidence/detail upgrade;
 - optional destination room + destination spawn;
 - enabled/disabled state.
 
