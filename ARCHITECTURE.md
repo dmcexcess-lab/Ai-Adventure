@@ -104,11 +104,30 @@ Hotspots declare allowed contextual actions.
 
 ### EvidenceService
 
+`EvidenceService` is an autoload backed by authored Chapter One clue definitions under `content/ch01/clues/`.
+
+Each clue definition provides:
+- stable ID;
+- title;
+- source;
+- reliability;
+- tags;
+- contradiction tags;
+- one or more detail levels;
+- optional temporal provenance.
+
+The canonical discovery state remains in `GameState.clues`; the service does not duplicate story state. Each discovered entry currently stores its highest detail level plus acquisition playtime.
+
 Responsibilities:
-- register clue acquisition;
-- merge upgraded clue detail;
-- surface relevant evidence for current context;
-- publish evidence-added events.
+- reject unknown clue IDs;
+- acquire clues idempotently;
+- upgrade detail levels without duplicate entries;
+- merge authored definitions with canonical discovery state for presentation;
+- filter discovered evidence by tag;
+- expose discovered tag values;
+- emit evidence-added, evidence-upgraded, and evidence-changed events.
+
+The notebook UI reads only through EvidenceService.
 
 ### DeductionService
 
@@ -156,7 +175,7 @@ Supported slots:
 - `manual_3`;
 - `autosave`.
 
-The game shell currently exposes manual slot 1 through simple **SAVE** / **LOAD** controls; the service already supports the remaining manual slots for later UI expansion.
+The game shell currently exposes manual slot 1 through simple **SAVE** / **LOAD** controls; the service already supports the remaining manual slots for later UI expansion. The content version is now **ch01-slice5**; the save schema remains version 1 because evidence discovery already fit the existing canonical clue dictionary.
 
 SaveService responsibilities:
 - validate slot names;
@@ -203,10 +222,11 @@ A hotspot declares:
 - inspect text;
 - primary-action feedback;
 - optional approach point;
+- optional evidence ID + evidence detail level;
 - optional destination room + destination spawn;
 - enabled/disabled state.
 
-Hotspots emit primary/inspect actions and hover changes. They do not own case-state logic.
+Hotspots emit primary/inspect actions and hover changes. Evidence-bearing primary actions delegate acquisition to EvidenceService through the room controller; hotspots never mutate GameState directly.
 
 ## Movement
 
