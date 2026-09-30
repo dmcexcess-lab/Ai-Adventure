@@ -3,9 +3,7 @@ extends Control
 const MAIN_MENU := "res://ui/menus/main_menu.tscn"
 const WALK_BOUNDS := Rect2(26.0, 236.0, 588.0, 154.0)
 
-@onready var art_background: TextureRect = $ArtBackground
 @onready var player: Control = %DemoPlayer
-@onready var player_sprite: TextureRect = %DemoPlayer/Sprite
 @onready var hotspots: Control = %Hotspots
 @onready var context_label: Label = %ContextLabel
 @onready var status_label: Label = %StatusLabel
@@ -46,7 +44,6 @@ const WALK_BOUNDS := Rect2(26.0, 236.0, 588.0, 154.0)
 @onready var dialogue_trust: Label = %DialogueTrust
 @onready var dialogue_choices: VBoxContainer = %DialogueChoices
 @onready var present_button: Button = %PresentButton
-@onready var alex_portrait: TextureRect = $DialoguePanel/Margin/Stack/DialogueRow/PortraitFrame/Portrait
 
 var _pending_hotspot: Node
 var _demo_clues: Dictionary = {
@@ -71,10 +68,6 @@ var _saved_trust := 0
 
 
 func _ready() -> void:
-	art_background.texture = _svg_texture("res://art/demo/community_center_lobby_noir.svg")
-	player_sprite.texture = _svg_texture("res://art/demo/demo_player_noir.svg")
-	alex_portrait.texture = _svg_texture("res://art/demo/alex_portrait_noir.svg")
-
 	player.call("place_at_foot", Vector2(318, 365))
 	if player.has_signal("arrived"):
 		player.connect("arrived", Callable(self, "_on_player_arrived"))
@@ -542,19 +535,3 @@ func _number_key_index(keycode: Key) -> int:
 		KEY_9, KEY_KP_9:
 			return 8
 	return -1
-
-
-func _svg_texture(path: String) -> Texture2D:
-	if not FileAccess.file_exists(path):
-		push_error("Umbrella visual asset missing: %s" % path)
-		return null
-	var svg_text := FileAccess.get_file_as_string(path)
-	if svg_text.is_empty():
-		push_error("Umbrella visual asset is empty: %s" % path)
-		return null
-	var image := Image.new()
-	var error := image.load_svg_from_string(svg_text)
-	if error != OK:
-		push_error("Umbrella SVG failed to rasterize: %s" % path)
-		return null
-	return ImageTexture.create_from_image(image)
