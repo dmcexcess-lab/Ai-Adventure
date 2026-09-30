@@ -130,6 +130,42 @@ func get_clues() -> Array:
 			"detail": "The rear rail is wet beneath one empty hook. A yellow tape fiber clings to the rail beside fresh navy fabric dye."
 		},
 		{
+			"id": "watcher_transfer_residue",
+			"title": "Transfer Residue at the Rack",
+			"source": "Lobby umbrella rack",
+			"reliability": "Skill-assisted physical observation",
+			"tags": ["physical", "lobby_move", "skill_observation"],
+			"contradiction_tags": [],
+			"detail": "A yellow adhesive filament on the lower rack crosses a fresh eastward scuff line. The repaired handle was carried toward Lost & Found after the rain began."
+		},
+		{
+			"id": "analyst_service_timing",
+			"title": "Service Timing Reconstruction",
+			"source": "Rear fan timer",
+			"reliability": "Skill-assisted documentary reconstruction",
+			"tags": ["paper", "mina_route", "skill_reasoning"],
+			"contradiction_tags": [],
+			"detail": "The 9:07 fan start fits the east-hall sweep window and occurs after Alex returned to the desk. The service route is the only staff movement chain that fits both records."
+		},
+		{
+			"id": "reader_protective_tell",
+			"title": "Mina's Protective Tell",
+			"source": "Mina Reyes",
+			"reliability": "Skill-assisted witness read",
+			"tags": ["witness", "reason", "drying", "skill_empathy"],
+			"contradiction_tags": ["theft"],
+			"detail": "Mina reacts to damage to claim files before she reacts to the accusation of theft. Her concern is protecting wet property and paperwork, not concealing possession."
+		},
+		{
+			"id": "anchor_exact_route",
+			"title": "Mina's Exact Service Route",
+			"source": "Mina Reyes",
+			"reliability": "Skill-assisted challenged statement",
+			"tags": ["witness", "mina_route", "skill_resolve"],
+			"contradiction_tags": [],
+			"detail": "Under direct challenge Mina gives the exact sequence: Cabinet B, storage cart, maintenance corridor, rear drying rail."
+		},
+		{
 			"id": "umbrella_recovered",
 			"title": "Nora's Umbrella Recovered",
 			"source": "Loading bay drying rail",
@@ -157,7 +193,7 @@ func get_deductions() -> Array:
 			"id": "lobby_to_lost_found",
 			"title": "The umbrella moved from the lobby to Lost & Found.",
 			"description": "The first disappearance was a routine staff transfer, not the final loss.",
-			"required_clue_ids": ["dry_outline", "alex_statement", "closing_log"],
+			"required_clue_ids": ["dry_outline", "alex_statement", "closing_log", "watcher_transfer_residue"],
 			"minimum_support": 2,
 			"prerequisite_deductions": ["identity_47b"],
 			"refute_evidence_tags": [],
@@ -177,7 +213,7 @@ func get_deductions() -> Array:
 			"id": "mina_service_route",
 			"title": "Mina carried 47B through the service route.",
 			"description": "Mina's assignment, transfer evidence, service timing, or her own statement converge on the same second move.",
-			"required_clue_ids": ["shift_board", "transfer_tag", "fan_timer", "mina_statement"],
+			"required_clue_ids": ["shift_board", "transfer_tag", "fan_timer", "mina_statement", "analyst_service_timing", "anchor_exact_route"],
 			"minimum_support": 2,
 			"prerequisite_deductions": ["cabinet_was_intermediate"],
 			"refute_evidence_tags": [],
@@ -187,7 +223,7 @@ func get_deductions() -> Array:
 			"id": "drying_not_theft",
 			"title": "The umbrella was moved to dry, not stolen.",
 			"description": "The second transfer follows the center's wet-property procedure and ends at the rear drying rail.",
-			"required_clue_ids": ["wet_property_policy", "mina_reason", "rear_drying_rail"],
+			"required_clue_ids": ["wet_property_policy", "mina_reason", "reader_protective_tell", "rear_drying_rail"],
 			"minimum_support": 2,
 			"prerequisite_deductions": ["mina_service_route"],
 			"refute_evidence_tags": [],

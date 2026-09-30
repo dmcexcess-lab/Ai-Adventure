@@ -40,6 +40,12 @@ func _run() -> void:
 	root.add_child(demo)
 	await process_frame
 
+	var background_choices := demo.find_child("BackgroundChoices", true, false)
+	if background_choices == null or background_choices.get_child_count() != 4:
+		failures.append("Umbrella Quest does not expose four fixed background choices")
+	if not bool(demo.call("_choose_demo_background", "watcher")):
+		failures.append("Umbrella Quest could not apply a demo-local background")
+
 	for node_name in [
 		"RoomHost",
 		"ArtBackground",
@@ -47,6 +53,7 @@ func _run() -> void:
 		"Hotspots",
 		"NotebookPanel",
 		"CharacterPanel",
+		"BackgroundOverlay",
 		"DialoguePanel",
 		"NoteButton",
 		"EvidenceButton",

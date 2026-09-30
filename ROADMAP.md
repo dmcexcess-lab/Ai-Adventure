@@ -46,7 +46,7 @@ Umbrella Quest is deliberately non-canon, but it is the authoritative compact pr
   - Alternate evidence routes.
   - Quest resolution skeleton.
 
-- [ ] **Slice 12 — Umbrella RPG integration**
+- [x] **Slice 12 — Umbrella RPG integration**
   - Meaningful Observation route.
   - Meaningful Reasoning route.
   - Meaningful Empathy route.

@@ -29,6 +29,8 @@ func _run() -> void:
 	var demo := scene.instantiate()
 	root.add_child(demo)
 	await process_frame
+	if not bool(demo.call("_choose_demo_background", "watcher")):
+		failures.append("case smoke could not choose a demo background")
 
 	var clues: Dictionary = demo.get("_demo_clues")
 	if not clues.has("case_request"):

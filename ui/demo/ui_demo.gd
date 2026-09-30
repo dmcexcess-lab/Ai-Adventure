@@ -40,6 +40,14 @@ const MINA_PORTRAIT := preload("res://art/demo/mina_portrait_noir.svg")
 
 @onready var character_panel: PanelContainer = %CharacterPanel
 @onready var character_close_button: Button = %CharacterCloseButton
+@onready var character_profile: Label = %CharacterProfile
+@onready var character_sentence: Label = %CharacterSentence
+@onready var character_skills: Label = %CharacterSkills
+@onready var character_descriptions: Label = %CharacterDescriptions
+@onready var character_failures: Label = %CharacterFailures
+
+@onready var background_overlay: Control = %BackgroundOverlay
+@onready var background_choices: VBoxContainer = %BackgroundChoices
 
 @onready var dialogue_panel: PanelContainer = %DialoguePanel
 @onready var dialogue_close_button: Button = %DialogueCloseButton
@@ -72,6 +80,10 @@ var _dialogue_evidence_mode := false
 var _active_witness_id := "alex"
 var _demo_trust: Dictionary = {"alex": 0, "mina": 0}
 var _case_resolved := false
+var _demo_background_id := ""
+var _demo_skill_values: Dictionary = {}
+var _demo_failed_approaches: Dictionary = {}
+var _demo_skill_checks: Dictionary = {}
 
 var _has_demo_save := false
 var _saved_room_path := ""
@@ -81,6 +93,10 @@ var _saved_trust: Dictionary = {}
 var _saved_deductions: Dictionary = {}
 var _saved_hypotheses: Array[String] = []
 var _saved_case_resolved := false
+var _saved_background_id := ""
+var _saved_skill_values: Dictionary = {}
+var _saved_failed_approaches: Dictionary = {}
+var _saved_skill_checks: Dictionary = {}
 
 
 func _ready() -> void:
@@ -107,13 +123,216 @@ func _ready() -> void:
 	present_button.pressed.connect(_toggle_dialogue_evidence)
 	resolution_close_button.pressed.connect(_close_all_modals)
 
+	_build_demo_background_choices()
 	_setup_filters()
 	_refresh_notebook()
 	_refresh_hypotheses()
+	_refresh_character_panel()
 	_load_demo_room(FIRST_ROOM)
-	_set_status(_case_objective())
+	_open_demo_background_choice()
+	_set_status("Choose how you approach problems. The profile is fixed for this Umbrella Quest run.")
+
+
+func _build_demo_background_choices() -> void:
+	for child in background_choices.get_children():
+		child.queue_free()
+
+	var skills := get_node_or_null("/root/SkillService")
+	if skills == null:
+		return
+
+	for profile_value in skills.call("get_backgrounds"):
+		if not profile_value is Dictionary:
+			continue
+		var profile: Dictionary = profile_value
+		var button := Button.new()
+		button.text = "“%s”\n%s" % [
+			String(profile.get("sentence", "")),
+			_profile_summary(profile.get("skills", {}))
+		]
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		button.custom_minimum_size = Vector2(0, 54)
+		button.pressed.connect(_choose_demo_background.bind(String(profile.get("id", ""))))
+		background_choices.add_child(button)
+
+
+func _profile_summary(raw_skills: Variant) -> String:
+	if not raw_skills is Dictionary:
+		return ""
+	var values: Dictionary = raw_skills
+	return "OBS %d  REA %d  EMP %d  RES %d" % [
+		int(values.get("observation", 0)),
+		int(values.get("reasoning", 0)),
+		int(values.get("empathy", 0)),
+		int(values.get("resolve", 0))
+	]
+
+
+func _open_demo_background_choice() -> void:
+	notebook_panel.visible = false
+	character_panel.visible = false
+	dialogue_panel.visible = false
+	resolution_panel.visible = false
+	background_overlay.visible = true
+	context_label.text = "UMBRELLA QUEST // APPROACH"
+
+
+func _choose_demo_background(background_id: String) -> bool:
+	var skills := get_node_or_null("/root/SkillService")
+	if skills == null:
+		return false
+	var profile: Dictionary = skills.call("get_background", background_id)
+	if profile.is_empty():
+		return false
+
+	_demo_background_id = background_id
+	_demo_skill_values = (profile.get("skills", {}) as Dictionary).duplicate(true)
+	_demo_failed_approaches.clear()
+	_demo_skill_checks.clear()
+	background_overlay.visible = false
+	_refresh_character_panel()
+	_set_status("%s selected // %s" % [
+		String(profile.get("title", background_id)),
+		_case_objective()
+	])
+	context_label.text = _room_context()
+	return true
+
+
+func _perform_demo_check(
+	check_id: String,
+	skill_id: String,
+	threshold: int,
+	modifier: int = 0,
+	context: String = "",
+	fallback_hint: String = ""
+) -> Dictionary:
+	var skills := get_node_or_null("/root/SkillService")
+	if skills == null or _demo_background_id.is_empty():
+		return {"ok": false, "passed": false, "error": "demo_profile_unavailable"}
+
+	var result: Dictionary = skills.call("evaluate_values", _demo_skill_values, skill_id, threshold, modifier)
+	result["check_id"] = check_id
+	result["context"] = context
+	result["fallback_hint"] = fallback_hint
+	_demo_skill_checks[check_id] = result.duplicate(true)
+	if not bool(result.get("passed", false)):
+		_record_demo_failed_approach(check_id, result)
+	_refresh_character_panel()
+	return result
+
+
+func _record_demo_failed_approach(check_id: String, result: Dictionary) -> void:
+	var prior: Dictionary = {}
+	if _demo_failed_approaches.get(check_id, {}) is Dictionary:
+		prior = (_demo_failed_approaches.get(check_id, {}) as Dictionary).duplicate(true)
+	_demo_failed_approaches[check_id] = {
+		"check_id": check_id,
+		"skill": String(result.get("skill", "")),
+		"threshold": int(result.get("threshold", 0)),
+		"last_total": int(result.get("total", 0)),
+		"last_modifier": int(result.get("modifier", 0)),
+		"context": String(result.get("context", "")),
+		"fallback_hint": String(result.get("fallback_hint", "")),
+		"attempts": int(prior.get("attempts", 0)) + 1
+	}
+
+
+func _demo_check_was_attempted(check_id: String) -> bool:
+	return _demo_skill_checks.has(check_id)
+
+
+func _demo_check_passed(check_id: String) -> bool:
+	if not _demo_skill_checks.has(check_id):
+		return false
+	var result: Dictionary = _demo_skill_checks[check_id]
+	return bool(result.get("passed", false))
+
+
+func _format_demo_check(result: Dictionary) -> String:
+	var skill_id := String(result.get("skill", "skill"))
+	var label := skill_id.to_upper()
+	var base := int(result.get("base", 0))
+	var modifier := int(result.get("modifier", 0))
+	var total := int(result.get("total", base + modifier))
+	var threshold := int(result.get("threshold", 0))
+	var modifier_text := "+%d" % modifier if modifier >= 0 else str(modifier)
+	return "%s %d %s = %d / %d // %s" % [
+		label,
+		base,
+		modifier_text,
+		total,
+		threshold,
+		"PASS" if bool(result.get("passed", false)) else "FAIL"
+	]
+
+
+func _refresh_character_panel() -> void:
+	var skills := get_node_or_null("/root/SkillService")
+	if skills == null or _demo_background_id.is_empty():
+		character_profile.text = "NO PROFILE SELECTED"
+		character_sentence.text = "Choose one approach before beginning the case."
+		character_skills.text = "OBSERVATION  -\nREASONING    -\nEMPATHY      -\nRESOLVE      -"
+		character_descriptions.text = "The four skills expose alternate investigative routes. Checks are deterministic; there are no hidden dice."
+		character_failures.text = "FAILED APPROACHES\nNone yet."
+		return
+
+	var profile: Dictionary = skills.call("get_background", _demo_background_id)
+	character_profile.text = String(profile.get("title", _demo_background_id)).to_upper()
+	character_sentence.text = "“%s”" % String(profile.get("sentence", ""))
+	character_skills.text = "OBSERVATION  %d\nREASONING    %d\nEMPATHY      %d\nRESOLVE      %d" % [
+		int(_demo_skill_values.get("observation", 0)),
+		int(_demo_skill_values.get("reasoning", 0)),
+		int(_demo_skill_values.get("empathy", 0)),
+		int(_demo_skill_values.get("resolve", 0))
+	]
+
+	var definitions: Dictionary = skills.call("get_skill_definitions")
+	var description_lines := PackedStringArray()
+	for skill_id in ["observation", "reasoning", "empathy", "resolve"]:
+		var definition: Dictionary = definitions.get(skill_id, {})
+		description_lines.append("%s — %s" % [
+			String(definition.get("name", skill_id.capitalize())),
+			String(definition.get("description", ""))
+		])
+	character_descriptions.text = "\n\n".join(description_lines)
+
+	var failure_lines := PackedStringArray(["FAILED APPROACHES"])
+	var failed_ids: Array = _demo_failed_approaches.keys()
+	failed_ids.sort()
+	if failed_ids.is_empty():
+		failure_lines.append("None yet.")
+	else:
+		for check_id_value in failed_ids:
+			var failed: Dictionary = _demo_failed_approaches[String(check_id_value)]
+			var skill_label := String(failed.get("skill", "skill")).to_upper()
+			var modifier := int(failed.get("last_modifier", 0))
+			var modifier_text := "+%d" % modifier if modifier >= 0 else str(modifier)
+			var math := "%s %d %s / %d" % [
+				skill_label,
+				int(failed.get("last_total", 0)) - modifier,
+				modifier_text,
+				int(failed.get("threshold", 0))
+			]
+			failure_lines.append("• %s — %s" % [math, String(failed.get("context", "Approach failed"))])
+			var fallback := String(failed.get("fallback_hint", ""))
+			if not fallback.is_empty():
+				failure_lines.append("  FALLBACK: %s" % fallback)
+	character_failures.text = "\n".join(failure_lines)
+
 
 func _unhandled_input(event: InputEvent) -> void:
+	if background_overlay.visible:
+		if event is InputEventKey and event.pressed and not event.echo:
+			var background_key := event as InputEventKey
+			var background_index := _number_key_index(background_key.keycode)
+			if background_index >= 0 and background_index < background_choices.get_child_count():
+				var button := background_choices.get_child(background_index) as Button
+				if button != null:
+					button.pressed.emit()
+		get_viewport().set_input_as_handled()
+		return
+
 	if event is InputEventKey and event.pressed and not event.echo:
 		var key_event := event as InputEventKey
 		if dialogue_panel.visible:
@@ -148,7 +367,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_released("reveal_hotspots"):
 		_set_reveal(false)
 		get_viewport().set_input_as_handled()
-
 
 func _load_demo_room(room_path: String, spawn_marker: String = "", restore_foot := Vector2(-10000.0, -10000.0)) -> void:
 	var packed := load(room_path) as PackedScene
@@ -208,16 +426,58 @@ func _on_demo_conversation(witness_id: String) -> void:
 		_set_status("That witness is not part of this case.")
 
 func _on_demo_hotspot_activated(hotspot: Node) -> void:
+	if _demo_background_id.is_empty():
+		_open_demo_background_choice()
+		return
+
 	var hotspot_id := String(hotspot.get("hotspot_id"))
+
+	if hotspot_id == "umbrella_rack":
+		_acquire_demo_clue("dry_outline", false)
+		var observation := _perform_demo_check(
+			"rack_residue_read",
+			"observation",
+			3,
+			0,
+			"Read the transfer residue on the wet umbrella rack",
+			"Use the paper record or ask Alex to establish the first transfer."
+		)
+		if bool(observation.get("passed", false)):
+			_acquire_demo_clue("watcher_transfer_residue", false)
+			_set_status("[%s] Transfer residue recorded as evidence." % _format_demo_check(observation))
+		else:
+			_set_status("[%s] The residue is too ambiguous to trust. FALLBACK: paper record or Alex." % _format_demo_check(observation))
+		_refresh_notebook()
+		_refresh_hypotheses()
+		return
+
+	if hotspot_id == "fuse_panel":
+		_acquire_demo_clue("fan_timer", false)
+		var modifier := 1 if _demo_clues.has("closing_log") else 0
+		var reasoning := _perform_demo_check(
+			"service_timing_reconstruction",
+			"reasoning",
+			4,
+			modifier,
+			"Reconstruct the closing route from the rear fan timer",
+			"Get the front-desk closing log for a timing anchor, or use Mina's transfer tag / statement."
+		)
+		if bool(reasoning.get("passed", false)):
+			_acquire_demo_clue("analyst_service_timing", false)
+			_set_status("[%s] Service timing reconstruction recorded." % _format_demo_check(reasoning))
+		else:
+			_set_status("[%s] The timer alone is underdetermined. FALLBACK: closing log, transfer tag, or Mina." % _format_demo_check(reasoning))
+		_refresh_notebook()
+		_refresh_hypotheses()
+		return
+
 	var clue_map := {
-		"umbrella_rack": "dry_outline",
 		"claim_board": "ticket_47b",
 		"desk_log": "closing_log",
 		"claim_cabinets": "cabinet_trace",
 		"office_corkboard": "shift_board",
 		"wet_property_handbook": "wet_property_policy",
 		"storage_shelves": "transfer_tag",
-		"fuse_panel": "fan_timer",
 	}
 	if clue_map.has(hotspot_id):
 		_acquire_demo_clue(String(clue_map[hotspot_id]))
@@ -259,10 +519,12 @@ func _reset_demo_case() -> void:
 	_demo_deductions.clear()
 	_selected_hypotheses.clear()
 	_demo_trust = {"alex": 0, "mina": 0}
+	_demo_failed_approaches.clear()
+	_demo_skill_checks.clear()
 	_case_resolved = false
 	_acquire_demo_clue("case_request", false)
 	_acquire_demo_clue("forecast_board", false)
-
+	_refresh_character_panel()
 
 func _acquire_demo_clue(clue_id: String, announce: bool = true) -> bool:
 	if not _clue_definitions.has(clue_id):
@@ -418,6 +680,9 @@ func _setup_filters() -> void:
 	filter_option.select(0)
 
 func _open_notebook(mode: String) -> void:
+	if _demo_background_id.is_empty():
+		_open_demo_background_choice()
+		return
 	_close_all_modals()
 	notebook_panel.visible = true
 	if mode == "hypothesis":
@@ -425,7 +690,6 @@ func _open_notebook(mode: String) -> void:
 	else:
 		_show_evidence_tab()
 	context_label.text = "UMBRELLA QUEST // CASE FILE"
-
 
 func _show_evidence_tab() -> void:
 	evidence_panel.visible = true
@@ -563,12 +827,18 @@ func _record_hypothesis() -> void:
 	_select_demo_hypothesis(_displayed_deduction_ids[index])
 
 func _open_character() -> void:
+	if _demo_background_id.is_empty():
+		_open_demo_background_choice()
+		return
 	_close_all_modals()
+	_refresh_character_panel()
 	character_panel.visible = true
 	context_label.text = "UMBRELLA QUEST // CHARACTER"
 
-
 func _open_dialogue(witness_id: String = "alex") -> void:
+	if _demo_background_id.is_empty():
+		_open_demo_background_choice()
+		return
 	if not _witness_definitions.has(witness_id):
 		return
 	_close_all_modals()
@@ -597,6 +867,10 @@ func _refresh_dialogue_choices() -> void:
 		_add_dialogue_action("Tell me about your closing sweep.", {"type": "topic", "id": "mina_sweep"})
 		_add_dialogue_action("What happens to soaking lost property?", {"type": "topic", "id": "mina_policy"})
 		if _is_demo_deduction_established("cabinet_was_intermediate") or _demo_clues.has("cabinet_trace"):
+			if not _demo_check_was_attempted("mina_protective_read"):
+				_add_dialogue_action("[EMPATHY 3] You're worried about the paperwork, not the accusation.", {"type": "skill_topic", "id": "mina_protective_read"})
+			if not _demo_check_was_attempted("mina_exact_route_challenge"):
+				_add_dialogue_action("[RESOLVE 3] No procedure. Give me the exact route.", {"type": "skill_topic", "id": "mina_exact_route_challenge"})
 			_add_dialogue_action("Did you move Ticket 47B out of Cabinet B?", {"type": "topic", "id": "mina_47b"})
 	_add_dialogue_action("End conversation.", {"type": "close"})
 
@@ -647,9 +921,58 @@ func _activate_dialogue_action(index: int) -> void:
 			_close_all_modals()
 		"topic":
 			_apply_demo_topic(String(action.get("id", "")))
+		"skill_topic":
+			_run_demo_dialogue_skill(String(action.get("id", "")))
 		"evidence":
 			_present_demo_evidence(String(action.get("id", "")))
 
+
+func _run_demo_dialogue_skill(check_id: String) -> Dictionary:
+	if check_id == "mina_protective_read":
+		var empathy := _perform_demo_check(
+			check_id,
+			"empathy",
+			3,
+			0,
+			"Read what Mina is actually defending",
+			"Ask about wet-property policy or present the Cabinet B / fan evidence."
+		)
+		if bool(empathy.get("passed", false)):
+			_acquire_demo_clue("reader_protective_tell", false)
+			_change_demo_trust("mina", 1)
+			dialogue_line.text = "[%s]\nMina keeps looking at the paper files, not the missing umbrella. “I was trying to keep the whole cabinet from getting soaked.”" % _format_demo_check(empathy)
+		else:
+			dialogue_line.text = "[%s]\nMina reads the question as an accusation and closes off. FALLBACK: ask about policy or show physical evidence." % _format_demo_check(empathy)
+		dialogue_trust.text = "TRUST %d" % _get_demo_trust("mina")
+		_refresh_dialogue_choices()
+		_refresh_notebook()
+		_refresh_hypotheses()
+		return empathy
+
+	if check_id == "mina_exact_route_challenge":
+		var resolve := _perform_demo_check(
+			check_id,
+			"resolve",
+			3,
+			0,
+			"Press Mina for the exact physical route",
+			"Corroborate the route with the shift board, transfer tag, fan timer, or evidence presentation."
+		)
+		if bool(resolve.get("passed", false)):
+			_acquire_demo_clue("mina_statement", false)
+			_acquire_demo_clue("anchor_exact_route", false)
+			_change_demo_trust("mina", -1)
+			dialogue_line.text = "[%s]\nMina stops hedging. “Cabinet B. Storage cart. Maintenance corridor. Rear drying rail. That's the exact route.”" % _format_demo_check(resolve)
+		else:
+			_change_demo_trust("mina", -1)
+			dialogue_line.text = "[%s]\n“I'm not being interrogated over an umbrella.” Mina digs in. FALLBACK: prove the route from records and physical traces." % _format_demo_check(resolve)
+		dialogue_trust.text = "TRUST %d" % _get_demo_trust("mina")
+		_refresh_dialogue_choices()
+		_refresh_notebook()
+		_refresh_hypotheses()
+		return resolve
+
+	return {"ok": false, "passed": false, "error": "unknown_demo_check"}
 
 func _apply_demo_topic(topic_id: String) -> void:
 	match topic_id:
@@ -723,6 +1046,10 @@ func _change_demo_trust(witness_id: String, amount: int) -> void:
 	_demo_trust[witness_id] = clampi(_get_demo_trust(witness_id) + amount, -3, 3)
 
 func _demo_save() -> void:
+	if _demo_background_id.is_empty():
+		_open_demo_background_choice()
+		_set_status("Choose an approach before saving the Umbrella Quest.")
+		return
 	if not is_instance_valid(_current_room):
 		_set_status("DEMO SAVE // no active room.")
 		return
@@ -733,8 +1060,12 @@ func _demo_save() -> void:
 	_saved_deductions = _demo_deductions.duplicate(true)
 	_saved_hypotheses = _selected_hypotheses.duplicate()
 	_saved_case_resolved = _case_resolved
+	_saved_background_id = _demo_background_id
+	_saved_skill_values = _demo_skill_values.duplicate(true)
+	_saved_failed_approaches = _demo_failed_approaches.duplicate(true)
+	_saved_skill_checks = _demo_skill_checks.duplicate(true)
 	_has_demo_save = true
-	_set_status("DEMO SAVE // room, case evidence, deductions, trust, and position stored in memory.")
+	_set_status("DEMO SAVE // room, case, profile, skills, failed approaches, and position stored in memory.")
 
 func _demo_load() -> void:
 	if not _has_demo_save:
@@ -745,10 +1076,16 @@ func _demo_load() -> void:
 	_demo_deductions = _saved_deductions.duplicate(true)
 	_selected_hypotheses = _saved_hypotheses.duplicate()
 	_case_resolved = _saved_case_resolved
+	_demo_background_id = _saved_background_id
+	_demo_skill_values = _saved_skill_values.duplicate(true)
+	_demo_failed_approaches = _saved_failed_approaches.duplicate(true)
+	_demo_skill_checks = _saved_skill_checks.duplicate(true)
+	background_overlay.visible = false
 	_load_demo_room(_saved_room_path, "", _saved_foot)
 	_refresh_notebook()
 	_refresh_hypotheses()
-	_set_status("DEMO LOAD // investigation snapshot restored. %s" % _case_objective())
+	_refresh_character_panel()
+	_set_status("DEMO LOAD // investigation + RPG snapshot restored. %s" % _case_objective())
 
 func _set_reveal(value: bool) -> void:
 	if is_instance_valid(_current_room):
@@ -761,10 +1098,11 @@ func _close_all_modals() -> void:
 	character_panel.visible = false
 	dialogue_panel.visible = false
 	resolution_panel.visible = false
-	context_label.text = _room_context()
+	background_overlay.visible = _demo_background_id.is_empty()
+	context_label.text = "UMBRELLA QUEST // APPROACH" if background_overlay.visible else _room_context()
 
 func _modal_open() -> bool:
-	return notebook_panel.visible or character_panel.visible or dialogue_panel.visible or resolution_panel.visible
+	return background_overlay.visible or notebook_panel.visible or character_panel.visible or dialogue_panel.visible or resolution_panel.visible
 
 func _return_to_menu() -> void:
 	get_tree().change_scene_to_file(MAIN_MENU)
