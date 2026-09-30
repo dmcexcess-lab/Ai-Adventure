@@ -93,7 +93,7 @@ func _run() -> void:
 	var visited: Dictionary = {}
 	var queue: Array[String] = [START_ROOM]
 	while not queue.is_empty():
-		var current := queue.pop_front()
+		var current: String = queue.pop_front()
 		if visited.has(current):
 			continue
 		visited[current] = true
