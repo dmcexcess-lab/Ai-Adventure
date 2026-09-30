@@ -90,10 +90,11 @@ func encode_document(document: Dictionary) -> String:
 
 
 func decode_document(raw_text: String) -> Dictionary:
-	var parsed = JSON.parse_string(raw_text)
-	if not parsed is Dictionary:
+	var json := JSON.new()
+	var parse_error := json.parse(raw_text)
+	if parse_error != OK or not json.data is Dictionary:
 		return {"ok": false, "error": "Save file is not valid JSON data."}
-	return validate_and_migrate(parsed)
+	return validate_and_migrate(json.data)
 
 
 func validate_and_migrate(raw_document: Dictionary) -> Dictionary:

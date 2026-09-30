@@ -43,7 +43,7 @@ func load_first_room() -> bool:
 func go_to_room(
 	room_path: String,
 	spawn_marker: String = "",
-	restore_foot: Vector2 = Vector2(-1.0, -1.0),
+	restore_foot: Variant = null,
 	write_autosave: bool = true
 ) -> bool:
 	if not is_instance_valid(_room_host):
@@ -69,7 +69,7 @@ func go_to_room(
 
 	if room.has_method("enter_at"):
 		room.call("enter_at", spawn_marker)
-	if restore_foot.x >= 0.0 and restore_foot.y >= 0.0 and room.has_method("restore_player_foot"):
+	if restore_foot is Vector2 and room.has_method("restore_player_foot"):
 		room.call("restore_player_foot", restore_foot)
 
 	sync_current_room_state()

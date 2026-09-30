@@ -118,7 +118,7 @@ func _test_canonical_room_restore() -> void:
 	router.call("attach_room_host", host)
 
 	game_state.call("reset_new_game")
-	if not bool(router.call("go_to_room", "res://rooms/ch01/corridor_room.tscn", "FromWorkstation", Vector2(-1, -1), false)):
+	if not bool(router.call("go_to_room", "res://rooms/ch01/corridor_room.tscn", "FromWorkstation", null, false)):
 		failures.append("canonical transition failed")
 		host.queue_free()
 		return
