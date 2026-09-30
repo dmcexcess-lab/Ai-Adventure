@@ -60,6 +60,14 @@ jobs:
             --headless --path . --export-release "Web" build/web/index.html
           touch build/web/.nojekyll
 
+      - name: Verify packaged runtime art
+        shell: bash
+        run: |
+          test -s build/web/index.pck
+          grep -a -q "community_center_lobby_noir.svg" build/web/index.pck
+          grep -a -q "demo_player_noir.svg" build/web/index.pck
+          grep -a -q "alex_portrait_noir.svg" build/web/index.pck
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
