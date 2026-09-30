@@ -17,7 +17,7 @@ The user normally says **next slice** / **continue**. The assistant executes the
 
 Umbrella Quest is deliberately non-canon, but it is the authoritative compact proof of the finished game. It must eventually exercise the complete gameplay language—including investigation, dialogue, RPG routing, combat, persistence, and final-style presentation—before Chapter One production resumes.
 
-- [ ] **Slice 9 — Visual direction foundation**
+- [x] **Slice 9 — Visual direction foundation**
   - Lock polished comic-book / dark gritty city art direction.
   - Add authoritative visual-production rules.
   - Replace the demo lobby greybox with the first reference-quality illustrated room pass.
