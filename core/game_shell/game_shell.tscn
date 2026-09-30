@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://core/game_shell/game_shell.gd" id="1_shell"]
 [ext_resource type="PackedScene" path="res://ui/notebook/evidence_notebook.tscn" id="2_notebook"]
+[ext_resource type="PackedScene" path="res://ui/dialogue/conversation_ui.tscn" id="3_dialogue"]
 
 [node name="GameShell" type="Control"]
 layout_mode = 3
@@ -24,6 +25,9 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="EvidenceNotebook" parent="." instance=ExtResource("2_notebook")]
+layout_mode = 1
+
+[node name="ConversationUI" parent="." instance=ExtResource("3_dialogue")]
 layout_mode = 1
 
 [node name="HudBar" type="ColorRect" parent="."]

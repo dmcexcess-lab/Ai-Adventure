@@ -17,6 +17,8 @@ var clues: Dictionary = {}
 var deductions: Dictionary = {}
 var hypotheses: Array = []
 var witness_trust: Dictionary = {}
+var dialogue_topics: Dictionary = {}
+var dialogue_reactions: Dictionary = {}
 var chapter_flags: Dictionary = {}
 var skill_values: Dictionary = DEFAULT_SKILLS.duplicate(true)
 var inventory: Array = []
@@ -38,6 +40,8 @@ func reset_new_game() -> void:
 	deductions = {}
 	hypotheses = []
 	witness_trust = {}
+	dialogue_topics = {}
+	dialogue_reactions = {}
 	chapter_flags = {}
 	skill_values = DEFAULT_SKILLS.duplicate(true)
 	inventory = []
@@ -76,6 +80,8 @@ func to_serializable_state() -> Dictionary:
 		"deductions": deductions.duplicate(true),
 		"hypotheses": hypotheses.duplicate(true),
 		"witness_trust": witness_trust.duplicate(true),
+		"dialogue_topics": dialogue_topics.duplicate(true),
+		"dialogue_reactions": dialogue_reactions.duplicate(true),
 		"chapter_flags": chapter_flags.duplicate(true),
 		"skill_values": skill_values.duplicate(true),
 		"inventory": inventory.duplicate(true),
@@ -96,6 +102,8 @@ func apply_serializable_state(raw_state: Dictionary) -> bool:
 	deductions = (normalized["deductions"] as Dictionary).duplicate(true)
 	hypotheses = (normalized["hypotheses"] as Array).duplicate(true)
 	witness_trust = (normalized["witness_trust"] as Dictionary).duplicate(true)
+	dialogue_topics = (normalized["dialogue_topics"] as Dictionary).duplicate(true)
+	dialogue_reactions = (normalized["dialogue_reactions"] as Dictionary).duplicate(true)
 	chapter_flags = (normalized["chapter_flags"] as Dictionary).duplicate(true)
 	skill_values = (normalized["skill_values"] as Dictionary).duplicate(true)
 	inventory = (normalized["inventory"] as Array).duplicate(true)
@@ -133,6 +141,8 @@ func normalize_serializable_state(raw_state: Dictionary) -> Dictionary:
 		"deductions": _dict_or_empty(raw_state.get("deductions", {})),
 		"hypotheses": _array_or_empty(raw_state.get("hypotheses", [])),
 		"witness_trust": _dict_or_empty(raw_state.get("witness_trust", {})),
+		"dialogue_topics": _dict_or_empty(raw_state.get("dialogue_topics", {})),
+		"dialogue_reactions": _dict_or_empty(raw_state.get("dialogue_reactions", {})),
 		"chapter_flags": _dict_or_empty(raw_state.get("chapter_flags", {})),
 		"skill_values": normalized_skills,
 		"inventory": _array_or_empty(raw_state.get("inventory", [])),

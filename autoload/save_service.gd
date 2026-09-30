@@ -5,7 +5,7 @@ signal save_loaded(slot: String)
 signal save_failed(slot: String, message: String)
 
 const SCHEMA_VERSION := 1
-const CONTENT_VERSION := "ch01-slice6"
+const CONTENT_VERSION := "ch01-slice7"
 const SAVE_DIRECTORY := "user://saves"
 const AUTO_SLOT := "autosave"
 const MANUAL_SLOTS := ["manual_1", "manual_2", "manual_3"]
