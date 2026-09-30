@@ -166,6 +166,9 @@ func select_hypothesis(deduction_id: String) -> Dictionary:
 			}
 			state.set("deductions", deductions)
 			deduction_established.emit(deduction_id)
+			var saves := get_node_or_null("/root/SaveService")
+			if saves != null and saves.has_method("auto_save"):
+				saves.call("auto_save")
 			status = "established"
 		elif String((deductions[deduction_id] as Dictionary).get("state", "")) == "established":
 			status = "established"
