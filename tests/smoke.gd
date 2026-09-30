@@ -1,12 +1,17 @@
 extends SceneTree
 
-const REQUIRED_RESOURCES := [
+const REQUIRED_SCRIPTS := [
 	"res://autoload/scene_router.gd",
-	"res://ui/menus/main_menu.tscn",
-	"res://core/game_shell/game_shell.tscn",
+	"res://ui/menus/main_menu.gd",
+	"res://core/game_shell/game_shell.gd",
 	"res://core/interaction/room_controller.gd",
 	"res://core/interaction/player_actor.gd",
 	"res://core/interaction/hotspot.gd",
+]
+
+const REQUIRED_SCENES := [
+	"res://ui/menus/main_menu.tscn",
+	"res://core/game_shell/game_shell.tscn",
 	"res://rooms/ch01/test_room.tscn",
 	"res://rooms/ch01/corridor_room.tscn",
 ]
@@ -24,13 +29,20 @@ func _init() -> void:
 	if not ProjectSettings.has_setting("autoload/SceneRouter"):
 		failures.append("SceneRouter autoload missing")
 
-	for path in REQUIRED_RESOURCES:
-		var resource := load(path)
-		if resource == null:
-			failures.append("failed to load %s" % path)
+	for path in REQUIRED_SCRIPTS:
+		var script := load(path) as Script
+		if script == null:
+			failures.append("failed to load script %s" % path)
+		elif not script.can_instantiate():
+			failures.append("script cannot instantiate: %s" % path)
+
+	for path in REQUIRED_SCENES:
+		var scene := load(path) as PackedScene
+		if scene == null:
+			failures.append("failed to load scene %s" % path)
 
 	if failures.is_empty():
-		print("SMOKE_OK: project, interaction scripts, and linked room resources load")
+		print("SMOKE_OK: project settings, scripts, and linked room resources are valid")
 		quit(0)
 		return
 

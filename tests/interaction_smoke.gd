@@ -23,28 +23,28 @@ func _run() -> void:
 
 func _test_hotspot_dispatch() -> void:
 	var hotspot_script := load("res://core/interaction/hotspot.gd") as Script
-	var hotspot := hotspot_script.new()
-	hotspot.hotspot_id = "smoke_hotspot"
-	hotspot.display_name = "Smoke Hotspot"
-	hotspot.size = Vector2(40, 40)
+	var hotspot: Node = hotspot_script.new() as Node
+	hotspot.set("hotspot_id", "smoke_hotspot")
+	hotspot.set("display_name", "Smoke Hotspot")
+	(hotspot as Control).size = Vector2(40, 40)
 	root.add_child(hotspot)
 
 	var actions: Array[StringName] = []
-	hotspot.action_requested.connect(func(_source: Node, action: StringName) -> void:
+	hotspot.connect("action_requested", func(_source: Node, action: StringName) -> void:
 		actions.append(action)
 	)
 
-	hotspot.trigger_primary()
-	hotspot.trigger_inspect()
+	hotspot.call("trigger_primary")
+	hotspot.call("trigger_inspect")
 	if actions != [&"primary", &"inspect"]:
 		failures.append("hotspot primary/inspect dispatch mismatch")
 
-	hotspot.set_reveal(true)
-	if not hotspot.is_reveal_active():
+	hotspot.call("set_reveal", true)
+	if not bool(hotspot.call("is_reveal_active")):
 		failures.append("hotspot reveal state did not activate")
 
-	hotspot.set_hotspot_enabled(false)
-	hotspot.trigger_primary()
+	hotspot.call("set_hotspot_enabled", false)
+	hotspot.call("trigger_primary")
 	if actions.size() != 2:
 		failures.append("disabled hotspot still dispatched an action")
 
@@ -53,7 +53,7 @@ func _test_hotspot_dispatch() -> void:
 
 func _test_room_contract() -> void:
 	var workstation_scene := load("res://rooms/ch01/test_room.tscn") as PackedScene
-	var workstation := workstation_scene.instantiate()
+	var workstation: Node = workstation_scene.instantiate()
 	root.add_child(workstation)
 	await process_frame
 
@@ -64,16 +64,16 @@ func _test_room_contract() -> void:
 	if player == null:
 		failures.append("workstation player actor missing")
 	else:
-		workstation.walk_to(Vector2(-200, 900))
-		var destination := player.get_destination_foot()
+		workstation.call("walk_to", Vector2(-200, 900))
+		var destination: Vector2 = player.call("get_destination_foot")
 		if destination != Vector2(28, 392):
 			failures.append("walk destination did not clamp to room bounds: %s" % destination)
 
-	workstation.set_hotspot_reveal(true)
+	workstation.call("set_hotspot_reveal", true)
 	var monitor := workstation.find_child("MonitorHotspot", true, false)
 	var door := workstation.find_child("DoorHotspot", true, false)
 
-	if monitor == null or not monitor.is_reveal_active():
+	if monitor == null or not bool(monitor.call("is_reveal_active")):
 		failures.append("room reveal did not propagate to hotspots")
 	if door == null:
 		failures.append("linked-room door hotspot missing")
@@ -85,7 +85,7 @@ func _test_room_contract() -> void:
 			failures.append("corridor transition target does not load")
 
 	var corridor_scene := load("res://rooms/ch01/corridor_room.tscn") as PackedScene
-	var corridor := corridor_scene.instantiate()
+	var corridor: Node = corridor_scene.instantiate()
 	root.add_child(corridor)
 	await process_frame
 

@@ -28,6 +28,10 @@ func attach_room_host(host: Control) -> void:
 	_room_host = host
 
 
+func load_first_room() -> bool:
+	return go_to_room(FIRST_TEST_ROOM)
+
+
 func go_to_room(room_path: String, spawn_marker: String = "") -> bool:
 	if not is_instance_valid(_room_host):
 		push_error("SceneRouter: no room host is attached.")

@@ -5,18 +5,27 @@ extends Control
 
 var _current_room: Node
 var _last_status := "CASE ACTIVE // Click to walk. Hover objects for context."
+var _scene_router: Node
 
 
 func _ready() -> void:
-	if not SceneRouter.room_changed.is_connected(_on_room_changed):
-		SceneRouter.room_changed.connect(_on_room_changed)
-	SceneRouter.attach_room_host(%RoomHost)
-	SceneRouter.go_to_room(SceneRouter.FIRST_TEST_ROOM)
+	_scene_router = get_node_or_null("/root/SceneRouter")
+	if _scene_router == null:
+		push_error("GameShell: SceneRouter autoload is missing.")
+		return
+
+	var callback := Callable(self, "_on_room_changed")
+	if not _scene_router.is_connected("room_changed", callback):
+		_scene_router.connect("room_changed", callback)
+
+	_scene_router.call("attach_room_host", %RoomHost)
+	_scene_router.call("load_first_room")
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("menu_back"):
-		SceneRouter.return_to_menu()
+		if _scene_router != null:
+			_scene_router.call("return_to_menu")
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("reveal_hotspots"):
 		_set_reveal(true)
@@ -62,7 +71,8 @@ func _on_hover_label_changed(text: String) -> void:
 func _set_reveal(value: bool) -> void:
 	if is_instance_valid(_current_room) and _current_room.has_method("set_hotspot_reveal"):
 		_current_room.call("set_hotspot_reveal", value)
-		context_label.text = "INTERACTABLES" if value else String(_current_room.get("room_title")).to_upper()
+		var title := String(_current_room.get("room_title"))
+		context_label.text = "INTERACTABLES" if value else title.to_upper()
 
 
 func _set_status(message: String) -> void:

@@ -12,7 +12,9 @@ func _ready() -> void:
 
 
 func _on_start_pressed() -> void:
-	SceneRouter.start_new_game()
+	var router := get_node_or_null("/root/SceneRouter")
+	if router != null:
+		router.call("start_new_game")
 
 
 func _on_about_pressed() -> void:

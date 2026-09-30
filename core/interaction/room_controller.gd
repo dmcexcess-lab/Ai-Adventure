@@ -9,7 +9,7 @@ signal hover_label_changed(text: String)
 @export var walk_bounds := Rect2(24.0, 240.0, 592.0, 150.0)
 @export var default_spawn := Vector2(320.0, 365.0)
 
-@onready var player: Control = %PlayerActor
+@onready var player: AdventurePlayerActor = %PlayerActor
 @onready var hotspots: Control = %Hotspots
 
 var _interaction_serial := 0
@@ -19,8 +19,7 @@ var _reveal_active := false
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_register_hotspots()
-	if player.has_method("place_at_foot"):
-		player.call("place_at_foot", default_spawn)
+	player.place_at_foot(default_spawn)
 
 
 func enter_at(spawn_marker: String = "") -> void:
@@ -32,14 +31,12 @@ func enter_at(spawn_marker: String = "") -> void:
 		elif marker is Control:
 			foot = (marker as Control).position
 
-	if player.has_method("place_at_foot"):
-		player.call("place_at_foot", foot)
+	player.place_at_foot(foot)
 
 
 func walk_to(point: Vector2) -> void:
 	_interaction_serial += 1
-	if player.has_method("move_to"):
-		player.call("move_to", point, walk_bounds)
+	player.move_to(point, walk_bounds)
 	status_requested.emit("Walking.")
 
 
@@ -83,11 +80,11 @@ func _on_hotspot_action_requested(hotspot: Node, action: StringName) -> void:
 
 	_interaction_serial += 1
 	var serial := _interaction_serial
-	var approach := hotspot.get("approach_point") as Vector2
+	var approach: Vector2 = hotspot.get("approach_point")
 
-	if approach.x >= 0.0 and approach.y >= 0.0 and player.has_method("move_to"):
-		var moved := bool(player.call("move_to", approach, walk_bounds))
-		if moved and player.has_signal("arrived"):
+	if approach.x >= 0.0 and approach.y >= 0.0:
+		var moved := player.move_to(approach, walk_bounds)
+		if moved:
 			await player.arrived
 			if serial != _interaction_serial:
 				return
@@ -95,8 +92,12 @@ func _on_hotspot_action_requested(hotspot: Node, action: StringName) -> void:
 	var transition_room := String(hotspot.get("transition_room"))
 	if not transition_room.is_empty():
 		var transition_spawn := String(hotspot.get("transition_spawn"))
+		var router := get_node_or_null("/root/SceneRouter")
+		if router == null:
+			status_requested.emit("Transition unavailable: scene router is missing.")
+			return
 		status_requested.emit("Moving to the next area.")
-		SceneRouter.go_to_room(transition_room, transition_spawn)
+		router.call("go_to_room", transition_room, transition_spawn)
 		return
 
 	var primary_text := String(hotspot.get("primary_text"))
