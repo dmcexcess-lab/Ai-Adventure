@@ -9,17 +9,21 @@ signal hover_label_changed(text: String)
 @export var walk_bounds := Rect2(24.0, 240.0, 592.0, 150.0)
 @export var default_spawn := Vector2(320.0, 365.0)
 
-@onready var player: AdventurePlayerActor = %PlayerActor
+@onready var player: Control = %PlayerActor
 @onready var hotspots: Control = %Hotspots
 
 var _interaction_serial := 0
 var _reveal_active := false
+var _pending_hotspot: Node
+var _pending_serial := -1
 
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_register_hotspots()
-	player.place_at_foot(default_spawn)
+	if player.has_signal("arrived"):
+		player.connect("arrived", Callable(self, "_on_player_arrived"))
+	player.call("place_at_foot", default_spawn)
 
 
 func enter_at(spawn_marker: String = "") -> void:
@@ -31,12 +35,13 @@ func enter_at(spawn_marker: String = "") -> void:
 		elif marker is Control:
 			foot = (marker as Control).position
 
-	player.place_at_foot(foot)
+	player.call("place_at_foot", foot)
 
 
 func walk_to(point: Vector2) -> void:
 	_interaction_serial += 1
-	player.move_to(point, walk_bounds)
+	_clear_pending_interaction()
+	player.call("move_to", point, walk_bounds)
 	status_requested.emit("Walking.")
 
 
@@ -83,11 +88,33 @@ func _on_hotspot_action_requested(hotspot: Node, action: StringName) -> void:
 	var approach: Vector2 = hotspot.get("approach_point")
 
 	if approach.x >= 0.0 and approach.y >= 0.0:
-		var moved := player.move_to(approach, walk_bounds)
+		var moved: bool = bool(player.call("move_to", approach, walk_bounds))
 		if moved:
-			await player.arrived
-			if serial != _interaction_serial:
-				return
+			_pending_hotspot = hotspot
+			_pending_serial = serial
+			status_requested.emit("Approaching %s." % String(hotspot.get("display_name")))
+			return
+
+	_complete_primary_action(hotspot, serial)
+
+
+func _on_player_arrived() -> void:
+	if not is_instance_valid(_pending_hotspot):
+		_clear_pending_interaction()
+		return
+
+	var hotspot := _pending_hotspot
+	var serial := _pending_serial
+	_clear_pending_interaction()
+
+	if serial != _interaction_serial:
+		return
+	_complete_primary_action(hotspot, serial)
+
+
+func _complete_primary_action(hotspot: Node, serial: int) -> void:
+	if serial != _interaction_serial or not is_instance_valid(hotspot):
+		return
 
 	var transition_room := String(hotspot.get("transition_room"))
 	if not transition_room.is_empty():
@@ -104,3 +131,8 @@ func _on_hotspot_action_requested(hotspot: Node, action: StringName) -> void:
 	if primary_text.is_empty():
 		primary_text = "There is nothing more to do here yet."
 	status_requested.emit(primary_text)
+
+
+func _clear_pending_interaction() -> void:
+	_pending_hotspot = null
+	_pending_serial = -1
