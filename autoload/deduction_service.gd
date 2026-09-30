@@ -166,7 +166,7 @@ func select_hypothesis(deduction_id: String) -> Dictionary:
 			}
 			state.set("deductions", deductions)
 			deduction_established.emit(deduction_id)
-		status = "established"
+			status = "established"
 		elif String((deductions[deduction_id] as Dictionary).get("state", "")) == "established":
 			status = "established"
 
