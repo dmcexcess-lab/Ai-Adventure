@@ -161,6 +161,28 @@ The reusable engine layer is now complete enough to begin Chapter One assembly.
 
 Slice 8 does not build the remaining primary locations or the full chapter flag/progression graph. Those belong to Slice 9.
 
+## UI feedback demo
+
+A completely non-canon UI sandbox is available from the title screen through **PLAY NON-CANON UI DEMO**.
+
+The sandbox uses an unrelated missing-umbrella scenario and exists only for interface/play-feel review. It exercises:
+
+- point-and-click movement;
+- hotspot hover/inspect/primary interaction;
+- held Space hotspot reveal;
+- bottom interaction bar;
+- notebook evidence and hypothesis views;
+- evidence filters;
+- character panel;
+- dialogue choices and keyboard 1-9;
+- evidence presentation;
+- local demo SAVE/LOAD feedback;
+- modal close/back behavior.
+
+The sandbox keeps its state local to the demo scene and does not mutate Chapter One canonical GameState.
+
+Slice 9 remains the next production operation.
+
 ## NEXT OPERATION
 
 **Slice 9 — Chapter One content skeleton**
