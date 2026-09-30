@@ -82,13 +82,10 @@ func apply_background(background_id: String) -> bool:
 	return true
 
 
-func evaluate_check(skill_id: String, threshold: int, modifier: int = 0) -> Dictionary:
-	var state := get_node_or_null("/root/GameState")
-	if state == null or not SKILLS.has(skill_id):
-		return {"ok": false, "passed": false, "error": "invalid_skill_or_state"}
-
-	var skills: Dictionary = state.get("skill_values")
-	var base := int(skills.get(skill_id, 0))
+func evaluate_values(skill_values: Dictionary, skill_id: String, threshold: int, modifier: int = 0) -> Dictionary:
+	if not SKILLS.has(skill_id):
+		return {"ok": false, "passed": false, "error": "invalid_skill"}
+	var base := int(skill_values.get(skill_id, 0))
 	var total := base + modifier
 	return {
 		"ok": true,
@@ -100,6 +97,14 @@ func evaluate_check(skill_id: String, threshold: int, modifier: int = 0) -> Dict
 		"passed": total >= threshold,
 		"margin": total - threshold
 	}
+
+
+func evaluate_check(skill_id: String, threshold: int, modifier: int = 0) -> Dictionary:
+	var state := get_node_or_null("/root/GameState")
+	if state == null:
+		return {"ok": false, "passed": false, "error": "invalid_skill_or_state"}
+	var skills: Dictionary = state.get("skill_values")
+	return evaluate_values(skills, skill_id, threshold, modifier)
 
 
 func perform_check(

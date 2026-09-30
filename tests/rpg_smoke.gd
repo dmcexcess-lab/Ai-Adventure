@@ -70,6 +70,11 @@ func _test_deterministic_checks(state: Node, skills: Node) -> void:
 	if not bool(modified.get("passed", false)) or int(modified.get("total", -1)) != 3:
 		failures.append("contextual modifier did not affect deterministic result")
 
+	var sandbox_values := {"observation": 1, "reasoning": 3, "empathy": 2, "resolve": 1}
+	var sandbox_check: Dictionary = skills.call("evaluate_values", sandbox_values, "reasoning", 4, 1)
+	if not bool(sandbox_check.get("passed", false)) or int(sandbox_check.get("total", -1)) != 4:
+		failures.append("pure local skill-value evaluation did not use the canonical deterministic rule")
+
 	skills.call("perform_check", "test_failed_approach", "empathy", 2, 0, true, "Test failed approach")
 	if not bool(skills.call("has_failed_approach", "test_failed_approach")):
 		failures.append("failed approach was not recorded")
