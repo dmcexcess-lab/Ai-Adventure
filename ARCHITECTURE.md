@@ -131,14 +131,31 @@ The notebook UI reads only through EvidenceService.
 
 ### DeductionService
 
-Evaluates authored deduction rules against canonical state.
+`DeductionService` is an autoload backed by authored Chapter One deduction definitions under `content/ch01/deductions/`.
 
-Rules are declarative:
+Each deduction definition can declare:
+- stable deduction ID;
+- title and description;
 - required clue IDs;
+- required evidence tags;
 - minimum support count;
-- exclusion/contradiction conditions;
 - prerequisite deductions;
-- optional skill insight.
+- evidence-tag refutation conditions;
+- contradiction-tag refutation conditions;
+- optional skill-insight metadata.
+
+Evaluation is deterministic and returns one of:
+
+- `unsupported` — current discovered evidence/prerequisites are insufficient;
+- `supported` — current discovered evidence satisfies the authored rule, but the player has not yet committed to the conclusion;
+- `established` — the player selected the hypothesis while the rule was supported;
+- `refuted` — discovered evidence currently matches an authored refutation condition.
+
+Only discovered evidence IDs are returned as visible support/contradictions. Missing or undiscovered clue identities are never exposed by the evaluator.
+
+Player hypothesis selections persist in `GameState.hypotheses`, including unsupported/refuted guesses. Established deductions persist in `GameState.deductions`. Re-selecting an already established deduction is idempotent.
+
+Establishing a deduction triggers the existing autosave path.
 
 The service never guesses deductions from free text.
 
@@ -175,7 +192,7 @@ Supported slots:
 - `manual_3`;
 - `autosave`.
 
-The game shell currently exposes manual slot 1 through simple **SAVE** / **LOAD** controls; the service already supports the remaining manual slots for later UI expansion. The content version is now **ch01-slice5**; the save schema remains version 1 because evidence discovery already fit the existing canonical clue dictionary.
+The game shell currently exposes manual slot 1 through simple **SAVE** / **LOAD** controls; the service already supports the remaining manual slots for later UI expansion. The content version is now **ch01-slice6**; the save schema remains version 1 because hypothesis and deduction state already fit the canonical `hypotheses` and `deductions` fields.
 
 SaveService responsibilities:
 - validate slot names;
