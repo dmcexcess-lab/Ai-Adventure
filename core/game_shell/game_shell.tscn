@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://core/game_shell/game_shell.gd" id="1_shell"]
 [ext_resource type="PackedScene" path="res://ui/notebook/evidence_notebook.tscn" id="2_notebook"]
 [ext_resource type="PackedScene" path="res://ui/dialogue/conversation_ui.tscn" id="3_dialogue"]
+[ext_resource type="PackedScene" path="res://ui/character/character_panel.tscn" id="4_character"]
 
 [node name="GameShell" type="Control"]
 layout_mode = 3
@@ -30,6 +31,9 @@ layout_mode = 1
 [node name="ConversationUI" parent="." instance=ExtResource("3_dialogue")]
 layout_mode = 1
 
+[node name="CharacterPanel" parent="." instance=ExtResource("4_character")]
+layout_mode = 1
+
 [node name="HudBar" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 12
@@ -48,7 +52,7 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_left = 12.0
 offset_top = 3.0
-offset_right = -266.0
+offset_right = -310.0
 offset_bottom = 22.0
 grow_horizontal = 2
 mouse_filter = 2
@@ -64,47 +68,56 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 12.0
 offset_top = -25.0
-offset_right = -266.0
+offset_right = -310.0
 offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.66, 0.72, 0.72, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 9
 text = "Click walk // Right-click inspect // SPACE reveal"
 vertical_alignment = 1
 
 [node name="NotebookButton" type="Button" parent="HudBar"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 382.0
+offset_left = 338.0
 offset_top = 5.0
-offset_right = 438.0
+offset_right = 386.0
 offset_bottom = 42.0
 text = "NOTE"
 
 [node name="EvidenceButton" type="Button" parent="HudBar"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 442.0
+offset_left = 390.0
 offset_top = 5.0
-offset_right = 500.0
+offset_right = 438.0
 offset_bottom = 42.0
 text = "EVID"
+
+[node name="CharacterButton" type="Button" parent="HudBar"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 442.0
+offset_top = 5.0
+offset_right = 490.0
+offset_bottom = 42.0
+text = "CHAR"
 
 [node name="SaveButton" type="Button" parent="HudBar"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 504.0
+offset_left = 494.0
 offset_top = 5.0
-offset_right = 564.0
+offset_right = 558.0
 offset_bottom = 42.0
 text = "SAVE"
 
 [node name="LoadButton" type="Button" parent="HudBar"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 568.0
+offset_left = 562.0
 offset_top = 5.0
 offset_right = 634.0
 offset_bottom = 42.0

@@ -119,16 +119,44 @@ func choose(witness_id: String, node_id: String, choice_id: String) -> Dictionar
 		open_topic(witness_id, topic_id)
 
 	apply_effects(witness_id, raw_choice.get("effects", []))
+
+	var next_node := String(raw_choice.get("next_node", node_id))
+	var check_result: Dictionary = {}
+	var skill_check = raw_choice.get("skill_check", {})
+	if skill_check is Dictionary and not (skill_check as Dictionary).is_empty():
+		var check: Dictionary = skill_check
+		var skills := get_node_or_null("/root/SkillService")
+		if skills == null:
+			return {"ok": false, "error": "skill_service_unavailable"}
+		check_result = skills.call(
+			"perform_check",
+			String(check.get("check_id", "")),
+			String(check.get("skill", "")),
+			int(check.get("threshold", 0)),
+			int(check.get("modifier", 0)),
+			true,
+			String(check.get("context", choice_id))
+		)
+		if not bool(check_result.get("ok", false)):
+			return {"ok": false, "error": "invalid_skill_check"}
+		if bool(check_result.get("passed", false)):
+			apply_effects(witness_id, raw_choice.get("success_effects", []))
+			next_node = String(raw_choice.get("success_node", next_node))
+		else:
+			apply_effects(witness_id, raw_choice.get("failure_effects", []))
+			next_node = String(raw_choice.get("failure_node", next_node))
+
 	if not once_key.is_empty():
 		record_reaction(witness_id, once_key)
 
 	if bool(raw_choice.get("end", false)):
-		return {"ok": true, "end": true, "witness_id": witness_id}
+		return {"ok": true, "end": true, "witness_id": witness_id, "skill_check": check_result}
 
-	var next_node := String(raw_choice.get("next_node", node_id))
 	var view := get_node_view(witness_id, next_node)
 	view["ok"] = not view.is_empty()
 	view["end"] = false
+	if not check_result.is_empty():
+		view["skill_check"] = check_result
 	return view
 
 
@@ -197,6 +225,11 @@ func evaluate_conditions(raw_conditions: Variant, witness_id: String = "") -> bo
 			return false
 	for reaction_id in conditions.get("reactions_unseen", []):
 		if has_reaction(witness_id, String(reaction_id)):
+			return false
+
+	var skills_service := get_node_or_null("/root/SkillService")
+	for check_id in conditions.get("failed_approaches_all", []):
+		if skills_service == null or not bool(skills_service.call("has_failed_approach", String(check_id))):
 			return false
 
 	return true

@@ -15,10 +15,16 @@ func _ready() -> void:
 	_install_input_actions()
 
 
-func start_new_game() -> void:
+func start_new_game(background_id: String = "") -> void:
 	var state := get_node_or_null("/root/GameState")
 	if state != null and state.has_method("reset_new_game"):
 		state.call("reset_new_game")
+
+	if not background_id.is_empty():
+		var skills := get_node_or_null("/root/SkillService")
+		if skills != null and skills.has_method("apply_background"):
+			skills.call("apply_background", background_id)
+
 	get_tree().change_scene_to_file(GAME_SHELL)
 
 

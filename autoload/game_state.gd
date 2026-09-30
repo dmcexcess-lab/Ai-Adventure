@@ -20,7 +20,9 @@ var witness_trust: Dictionary = {}
 var dialogue_topics: Dictionary = {}
 var dialogue_reactions: Dictionary = {}
 var chapter_flags: Dictionary = {}
+var background_id := ""
 var skill_values: Dictionary = DEFAULT_SKILLS.duplicate(true)
+var failed_approaches: Dictionary = {}
 var inventory: Array = []
 var visited_locations: Array = []
 var playtime_seconds := 0.0
@@ -43,7 +45,9 @@ func reset_new_game() -> void:
 	dialogue_topics = {}
 	dialogue_reactions = {}
 	chapter_flags = {}
+	background_id = ""
 	skill_values = DEFAULT_SKILLS.duplicate(true)
+	failed_approaches = {}
 	inventory = []
 	visited_locations = []
 	playtime_seconds = 0.0
@@ -83,7 +87,9 @@ func to_serializable_state() -> Dictionary:
 		"dialogue_topics": dialogue_topics.duplicate(true),
 		"dialogue_reactions": dialogue_reactions.duplicate(true),
 		"chapter_flags": chapter_flags.duplicate(true),
+		"background_id": background_id,
 		"skill_values": skill_values.duplicate(true),
+		"failed_approaches": failed_approaches.duplicate(true),
 		"inventory": inventory.duplicate(true),
 		"visited_locations": visited_locations.duplicate(true),
 		"playtime_seconds": playtime_seconds,
@@ -105,7 +111,9 @@ func apply_serializable_state(raw_state: Dictionary) -> bool:
 	dialogue_topics = (normalized["dialogue_topics"] as Dictionary).duplicate(true)
 	dialogue_reactions = (normalized["dialogue_reactions"] as Dictionary).duplicate(true)
 	chapter_flags = (normalized["chapter_flags"] as Dictionary).duplicate(true)
+	background_id = String(normalized["background_id"])
 	skill_values = (normalized["skill_values"] as Dictionary).duplicate(true)
+	failed_approaches = (normalized["failed_approaches"] as Dictionary).duplicate(true)
 	inventory = (normalized["inventory"] as Array).duplicate(true)
 	visited_locations = (normalized["visited_locations"] as Array).duplicate(true)
 	playtime_seconds = float(normalized["playtime_seconds"])
@@ -144,7 +152,9 @@ func normalize_serializable_state(raw_state: Dictionary) -> Dictionary:
 		"dialogue_topics": _dict_or_empty(raw_state.get("dialogue_topics", {})),
 		"dialogue_reactions": _dict_or_empty(raw_state.get("dialogue_reactions", {})),
 		"chapter_flags": _dict_or_empty(raw_state.get("chapter_flags", {})),
+		"background_id": String(raw_state.get("background_id", "")),
 		"skill_values": normalized_skills,
+		"failed_approaches": _dict_or_empty(raw_state.get("failed_approaches", {})),
 		"inventory": _array_or_empty(raw_state.get("inventory", [])),
 		"visited_locations": _array_or_empty(raw_state.get("visited_locations", [])),
 		"playtime_seconds": maxf(0.0, float(raw_state.get("playtime_seconds", 0.0))),

@@ -6,10 +6,12 @@ const MANUAL_SLOT := "manual_1"
 @onready var status_label: Label = %StatusLabel
 @onready var notebook_button: Button = %NotebookButton
 @onready var evidence_button: Button = %EvidenceButton
+@onready var character_button: Button = %CharacterButton
 @onready var save_button: Button = %SaveButton
 @onready var load_button: Button = %LoadButton
 @onready var evidence_notebook: Control = $EvidenceNotebook
 @onready var conversation_ui: Control = $ConversationUI
+@onready var character_panel: Control = $CharacterPanel
 
 var _current_room: Node
 var _last_status := "CASE ACTIVE // Click to walk. Hover objects for context."
@@ -31,10 +33,12 @@ func _ready() -> void:
 
 	notebook_button.pressed.connect(_open_notebook)
 	evidence_button.pressed.connect(_open_notebook)
+	character_button.pressed.connect(_open_character)
 	save_button.pressed.connect(_on_save_pressed)
 	load_button.pressed.connect(_on_load_pressed)
 	evidence_notebook.connect("closed", Callable(self, "_on_notebook_closed"))
 	conversation_ui.connect("closed", Callable(self, "_on_conversation_closed"))
+	character_panel.connect("closed", Callable(self, "_on_character_closed"))
 
 	_scene_router.call("attach_room_host", %RoomHost)
 	_scene_router.call("load_first_room")
@@ -45,9 +49,19 @@ func _unhandled_input(event: InputEvent) -> void:
 	if bool(conversation_ui.call("is_open")):
 		return
 
+	if bool(character_panel.call("is_open")):
+		if event.is_action_pressed("menu_back") or event.is_action_pressed("character"):
+			character_panel.call("close_panel")
+			get_viewport().set_input_as_handled()
+		return
+
 	if bool(evidence_notebook.call("is_open")):
 		if event.is_action_pressed("menu_back") or event.is_action_pressed("notebook") or event.is_action_pressed("evidence"):
 			evidence_notebook.call("close_notebook")
+			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("character"):
+			evidence_notebook.call("close_notebook")
+			_open_character()
 			get_viewport().set_input_as_handled()
 		return
 
@@ -65,7 +79,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_open_notebook()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("character"):
-		_set_status("CHARACTER — RPG layer arrives in Slice 8")
+		_open_character()
+		get_viewport().set_input_as_handled()
 
 
 func _on_room_changed(_room_path: String, room: Node) -> void:
@@ -77,7 +92,7 @@ func _on_room_changed(_room_path: String, room: Node) -> void:
 	if room.has_signal("conversation_requested"):
 		room.connect("conversation_requested", Callable(self, "_on_conversation_requested"))
 
-	if bool(evidence_notebook.call("is_open")) or bool(conversation_ui.call("is_open")):
+	if _any_modal_open():
 		room.process_mode = Node.PROCESS_MODE_DISABLED
 
 	var title := String(room.get("room_title"))
@@ -102,27 +117,42 @@ func _on_hover_label_changed(message: String) -> void:
 func _open_notebook() -> void:
 	if bool(conversation_ui.call("is_open")):
 		return
+	if bool(character_panel.call("is_open")):
+		character_panel.call("close_panel")
 	evidence_notebook.call("open_notebook")
-	if is_instance_valid(_current_room):
-		_current_room.process_mode = Node.PROCESS_MODE_DISABLED
+	_set_room_paused(true)
 	context_label.text = "CASE NOTEBOOK"
 	_set_status("Evidence is recorded automatically. Filter by tag or test a hypothesis.")
 
 
 func _on_notebook_closed() -> void:
-	if is_instance_valid(_current_room) and not bool(conversation_ui.call("is_open")):
-		_current_room.process_mode = Node.PROCESS_MODE_INHERIT
-		var title := String(_current_room.get("room_title"))
-		context_label.text = title.to_upper() if not title.is_empty() else "LOCATION"
+	_restore_room_after_modal()
+	_set_status("Returned to investigation.")
+
+
+func _open_character() -> void:
+	if bool(conversation_ui.call("is_open")):
+		return
+	if bool(evidence_notebook.call("is_open")):
+		evidence_notebook.call("close_notebook")
+	character_panel.call("open_panel")
+	_set_room_paused(true)
+	context_label.text = "CHARACTER"
+	_set_status("Background, skills, and failed investigative approaches.")
+
+
+func _on_character_closed() -> void:
+	_restore_room_after_modal()
 	_set_status("Returned to investigation.")
 
 
 func _on_conversation_requested(witness_id: String) -> void:
 	if bool(evidence_notebook.call("is_open")):
 		evidence_notebook.call("close_notebook")
+	if bool(character_panel.call("is_open")):
+		character_panel.call("close_panel")
 	if bool(conversation_ui.call("open_conversation", witness_id)):
-		if is_instance_valid(_current_room):
-			_current_room.process_mode = Node.PROCESS_MODE_DISABLED
+		_set_room_paused(true)
 		context_label.text = "CONVERSATION"
 		_set_status("Choose a topic or present relevant evidence.")
 	else:
@@ -130,10 +160,7 @@ func _on_conversation_requested(witness_id: String) -> void:
 
 
 func _on_conversation_closed() -> void:
-	if is_instance_valid(_current_room) and not bool(evidence_notebook.call("is_open")):
-		_current_room.process_mode = Node.PROCESS_MODE_INHERIT
-		var title := String(_current_room.get("room_title"))
-		context_label.text = title.to_upper() if not title.is_empty() else "LOCATION"
+	_restore_room_after_modal()
 	_set_status("Conversation ended.")
 
 
@@ -156,6 +183,8 @@ func _on_load_pressed() -> void:
 		_set_status("CASE RESTORED // Slot 1")
 		if bool(evidence_notebook.call("is_open")):
 			evidence_notebook.call("refresh")
+		if bool(character_panel.call("is_open")):
+			character_panel.call("refresh")
 	else:
 		_set_status("No valid save in Slot 1.")
 	_refresh_save_buttons()
@@ -171,6 +200,26 @@ func _set_reveal(value: bool) -> void:
 		_current_room.call("set_hotspot_reveal", value)
 		var title := String(_current_room.get("room_title"))
 		context_label.text = "INTERACTABLES" if value else title.to_upper()
+
+
+func _set_room_paused(value: bool) -> void:
+	if is_instance_valid(_current_room):
+		_current_room.process_mode = Node.PROCESS_MODE_DISABLED if value else Node.PROCESS_MODE_INHERIT
+
+
+func _restore_room_after_modal() -> void:
+	if is_instance_valid(_current_room) and not _any_modal_open():
+		_set_room_paused(false)
+		var title := String(_current_room.get("room_title"))
+		context_label.text = title.to_upper() if not title.is_empty() else "LOCATION"
+
+
+func _any_modal_open() -> bool:
+	return (
+		bool(evidence_notebook.call("is_open"))
+		or bool(conversation_ui.call("is_open"))
+		or bool(character_panel.call("is_open"))
+	)
 
 
 func _set_status(message: String) -> void:

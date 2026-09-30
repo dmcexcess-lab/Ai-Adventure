@@ -14,6 +14,14 @@ signal action_requested(hotspot: Node, action: StringName)
 @export var evidence_id := ""
 @export var evidence_detail_level := 1
 @export var witness_id := ""
+@export var skill_check_id := ""
+@export var skill_name := ""
+@export var skill_threshold := 0
+@export var skill_modifier := 0
+@export var skill_success_evidence_id := ""
+@export var skill_success_evidence_detail_level := 1
+@export_multiline var skill_success_text := ""
+@export_multiline var skill_failure_text := ""
 @export var enabled := true
 
 var _hovered := false

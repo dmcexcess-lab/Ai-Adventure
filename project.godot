@@ -16,6 +16,7 @@ GameState="*res://autoload/game_state.gd"
 EvidenceService="*res://autoload/evidence_service.gd"
 DeductionService="*res://autoload/deduction_service.gd"
 DialogueService="*res://autoload/dialogue_service.gd"
+SkillService="*res://autoload/skill_service.gd"
 SaveService="*res://autoload/save_service.gd"
 SceneRouter="*res://autoload/scene_router.gd"
 

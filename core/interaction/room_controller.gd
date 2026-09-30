@@ -130,6 +130,7 @@ func _complete_primary_action(hotspot: Node, serial: int) -> void:
 		return
 
 	var evidence_feedback := _grant_hotspot_evidence(hotspot)
+	var skill_feedback := _run_hotspot_skill_check(hotspot)
 	var transition_room := String(hotspot.get("transition_room"))
 	if not transition_room.is_empty():
 		var transition_spawn := String(hotspot.get("transition_spawn"))
@@ -146,6 +147,8 @@ func _complete_primary_action(hotspot: Node, serial: int) -> void:
 		primary_text = "There is nothing more to do here yet."
 	if not evidence_feedback.is_empty():
 		primary_text += "  " + evidence_feedback
+	if not skill_feedback.is_empty():
+		primary_text += "  " + skill_feedback
 	status_requested.emit(primary_text)
 
 
@@ -172,6 +175,50 @@ func _grant_hotspot_evidence(hotspot: Node) -> String:
 			return "Evidence updated: %s." % title
 		_:
 			return ""
+
+
+func _run_hotspot_skill_check(hotspot: Node) -> String:
+	var check_id := String(hotspot.get("skill_check_id"))
+	var skill_id := String(hotspot.get("skill_name"))
+	if check_id.is_empty() or skill_id.is_empty():
+		return ""
+
+	var skills := get_node_or_null("/root/SkillService")
+	if skills == null:
+		return ""
+
+	var result: Dictionary = skills.call(
+		"perform_check",
+		check_id,
+		skill_id,
+		int(hotspot.get("skill_threshold")),
+		int(hotspot.get("skill_modifier")),
+		true,
+		String(hotspot.get("display_name"))
+	)
+
+	if not bool(result.get("ok", false)):
+		return ""
+
+	if bool(result.get("passed", false)):
+		var success_clue := String(hotspot.get("skill_success_evidence_id"))
+		if not success_clue.is_empty():
+			var evidence := get_node_or_null("/root/EvidenceService")
+			if evidence != null:
+				evidence.call(
+					"acquire_clue",
+					success_clue,
+					int(hotspot.get("skill_success_evidence_detail_level"))
+				)
+		var success_text := String(hotspot.get("skill_success_text"))
+		if success_text.is_empty():
+			success_text = "%s check passed." % skill_id.capitalize()
+		return success_text
+
+	var failure_text := String(hotspot.get("skill_failure_text"))
+	if failure_text.is_empty():
+		failure_text = "That approach does not reveal anything more."
+	return failure_text
 
 
 func _clear_pending_interaction() -> void:

@@ -83,6 +83,60 @@ layout_mode = 2
 text = "THE MESSAGE THAT SURVIVED\n\nA transmission bears your signature.\nIts timestamp has not happened yet."
 horizontal_alignment = 1
 
+[node name="BackgroundPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -205.0
+offset_right = 250.0
+offset_bottom = 205.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="BackgroundPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="Stack" type="VBoxContainer" parent="BackgroundPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Heading" type="Label" parent="BackgroundPanel/Margin/Stack"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.63, 0.92, 0.79, 1)
+theme_override_font_sizes/font_size = 15
+text = "BEFORE THE MESSAGE // HOW DO YOU APPROACH PROBLEMS?"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Hint" type="Label" parent="BackgroundPanel/Margin/Stack"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.66, 0.66, 1)
+theme_override_font_sizes/font_size = 10
+text = "Choose one sentence. This sets a fixed Chapter One skill profile; there is no point allocation."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="BackgroundChoices" type="VBoxContainer" parent="BackgroundPanel/Margin/Stack"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="BackgroundBackButton" type="Button" parent="BackgroundPanel/Margin/Stack"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "BACK"
+
 [node name="Footer" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 12

@@ -35,6 +35,44 @@ func get_definitions() -> Array:
 							"once_key": "mara_packet_question"
 						},
 						{
+							"id": "read_mara",
+							"topic_id": "mara_read",
+							"text": "Watch her reaction instead of pressing the point.",
+							"conditions": {"clues_all": ["packet_impossible_timestamp"]},
+							"effects": [],
+							"skill_check": {
+								"check_id": "mara_read_evasion",
+								"skill": "empathy",
+								"threshold": 3,
+								"modifier": 0,
+								"context": "Read Mara's reaction to the impossible timestamp"
+							},
+							"success_node": "empathy_read_success",
+							"failure_node": "empathy_read_failure",
+							"success_effects": [
+								{"type": "trust_delta", "amount": 1},
+								{"type": "acquire_clue", "clue_id": "packet_impossible_timestamp", "detail_level": 2}
+							],
+							"failure_effects": [
+								{"type": "open_topic", "topic_id": "mara_direct_route"}
+							],
+							"once_key": "mara_empathy_attempt"
+						},
+						{
+							"id": "ask_failed_route",
+							"topic_id": "service_record",
+							"text": "Forget the read. Show me the paper trail.",
+							"next_node": "record_answer",
+							"conditions": {
+								"failed_approaches_all": ["mara_read_evasion"],
+								"topics_open_all": ["service_call"]
+							},
+							"effects": [
+								{"type": "open_topic", "topic_id": "service_record"},
+								{"type": "acquire_clue", "clue_id": "corridor_service_sticker", "detail_level": 1}
+							]
+						},
+						{
 							"id": "ask_copy",
 							"topic_id": "service_record",
 							"text": "Can I see the service record?",
@@ -67,6 +105,18 @@ func get_definitions() -> Array:
 					"line": "Her expression flattens. \"Then either your clock is wrong, or mine is about to become interesting.\"",
 					"choices": [
 						{"id": "back", "text": "Something else.", "next_node": "greeting", "conditions": {}, "effects": []}
+					]
+				},
+				"empathy_read_success": {
+					"line": "She glances at the timestamp, then at yesterday's carbon copy before answering. The hesitation is tiny, but specific: she trusts the paper more than your machine.",
+					"choices": [
+						{"id": "back", "text": "Follow the paper trail.", "next_node": "greeting", "conditions": {}, "effects": []}
+					]
+				},
+				"empathy_read_failure": {
+					"line": "Whatever Mara thinks, her face gives you nothing useful. The human read is a dead end; the records are not.",
+					"choices": [
+						{"id": "back", "text": "Use the records instead.", "next_node": "greeting", "conditions": {}, "effects": []}
 					]
 				},
 				"record_answer": {
