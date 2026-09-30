@@ -1,10 +1,11 @@
 extends Control
 
 const MAIN_MENU := "res://ui/menus/main_menu.tscn"
-const WALK_BOUNDS := Rect2(26.0, 236.0, 588.0, 154.0)
+const FIRST_ROOM := "res://rooms/demo/lobby.tscn"
 
-@onready var player: Control = %DemoPlayer
-@onready var hotspots: Control = %Hotspots
+@onready var room_host: Control = %RoomHost
+@onready var room_title_label: Label = %RoomTitle
+@onready var room_subtitle_label: Label = %RoomSubtitle
 @onready var context_label: Label = %ContextLabel
 @onready var status_label: Label = %StatusLabel
 
@@ -45,7 +46,8 @@ const WALK_BOUNDS := Rect2(26.0, 236.0, 588.0, 154.0)
 @onready var dialogue_choices: VBoxContainer = %DialogueChoices
 @onready var present_button: Button = %PresentButton
 
-var _pending_hotspot: Node
+var _current_room: Control
+var _current_room_path := ""
 var _demo_clues: Dictionary = {
 	"forecast_board": {
 		"title": "Rain Forecast",
@@ -62,18 +64,13 @@ var _demo_trust := 0
 var _hypothesis_recorded := false
 
 var _has_demo_save := false
+var _saved_room_path := ""
 var _saved_foot := Vector2.ZERO
 var _saved_clues: Dictionary = {}
 var _saved_trust := 0
 
 
 func _ready() -> void:
-	player.call("place_at_foot", Vector2(318, 365))
-	if player.has_signal("arrived"):
-		player.connect("arrived", Callable(self, "_on_player_arrived"))
-
-	_register_hotspots()
-
 	note_button.pressed.connect(_open_notebook.bind("hypothesis"))
 	evidence_button.pressed.connect(_open_notebook.bind("evidence"))
 	character_button.pressed.connect(_open_character)
@@ -96,17 +93,7 @@ func _ready() -> void:
 	_setup_filters()
 	_refresh_notebook()
 	_refresh_hypotheses()
-	_set_status("Visual reference room ready. Click to walk; hover objects; right-click to inspect.")
-
-
-func _gui_input(event: InputEvent) -> void:
-	if _modal_open():
-		return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_pending_hotspot = null
-		player.call("move_to", get_local_mouse_position(), WALK_BOUNDS)
-		_set_status("Walking.")
-		accept_event()
+	_load_demo_room(FIRST_ROOM)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -146,41 +133,65 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func _register_hotspots() -> void:
-	for hotspot in hotspots.get_children():
-		if hotspot.has_signal("hover_changed"):
-			hotspot.connect("hover_changed", Callable(self, "_on_hotspot_hover"))
-		if hotspot.has_signal("action_requested"):
-			hotspot.connect("action_requested", Callable(self, "_on_hotspot_action"))
-
-
-func _on_hotspot_hover(label: String) -> void:
-	context_label.text = "UMBRELLA QUEST // COMMUNITY CENTER" if label.is_empty() else label.to_upper()
-
-
-func _on_hotspot_action(hotspot: Node, action: StringName) -> void:
-	if action == &"inspect":
-		_set_status(String(hotspot.get("inspect_text")))
+func _load_demo_room(room_path: String, spawn_marker: String = "", restore_foot := Vector2(-10000.0, -10000.0)) -> void:
+	var packed := load(room_path) as PackedScene
+	if packed == null:
+		_set_status("DEMO WORLD ERROR // room failed to load.")
 		return
 
-	var approach: Vector2 = hotspot.get("approach_point")
-	if approach.x >= 0.0 and approach.y >= 0.0:
-		_pending_hotspot = hotspot
-		if bool(player.call("move_to", approach, WALK_BOUNDS)):
-			_set_status("Approaching %s." % String(hotspot.get("display_name")))
-			return
-	_pending_hotspot = null
-	_activate_hotspot(hotspot)
+	if is_instance_valid(_current_room):
+		room_host.remove_child(_current_room)
+		_current_room.queue_free()
+
+	_current_room = packed.instantiate() as Control
+	if _current_room == null:
+		_set_status("DEMO WORLD ERROR // room failed to instantiate.")
+		return
+
+	room_host.add_child(_current_room)
+	_current_room_path = room_path
+
+	if _current_room.has_signal("status_requested"):
+		_current_room.connect("status_requested", Callable(self, "_on_demo_room_status"))
+	if _current_room.has_signal("hover_label_changed"):
+		_current_room.connect("hover_label_changed", Callable(self, "_on_demo_room_hover"))
+	if _current_room.has_signal("conversation_requested"):
+		_current_room.connect("conversation_requested", Callable(self, "_on_demo_conversation"))
+	if _current_room.has_signal("transition_requested"):
+		_current_room.connect("transition_requested", Callable(self, "_on_demo_room_transition"))
+	if _current_room.has_signal("hotspot_activated"):
+		_current_room.connect("hotspot_activated", Callable(self, "_on_demo_hotspot_activated"))
+
+	room_title_label.text = "UMBRELLA QUEST // %s" % String(_current_room.get("room_title"))
+	room_subtitle_label.text = String(_current_room.get("room_subtitle"))
+	if restore_foot.x > -9000.0:
+		_current_room.call("restore_player_foot", restore_foot)
+	else:
+		_current_room.call("enter_at", spawn_marker)
+	context_label.text = _room_context()
+	_set_status("Entered %s. Click to walk; hover objects; right-click to inspect." % String(_current_room.get("room_title")).to_lower())
 
 
-func _on_player_arrived() -> void:
-	if is_instance_valid(_pending_hotspot):
-		var hotspot := _pending_hotspot
-		_pending_hotspot = null
-		_activate_hotspot(hotspot)
+func _on_demo_room_status(message: String) -> void:
+	_set_status(message)
 
 
-func _activate_hotspot(hotspot: Node) -> void:
+func _on_demo_room_hover(label: String) -> void:
+	context_label.text = _room_context() if label.is_empty() else label.to_upper()
+
+
+func _on_demo_room_transition(room_path: String, spawn_marker: String) -> void:
+	_load_demo_room(room_path, spawn_marker)
+
+
+func _on_demo_conversation(witness_id: String) -> void:
+	if witness_id == "alex":
+		_open_dialogue()
+	else:
+		_set_status("That witness is a placeholder for the investigation slice.")
+
+
+func _on_demo_hotspot_activated(hotspot: Node) -> void:
 	match String(hotspot.get("hotspot_id")):
 		"umbrella_rack":
 			_add_clue("dry_outline", {
@@ -200,14 +211,14 @@ func _activate_hotspot(hotspot: Node) -> void:
 				"detail": "Ticket 47B lists a blue umbrella, logged twenty minutes before closing."
 			})
 			_set_status("Evidence recorded: Claim Ticket 47B.")
-		"front_desk":
-			_open_dialogue()
-		"vending_machine":
-			_set_status("The vending machine offers six kinds of soda and no investigative insight.")
-		"exit_door":
-			_set_status("The visual reference slice currently ends at this lobby. Use EXIT to return to the title screen.")
 		_:
 			_set_status(String(hotspot.get("primary_text")))
+
+
+func _room_context() -> String:
+	if is_instance_valid(_current_room):
+		return "UMBRELLA QUEST // %s" % String(_current_room.get("room_title"))
+	return "UMBRELLA QUEST // COMMUNITY CENTER"
 
 
 func _add_clue(clue_id: String, clue: Dictionary) -> void:
@@ -461,11 +472,15 @@ func _activate_dialogue_action(index: int) -> void:
 
 
 func _demo_save() -> void:
-	_saved_foot = player.call("get_foot_position")
+	if not is_instance_valid(_current_room):
+		_set_status("DEMO SAVE // no active room.")
+		return
+	_saved_room_path = _current_room_path
+	_saved_foot = _current_room.call("get_player_foot")
 	_saved_clues = _demo_clues.duplicate(true)
 	_saved_trust = _demo_trust
 	_has_demo_save = true
-	_set_status("DEMO SAVE // position, evidence, and trust snapshot stored in memory.")
+	_set_status("DEMO SAVE // room, position, evidence, and trust snapshot stored in memory.")
 
 
 func _demo_load() -> void:
@@ -474,7 +489,7 @@ func _demo_load() -> void:
 		return
 	_demo_clues = _saved_clues.duplicate(true)
 	_demo_trust = _saved_trust
-	player.call("place_at_foot", _saved_foot)
+	_load_demo_room(_saved_room_path, "", _saved_foot)
 	dialogue_trust.text = "TRUST %d" % _demo_trust
 	_refresh_notebook()
 	_refresh_hypotheses()
@@ -482,17 +497,16 @@ func _demo_load() -> void:
 
 
 func _set_reveal(value: bool) -> void:
-	for hotspot in hotspots.get_children():
-		if hotspot.has_method("set_reveal"):
-			hotspot.call("set_reveal", value)
-	context_label.text = "INTERACTABLES" if value else "UMBRELLA QUEST // COMMUNITY CENTER"
+	if is_instance_valid(_current_room):
+		_current_room.call("set_hotspot_reveal", value)
+	context_label.text = "INTERACTABLES" if value else _room_context()
 
 
 func _close_all_modals() -> void:
 	notebook_panel.visible = false
 	character_panel.visible = false
 	dialogue_panel.visible = false
-	context_label.text = "UMBRELLA QUEST // COMMUNITY CENTER"
+	context_label.text = _room_context()
 
 
 func _modal_open() -> bool:

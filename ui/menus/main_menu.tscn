@@ -71,7 +71,7 @@ text = "BEGIN CHAPTER ONE"
 [node name="DemoButton" type="Button" parent="Center/MenuStack"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "PLAY UMBRELLA QUEST // VISUAL SLICE"
+text = "PLAY UMBRELLA QUEST // WORLD SLICE"
 
 [node name="AboutButton" type="Button" parent="Center/MenuStack"]
 unique_name_in_owner = true

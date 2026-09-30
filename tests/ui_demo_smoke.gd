@@ -41,8 +41,9 @@ func _run() -> void:
 	await process_frame
 
 	for node_name in [
+		"RoomHost",
 		"ArtBackground",
-		"DemoPlayer",
+		"PlayerActor",
 		"Hotspots",
 		"NotebookPanel",
 		"CharacterPanel",
@@ -99,7 +100,7 @@ func _run() -> void:
 		if rack == null:
 			failures.append("umbrella rack hotspot missing")
 		else:
-			demo.call("_activate_hotspot", rack)
+			demo.call("_on_demo_hotspot_activated", rack)
 			var demo_clues: Dictionary = demo.get("_demo_clues")
 			if not demo_clues.has("dry_outline"):
 				failures.append("demo hotspot did not add sandbox evidence")
@@ -125,7 +126,7 @@ func _run() -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("UMBRELLA_VISUAL_OK: launch, controls, modals, hotspots, reveal, local save/load, and canon isolation are valid")
+		print("UMBRELLA_VISUAL_OK: multi-room launch, controls, modals, hotspots, reveal, local save/load, and canon isolation are valid")
 		quit(0)
 		return
 

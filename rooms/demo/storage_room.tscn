@@ -1,0 +1,135 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
+[ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
+[ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
+[ext_resource type="Texture2D" path="res://art/demo/storage_room_noir.svg" id="4_bg"]
+[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="5_player"]
+
+[node name="DemoRoom" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_room")
+room_id = "storage_room"
+room_title = "STORAGE ROOM"
+room_subtitle = "WESTSIDE COMMUNITY CENTER // LOST PROPERTY OVERFLOW"
+walk_bounds = Rect2(54, 248, 532, 130)
+default_spawn = Vector2(96, 354)
+
+[node name="ArtBackground" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_bg")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="PlayerActor" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 75.0
+offset_top = 272.0
+offset_right = 117.0
+offset_bottom = 354.0
+mouse_filter = 2
+script = ExtResource("2_player")
+move_speed = 185.0
+
+[node name="Sprite" type="TextureRect" parent="PlayerActor"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_player")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Hotspots" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Shelves" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 202.0
+offset_top = 82.0
+offset_right = 408.0
+offset_bottom = 280.0
+script = ExtResource("3_hotspot")
+hotspot_id = "storage_shelves"
+display_name = "Overflow Shelves"
+inspect_text = "Boxes of scarves, gym bags, folding signs, and umbrellas wait under dust."
+primary_text = "The shelves will support the full case in Slice 11."
+approach_point = Vector2(306, 338)
+
+[node name="HallDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 100.0
+offset_right = 112.0
+offset_bottom = 284.0
+script = ExtResource("3_hotspot")
+hotspot_id = "storage_hall"
+display_name = "Lost & Found Hall"
+inspect_text = "The brighter hall lies through the metal door."
+primary_text = "Return to the hall."
+approach_point = Vector2(84, 342)
+transition_room = "res://rooms/demo/lost_found_hall.tscn"
+transition_spawn = "FromStorage"
+
+[node name="MaintenanceDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 516.0
+offset_top = 100.0
+offset_right = 612.0
+offset_bottom = 284.0
+script = ExtResource("3_hotspot")
+hotspot_id = "storage_maintenance"
+display_name = "Maintenance Corridor"
+inspect_text = "A service door links storage to the maintenance corridor."
+primary_text = "Enter maintenance."
+approach_point = Vector2(530, 342)
+transition_room = "res://rooms/demo/maintenance_corridor.tscn"
+transition_spawn = "FromStorage"
+
+[node name="Spawns" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FromHall" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 84.0
+offset_top = 350.0
+offset_right = 85.0
+offset_bottom = 351.0
+mouse_filter = 2
+
+[node name="FromMaintenance" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 530.0
+offset_top = 350.0
+offset_right = 531.0
+offset_bottom = 351.0
+mouse_filter = 2

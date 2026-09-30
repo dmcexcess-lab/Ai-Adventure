@@ -1,0 +1,149 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
+[ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
+[ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
+[ext_resource type="Texture2D" path="res://art/demo/front_desk_noir.svg" id="4_bg"]
+[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="5_player"]
+
+[node name="DemoRoom" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_room")
+room_id = "front_desk"
+room_title = "FRONT DESK"
+room_subtitle = "WESTSIDE COMMUNITY CENTER // RECEPTION ALCOVE"
+walk_bounds = Rect2(54, 250, 532, 126)
+default_spawn = Vector2(120, 354)
+
+[node name="ArtBackground" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_bg")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="PlayerActor" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 99.0
+offset_top = 272.0
+offset_right = 141.0
+offset_bottom = 354.0
+mouse_filter = 2
+script = ExtResource("2_player")
+move_speed = 185.0
+
+[node name="Sprite" type="TextureRect" parent="PlayerActor"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_player")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Hotspots" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Alex" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 286.0
+offset_top = 106.0
+offset_right = 402.0
+offset_bottom = 284.0
+script = ExtResource("3_hotspot")
+hotspot_id = "alex"
+display_name = "Alex // Front Desk"
+inspect_text = "Alex has the posture of someone who has answered the same question all night."
+primary_text = "Talk to Alex."
+approach_point = Vector2(338, 334)
+witness_id = "alex"
+
+[node name="DeskLog" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 404.0
+offset_top = 184.0
+offset_right = 508.0
+offset_bottom = 256.0
+script = ExtResource("3_hotspot")
+hotspot_id = "desk_log"
+display_name = "Closing Log"
+inspect_text = "A paper closing log sits under a chipped acrylic clipboard."
+primary_text = "The log will matter once the investigation begins."
+approach_point = Vector2(438, 338)
+
+[node name="LobbyDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 114.0
+offset_right = 106.0
+offset_bottom = 280.0
+script = ExtResource("3_hotspot")
+hotspot_id = "lobby_return"
+display_name = "Main Lobby"
+inspect_text = "The lobby glows beyond the half-door."
+primary_text = "Return to the lobby."
+approach_point = Vector2(80, 342)
+transition_room = "res://rooms/demo/lobby.tscn"
+transition_spawn = "FromFrontDesk"
+
+[node name="OfficeDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 520.0
+offset_top = 96.0
+offset_right = 608.0
+offset_bottom = 280.0
+script = ExtResource("3_hotspot")
+hotspot_id = "office_door"
+display_name = "Staff Office"
+inspect_text = "A narrow office door stands behind the reception station."
+primary_text = "Enter the staff office."
+approach_point = Vector2(536, 340)
+transition_room = "res://rooms/demo/staff_office.tscn"
+transition_spawn = "FromFrontDesk"
+
+[node name="Spawns" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FromLobby" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 86.0
+offset_top = 350.0
+offset_right = 87.0
+offset_bottom = 351.0
+mouse_filter = 2
+
+[node name="FromOffice" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 522.0
+offset_top = 350.0
+offset_right = 523.0
+offset_bottom = 351.0
+mouse_filter = 2
