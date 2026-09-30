@@ -441,3 +441,74 @@ A protected `demo_world_smoke.gd` test verifies:
 - every transition spawn exists in the destination scene;
 - every room has an outgoing route;
 - the entire graph is reachable from the lobby.
+
+
+### Umbrella investigation runtime
+
+Slice 11 turns the multi-room demo into a complete non-canon investigation while preserving canon isolation.
+
+Authored case content lives in `content/demo/umbrella_case.gd` and supplies:
+
+- clue definitions;
+- deduction definitions;
+- witness identity/presentation data.
+
+The persistent Umbrella shell owns demo-local case state:
+
+- discovered evidence;
+- established deductions;
+- selected hypotheses;
+- witness trust;
+- case-resolution state;
+- in-memory demo save snapshot.
+
+It does not write these values into Chapter One `GameState`, `EvidenceService`, `DeductionService`, `DialogueService`, or canonical save slots.
+
+The demo deduction evaluator deliberately mirrors the production deduction contract:
+
+- authored required clue IDs;
+- minimum visible support;
+- prerequisite deductions;
+- refuting evidence tags;
+- refuting contradiction tags;
+- explicit player hypothesis selection;
+- `unsupported`, `supported`, `established`, and `refuted` states.
+
+Only discovered support/contradiction evidence is shown in the notebook. Later case conclusions become visible only after their prerequisite conclusion is established.
+
+The current Umbrella deduction chain is:
+
+1. Ticket 47B is Nora Vale's umbrella.
+2. The umbrella moved from the lobby to Lost & Found.
+3. Cabinet B was only an intermediate stop.
+4. Mina carried 47B through the service route.
+5. The umbrella was moved to dry, not stolen.
+
+Two intentionally bad hypotheses remain selectable and can later become refuted.
+
+Demo witness interaction now supports Alex and Mina Reyes. Both use topic dialogue plus evidence presentation. Evidence shown to a witness can add witness-backed evidence or clarify motive, matching the production conversation grammar without touching canonical dialogue state.
+
+Critical case conclusions have alternate support where practical. In particular, the service-route deduction can be established from documentary/physical evidence without Mina's admission, and the drying conclusion can be established from policy + physical endpoint evidence without requiring a single dialogue route.
+
+The final deduction does not immediately end the quest. It changes the objective to the loading-bay drying rail. Interacting with that endpoint records recovery evidence and opens a case-closed panel, proving the investigation can resolve through world interaction after notebook reasoning.
+
+The demo-local save snapshot now includes:
+
+- current room;
+- safe player foot position;
+- discovered case evidence;
+- established deductions;
+- selected hypotheses;
+- per-witness trust;
+- case-resolution state.
+
+A protected `umbrella_case_smoke.gd` test covers:
+
+- fresh-case initialization;
+- witness-assisted progression;
+- evidence presentation;
+- the complete five-deduction chain;
+- alternate documentary/physical progression;
+- bad-hypothesis refutation;
+- final case resolution;
+- canon-state isolation.

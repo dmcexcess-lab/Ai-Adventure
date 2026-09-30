@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
 [ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
 [ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
 [ext_resource type="Texture2D" path="res://art/demo/staff_office_noir.svg" id="4_bg"]
 [ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="5_player"]
+[ext_resource type="Texture2D" path="res://art/demo/mina_sprite_noir.svg" id="6_mina"]
 
 [node name="DemoRoom" type="Control"]
 layout_mode = 3
@@ -32,6 +33,17 @@ mouse_filter = 2
 texture = ExtResource("4_bg")
 expand_mode = 1
 stretch_mode = 0
+
+[node name="MinaVisual" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 396.0
+offset_top = 116.0
+offset_right = 480.0
+offset_bottom = 284.0
+mouse_filter = 2
+texture = ExtResource("6_mina")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="PlayerActor" type="Control" parent="."]
 unique_name_in_owner = true
@@ -78,6 +90,33 @@ display_name = "Shift Board"
 inspect_text = "Schedules, phone trees, and old notices overlap beneath pushpins."
 primary_text = "A later investigation pass can turn this into evidence."
 approach_point = Vector2(300, 336)
+
+[node name="Mina" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 386.0
+offset_top = 102.0
+offset_right = 490.0
+offset_bottom = 286.0
+script = ExtResource("3_hotspot")
+hotspot_id = "mina"
+display_name = "Mina Reyes // Closing Staff"
+inspect_text = "Mina is halfway through closing paperwork and clearly expected to be done already."
+primary_text = "Talk to Mina."
+approach_point = Vector2(430, 338)
+witness_id = "mina"
+
+[node name="Handbook" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 126.0
+offset_top = 196.0
+offset_right = 216.0
+offset_bottom = 254.0
+script = ExtResource("3_hotspot")
+hotspot_id = "wet_property_handbook"
+display_name = "Staff Handbook"
+inspect_text = "A battered operations binder lies open to end-of-night procedures."
+primary_text = "The handbook includes a wet-property procedure."
+approach_point = Vector2(174, 338)
 
 [node name="FrontDeskDoor" type="Control" parent="Hotspots"]
 layout_mode = 0

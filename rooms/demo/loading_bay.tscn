@@ -79,6 +79,19 @@ inspect_text = "A battered roll-up door faces a rain-black alley."
 primary_text = "The loading door is shut for the night."
 approach_point = Vector2(338, 338)
 
+[node name="DryingRail" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 96.0
+offset_right = 456.0
+offset_bottom = 242.0
+script = ExtResource("3_hotspot")
+hotspot_id = "drying_rail"
+display_name = "Rear Drying Rail"
+inspect_text = "A wall rail sits behind a folded safety curtain, directly under the exhaust fan."
+primary_text = "The rail is part of the center's wet-property handling setup."
+approach_point = Vector2(360, 338)
+
 [node name="MaintenanceDoor" type="Control" parent="Hotspots"]
 layout_mode = 0
 offset_left = 20.0
