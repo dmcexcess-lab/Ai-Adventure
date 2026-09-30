@@ -27,7 +27,7 @@ The user only says **next slice** / **continue**. The assistant executes the nex
   - Interaction feedback.
   - Hotspot reveal accessibility key.
 
-- [ ] **Slice 4 — Canonical state and persistence**
+- [x] **Slice 4 — Canonical state and persistence**
   - GameState.
   - Save schema.
   - Manual save/load UI.

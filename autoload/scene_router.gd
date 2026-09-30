@@ -8,6 +8,7 @@ const FIRST_TEST_ROOM := "res://rooms/ch01/test_room.tscn"
 
 var _room_host: Control
 var current_room: Node
+var current_room_path := ""
 
 
 func _ready() -> void:
@@ -15,12 +16,19 @@ func _ready() -> void:
 
 
 func start_new_game() -> void:
+	var state := get_node_or_null("/root/GameState")
+	if state != null and state.has_method("reset_new_game"):
+		state.call("reset_new_game")
 	get_tree().change_scene_to_file(GAME_SHELL)
 
 
 func return_to_menu() -> void:
+	var state := get_node_or_null("/root/GameState")
+	if state != null and state.has_method("pause_session"):
+		state.call("pause_session")
 	_room_host = null
 	current_room = null
+	current_room_path = ""
 	get_tree().change_scene_to_file(MAIN_MENU)
 
 
@@ -32,7 +40,12 @@ func load_first_room() -> bool:
 	return go_to_room(FIRST_TEST_ROOM)
 
 
-func go_to_room(room_path: String, spawn_marker: String = "") -> bool:
+func go_to_room(
+	room_path: String,
+	spawn_marker: String = "",
+	restore_foot: Variant = null,
+	write_autosave: bool = true
+) -> bool:
 	if not is_instance_valid(_room_host):
 		push_error("SceneRouter: no room host is attached.")
 		return false
@@ -52,11 +65,51 @@ func go_to_room(room_path: String, spawn_marker: String = "") -> bool:
 		(room as Control).set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 	current_room = room
+	current_room_path = room_path
+
 	if room.has_method("enter_at"):
 		room.call("enter_at", spawn_marker)
+	if restore_foot is Vector2 and room.has_method("restore_player_foot"):
+		room.call("restore_player_foot", restore_foot)
 
+	sync_current_room_state()
 	room_changed.emit(room_path, room)
+
+	if write_autosave:
+		var saves := get_node_or_null("/root/SaveService")
+		if saves != null and saves.has_method("auto_save"):
+			saves.call("auto_save")
+
 	return true
+
+
+func sync_current_room_state() -> void:
+	if not is_instance_valid(current_room):
+		return
+
+	var state := get_node_or_null("/root/GameState")
+	if state == null:
+		return
+
+	var room_id := String(current_room.get("room_id"))
+	var player_foot := Vector2.ZERO
+	if current_room.has_method("get_player_foot"):
+		player_foot = current_room.call("get_player_foot")
+
+	state.call("set_room", current_room_path, room_id, player_foot)
+
+
+func restore_from_state() -> bool:
+	var state := get_node_or_null("/root/GameState")
+	if state == null:
+		return false
+
+	var room_path := String(state.get("current_room_path"))
+	if room_path.is_empty():
+		room_path = FIRST_TEST_ROOM
+
+	var foot: Vector2 = state.get("current_player_foot")
+	return go_to_room(room_path, "", foot, false)
 
 
 func _install_input_actions() -> void:

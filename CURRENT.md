@@ -2,130 +2,142 @@
 
 ## Status
 
-**Slice 3 — Interaction and room framework: COMPLETE**
+**Slice 4 — Canonical state and persistence: COMPLETE**
 
-The project now has a reusable adventure-room interaction layer and a playable two-room traversal scaffold.
+The project now has authoritative serializable game state and a versioned persistence path suitable for the Godot Web build.
 
 ## Implemented
 
-### Point-and-click movement
+### Canonical GameState
 
-- Reusable visual player actor.
-- Left-click floor movement.
-- Per-room authored walk bounds.
-- Destination clamping prevents walking outside the playable floor.
-- Movement is lightweight and Web-friendly.
-- A new click cancels any pending approach/action.
+`GameState` is now an autoload and owns:
 
-### Hotspots
+- current room path;
+- current room ID;
+- player foot position;
+- discovered clue state;
+- deduction state;
+- selected hypotheses;
+- witness trust;
+- chapter flags;
+- four skill values;
+- literal inventory;
+- visited locations;
+- playtime.
 
-Reusable hotspot contract now supports:
+New games reset this state in one place. Rooms no longer need to become the sole owner of future investigation state.
 
-- stable hotspot ID;
-- hover label;
-- left-click primary action;
-- right-click inspect;
-- enabled/disabled state;
-- authored approach point;
-- optional room transition target;
-- optional destination spawn marker;
-- held reveal visualization.
+### Scene-state synchronization
 
-Primary hotspot actions can require the actor to approach first. A later player command cancels the pending action rather than allowing stale actions to fire after movement changes.
+`SceneRouter` now synchronizes the active room and player position into GameState.
 
-### Room contract
+Room entry records canonical state only after the room exists and the player has been positioned.
 
-Reusable room controller now owns:
+Saved player positions are restored through the room contract and clamped to that room's authored walk bounds, so stale or invalid coordinates cannot strand the player outside the playable area.
 
-- walk input;
-- hotspot registration;
-- approach/action sequencing;
-- inspect dispatch;
-- hotspot reveal propagation;
-- room-status events;
-- hover/context events;
-- transition handoff to SceneRouter.
+Player arrival also refreshes canonical position state.
 
-### Scene routing
+### SaveService
 
-SceneRouter now:
+`SaveService` is now an autoload with:
 
-- exposes the current room;
-- supports destination spawn markers;
-- cleanly replaces the active room;
-- emits the new room instance with room-change events.
+- schema version **1**;
+- content version **ch01-slice4**;
+- JSON serialization;
+- `user://saves` storage;
+- manual slots `manual_1`, `manual_2`, `manual_3`;
+- `autosave`;
+- malformed-save rejection;
+- future-schema rejection;
+- migration hook;
+- schema-0 to schema-1 migration coverage.
 
-### HUD
+The format stores schema/content metadata separately from the canonical GameState payload.
 
-The lower interface now has separate:
+### Save / Load UI
 
-- current context / hovered hotspot;
-- interaction feedback / inspection text.
+The lower game shell now exposes simple:
 
-Holding **Space** reveals interactable regions without revealing what puzzle conclusion they support.
+- **SAVE** — writes manual slot 1;
+- **LOAD** — restores manual slot 1.
 
-### Linked test locations
+The Load control stays disabled until a valid slot file exists.
 
-The Chapter One scaffold now contains two traversable rooms:
+This is intentionally the minimum usable save UI; richer slot presentation can be layered later without changing the persistence service.
 
-1. **Her's Workstation**
-   - workstation hotspot;
-   - window hotspot;
-   - hall-door transition.
-2. **Apartment Corridor**
-   - return-door transition;
-   - intercom hotspot;
-   - building-office hotspot.
+### Auto-save
 
-This is still framework/greybox material. Final Chapter One investigation content remains in the later content slices.
+Successful room entry writes the auto-save slot after canonical room/player state is synchronized.
+
+Loading a save restores the saved room and safe player position without immediately overwriting the loaded state with a new auto-save.
+
+### Web persistence path
+
+Persistence uses Godot `user://`, which is the engine-supported storage path for desktop and Web exports.
+
+Fresh-browser Firefox persistence is still explicitly reserved for full release QA in Slice 16/17.
 
 ## Validation
 
-Godot 4.7.2 CI passes:
+Godot 4.7.2 CI now passes:
 
-1. project settings;
-2. all core scripts compile and instantiate;
-3. required scenes load;
-4. hotspot primary/inspect dispatch;
-5. disabled-hotspot suppression;
-6. hotspot reveal propagation;
-7. walk-bound clamping;
-8. linked-room targets load in both directions;
-9. real main-scene startup.
+1. project/autoload/resource validation;
+2. protected hotspot and movement regression suite;
+3. canonical GameState serialization round-trip;
+4. JSON save-document round-trip;
+5. real file write/read round-trip;
+6. malformed JSON rejection;
+7. future-schema rejection;
+8. schema migration;
+9. room-transition canonical state synchronization;
+10. saved-room restoration;
+11. safe player-position clamping;
+12. real main-scene startup.
 
-The test harness was hardened during this slice so script compile failures now fail CI rather than only printing Godot errors.
+## Scope discipline
+
+Slice 4 does not implement clue definitions or notebook presentation. The canonical fields required by those systems now exist, but evidence behavior remains owned by Slice 5.
 
 ## NEXT OPERATION
 
-**Slice 4 — Canonical state and persistence**
+**Slice 5 — Evidence notebook**
 
 Execute without requesting design decisions:
 
-1. Implement the canonical `GameState` service for:
-   - current room;
-   - clues;
-   - deductions;
-   - hypotheses;
-   - witness trust;
-   - chapter flags;
-   - skill values;
-   - inventory;
-   - playtime.
-2. Make room transitions update canonical current-room state rather than relying on scene-local state.
-3. Implement a versioned save schema with:
-   - schema version;
-   - content version;
-   - manual slots;
-   - auto-save slot;
-   - migration hook.
-4. Implement save/load persistence using Godot user storage compatible with Web export.
-5. Add minimal Save/Load UI reachable from the game shell.
-6. Auto-save on room transition.
-7. Restore the correct room and spawn-safe player state after loading.
-8. Add serialization, round-trip, invalid-save, and migration tests.
-9. Protect the existing movement/hotspot/room-transition tests.
-10. Run Godot validation and main-scene startup regression.
-11. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
-12. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
+1. Implement authored clue definitions with:
+   - stable clue ID;
+   - title;
+   - source;
+   - reliability;
+   - tags;
+   - contradiction tags;
+   - optional detail levels;
+   - optional temporal provenance.
+2. Implement an `EvidenceService` that:
+   - acquires clues idempotently;
+   - persists clue discovery in GameState;
+   - upgrades clue detail without duplicating clues;
+   - emits evidence-added / evidence-upgraded events;
+   - returns evidence relevant to filters/context.
+3. Implement Chapter One seed clue data needed to exercise the framework, without beginning full Act I content.
+4. Implement the Notebook/Evidence UI with:
+   - discovered evidence list;
+   - selected clue detail;
+   - source/reliability display;
+   - basic tag/filter support;
+   - keyboard access via N / E;
+   - close/back behavior that returns cleanly to room play.
+5. Make notebook/evidence state survive save/load through the existing GameState persistence path.
+6. Add evidence acquisition and upgrade hooks that hotspots/content can call later without hardcoding notebook logic into rooms.
+7. Add tests for:
+   - idempotent acquisition;
+   - detail upgrades;
+   - serialization persistence;
+   - filtering;
+   - unknown clue rejection.
+8. Protect all Slice 3 interaction and Slice 4 persistence regressions.
+9. Run Godot validation and main-scene startup regression.
+10. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
+11. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
 
-Do not start Slice 5 in the same turn unless the user explicitly asks for multiple slices.
+Do not start Slice 6 in the same turn unless the user explicitly asks for multiple slices.

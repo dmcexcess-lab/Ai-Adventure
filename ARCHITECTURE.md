@@ -62,7 +62,8 @@ Do **not** build a general-purpose visual scripting language.
 ### GameState
 
 Owns the canonical serializable state:
-- current room;
+- current room path and room ID;
+- spawn-safe player foot position;
 - clues;
 - deductions;
 - hypotheses;
@@ -70,7 +71,10 @@ Owns the canonical serializable state:
 - chapter flags;
 - skill values;
 - inventory;
+- visited locations;
 - playtime.
+
+The service exposes normalized dictionary serialization so later evidence/dialogue/RPG systems add data without making room scenes authoritative.
 
 No room scene is allowed to be the sole owner of critical story state.
 
@@ -80,7 +84,11 @@ Handles:
 - room changes;
 - transition locks;
 - spawn markers;
+- canonical room/player-position synchronization;
+- save restoration;
 - auto-save hooks.
+
+Room loads update GameState only after the new room is instantiated and positioned. Save restoration can provide an explicit player foot position; the room contract clamps that position to its valid walk bounds before play resumes.
 
 ### InteractionController
 
@@ -134,16 +142,34 @@ Node effects can:
 
 ### SaveService
 
-Versioned save schema.
+Versioned JSON save schema stored under Godot `user://`.
 
-Must support:
-- manual save slots;
-- quick auto-save;
-- schema version;
-- content version;
-- migration hook.
+Current schema fields:
+- `schema_version`;
+- `content_version`;
+- `saved_at_unix`;
+- canonical `state` payload from GameState.
 
-Web persistence must be exercised in Firefox before Chapter One is called done.
+Supported slots:
+- `manual_1`;
+- `manual_2`;
+- `manual_3`;
+- `autosave`.
+
+The game shell currently exposes manual slot 1 through simple **SAVE** / **LOAD** controls; the service already supports the remaining manual slots for later UI expansion.
+
+SaveService responsibilities:
+- validate slot names;
+- capture current room/player state before writes;
+- serialize/deserialize JSON;
+- reject malformed or future-version saves;
+- migrate older schema versions;
+- apply GameState;
+- ask SceneRouter to restore the saved room and safe player position.
+
+Auto-save runs after successful room entry. Loading does not immediately overwrite the loaded save with another auto-save.
+
+Godot `user://` is used so the same implementation targets desktop files and browser-backed Web persistence. Fresh-browser Firefox persistence remains part of release QA before Chapter One is called done.
 
 ## Room contract
 

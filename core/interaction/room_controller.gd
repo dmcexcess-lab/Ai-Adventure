@@ -34,8 +34,15 @@ func enter_at(spawn_marker: String = "") -> void:
 			foot = (marker as Node2D).position
 		elif marker is Control:
 			foot = (marker as Control).position
+	restore_player_foot(foot)
 
-	player.call("place_at_foot", foot)
+
+func restore_player_foot(foot: Vector2) -> void:
+	player.call("place_at_foot", _clamp_to_walk_bounds(foot))
+
+
+func get_player_foot() -> Vector2:
+	return player.call("get_foot_position")
 
 
 func walk_to(point: Vector2) -> void:
@@ -57,10 +64,9 @@ func is_hotspot_reveal_active() -> bool:
 
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			walk_to(get_local_mouse_position())
-			accept_event()
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		walk_to(get_local_mouse_position())
+		accept_event()
 
 
 func _register_hotspots() -> void:
@@ -86,7 +92,6 @@ func _on_hotspot_action_requested(hotspot: Node, action: StringName) -> void:
 	_interaction_serial += 1
 	var serial := _interaction_serial
 	var approach: Vector2 = hotspot.get("approach_point")
-
 	if approach.x >= 0.0 and approach.y >= 0.0:
 		var moved: bool = bool(player.call("move_to", approach, walk_bounds))
 		if moved:
@@ -99,6 +104,10 @@ func _on_hotspot_action_requested(hotspot: Node, action: StringName) -> void:
 
 
 func _on_player_arrived() -> void:
+	var router := get_node_or_null("/root/SceneRouter")
+	if router != null and router.has_method("sync_current_room_state"):
+		router.call("sync_current_room_state")
+
 	if not is_instance_valid(_pending_hotspot):
 		_clear_pending_interaction()
 		return
@@ -106,10 +115,8 @@ func _on_player_arrived() -> void:
 	var hotspot := _pending_hotspot
 	var serial := _pending_serial
 	_clear_pending_interaction()
-
-	if serial != _interaction_serial:
-		return
-	_complete_primary_action(hotspot, serial)
+	if serial == _interaction_serial:
+		_complete_primary_action(hotspot, serial)
 
 
 func _complete_primary_action(hotspot: Node, serial: int) -> void:
@@ -136,3 +143,11 @@ func _complete_primary_action(hotspot: Node, serial: int) -> void:
 func _clear_pending_interaction() -> void:
 	_pending_hotspot = null
 	_pending_serial = -1
+
+
+func _clamp_to_walk_bounds(point: Vector2) -> Vector2:
+	var max_point := walk_bounds.position + walk_bounds.size
+	return Vector2(
+		clampf(point.x, walk_bounds.position.x, max_point.x),
+		clampf(point.y, walk_bounds.position.y, max_point.y)
+	)

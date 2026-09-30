@@ -44,5 +44,8 @@ jobs:
       - name: Interaction smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/interaction_smoke.gd
 
+      - name: Persistence smoke test
+        run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/persistence_smoke.gd
+
       - name: Main scene startup
         run: timeout 30s .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --quit-after 3
