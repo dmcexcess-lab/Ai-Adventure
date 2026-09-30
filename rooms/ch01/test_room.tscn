@@ -151,6 +151,14 @@ primary_text = "The packet is intact enough to enter into the case notebook."
 approach_point = Vector2(212, 326)
 evidence_id = "packet_impossible_timestamp"
 evidence_detail_level = 1
+skill_check_id = "workstation_packet_second_field"
+skill_name = "observation"
+skill_threshold = 3
+skill_modifier = 0
+skill_success_evidence_id = "packet_impossible_timestamp"
+skill_success_evidence_detail_level = 2
+skill_success_text = "A second timestamp field repeats the impossible time. Evidence detail upgraded."
+skill_failure_text = "You cannot isolate another reliable pattern in the damaged fields yet."
 
 [node name="WindowHotspot" type="Control" parent="Hotspots"]
 layout_mode = 0

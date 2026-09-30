@@ -53,6 +53,9 @@ jobs:
       - name: Dialogue smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/dialogue_smoke.gd
 
+      - name: RPG smoke test
+        run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/rpg_smoke.gd
+
       - name: Persistence smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/persistence_smoke.gd
 
