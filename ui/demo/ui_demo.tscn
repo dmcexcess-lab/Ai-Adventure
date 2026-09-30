@@ -396,7 +396,8 @@ theme_override_constants/separation = 8
 [node name="Header" type="HBoxContainer" parent="DialoguePanel/Margin/Stack"]
 layout_mode = 2
 
-[node name="Name" type="Label" parent="DialoguePanel/Margin/Stack/Header"]
+[node name="DialogueName" type="Label" parent="DialoguePanel/Margin/Stack/Header"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
@@ -414,7 +415,8 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "EXIT"
 
-[node name="Role" type="Label" parent="DialoguePanel/Margin/Stack"]
+[node name="DialogueRole" type="Label" parent="DialoguePanel/Margin/Stack"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.50, 0.60, 0.59, 1)
 theme_override_font_sizes/font_size = 9
@@ -432,7 +434,8 @@ theme_override_constants/separation = 12
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 
-[node name="Portrait" type="TextureRect" parent="DialoguePanel/Margin/Stack/DialogueRow/PortraitFrame"]
+[node name="DialoguePortrait" type="TextureRect" parent="DialoguePanel/Margin/Stack/DialogueRow/PortraitFrame"]
+unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("7_alex")
 expand_mode = 1
@@ -474,3 +477,45 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 5
+
+[node name="ResolutionPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 72.0
+offset_top = 72.0
+offset_right = 568.0
+offset_bottom = 380.0
+
+[node name="Margin" type="MarginContainer" parent="ResolutionPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 16
+
+[node name="Stack" type="VBoxContainer" parent="ResolutionPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Heading" type="Label" parent="ResolutionPanel/Margin/Stack"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
+theme_override_font_sizes/font_size = 20
+text = "CASE CLOSED // UMBRELLA QUEST"
+horizontal_alignment = 1
+
+[node name="ResolutionText" type="Label" parent="ResolutionPanel/Margin/Stack"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.84, 0.84, 0.78, 1)
+theme_override_font_sizes/font_size = 12
+text = "Case resolution."
+autowrap_mode = 2
+vertical_alignment = 1
+
+[node name="ResolutionCloseButton" type="Button" parent="ResolutionPanel/Margin/Stack"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "KEEP EXPLORING"

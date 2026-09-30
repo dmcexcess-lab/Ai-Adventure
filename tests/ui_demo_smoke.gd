@@ -64,7 +64,7 @@ func _run() -> void:
 	var player_sprite := demo.find_child("Sprite", true, false)
 	if player_sprite == null or player_sprite.get("texture") == null:
 		failures.append("visual reference player sprite is missing")
-	var portrait := demo.find_child("Portrait", true, false)
+	var portrait := demo.find_child("DialoguePortrait", true, false)
 	if portrait == null or portrait.get("texture") == null:
 		failures.append("dialogue portrait art is missing")
 	if demo.get("theme") == null:
@@ -90,7 +90,7 @@ func _run() -> void:
 	demo.call("_open_character")
 	if character == null or not character.visible or (notebook != null and notebook.visible):
 		failures.append("demo character panel did not open exclusively")
-	demo.call("_open_dialogue")
+	demo.call("_open_dialogue", "alex")
 	if dialogue == null or not dialogue.visible or (character != null and character.visible):
 		failures.append("demo dialogue panel did not open exclusively")
 	demo.call("_close_all_modals")

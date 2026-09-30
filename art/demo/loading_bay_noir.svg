@@ -9,6 +9,9 @@
 <rect x="202" y="54" width="274" height="234" fill="#242c2e" stroke="#07090a" stroke-width="9"/>
 <g stroke="#4c595b" stroke-width="5"><path d="M216 86 H462"/><path d="M216 116 H462"/><path d="M216 146 H462"/><path d="M216 176 H462"/><path d="M216 206 H462"/><path d="M216 236 H462"/></g>
 <rect x="18" y="98" width="96" height="190" fill="#1b282b" stroke="#07090a" stroke-width="7"/><rect x="516" y="98" width="104" height="190" fill="#1a2528" stroke="#07090a" stroke-width="7"/>
+<path d="M262 92 V228 M448 92 V228 M262 108 H448" stroke="#69797b" stroke-width="8"/>
+<path d="M292 112 Q314 132 292 208 M344 112 Q366 132 344 208 M396 112 Q418 132 396 208" fill="none" stroke="#2b393c" stroke-width="16"/>
+<path d="M278 96 H432" stroke="#c58a43" stroke-width="3" opacity=".55"/>
 <rect x="142" y="226" width="104" height="62" fill="#584532" stroke="#110d0a" stroke-width="6"/><path d="M142 246 h104 M194 226 v62" stroke="#2d231a" stroke-width="4"/>
 <path d="M468 170 L640 132 L640 288 L482 288 Z" fill="#17313a"/><g stroke="#75a5ae" stroke-width="2" opacity=".6"><path d="M490 142 l-22 92"/><path d="M512 142 l-22 92"/><path d="M534 142 l-22 92"/><path d="M556 142 l-22 92"/><path d="M578 142 l-22 92"/><path d="M600 142 l-22 92"/><path d="M622 142 l-22 92"/><path d="M644 142 l-22 92"/></g>
 <ellipse cx="408" cy="342" rx="116" ry="18" fill="#2a5960" opacity=".52"/><ellipse cx="430" cy="345" rx="72" ry="9" fill="#9d7040" opacity=".35"/><path d="M0 421 L0 286 L640 250 L640 421 Z" fill="url(#floor)"/>
