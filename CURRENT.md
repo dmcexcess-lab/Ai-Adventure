@@ -94,16 +94,20 @@ The notebook, hypotheses, character panel, dialogue panel, and bottom interactio
 
 ## Web-safe art pipeline
 
-Source art is stored as raw SVG under `art/demo/`.
+Source art remains SVG under `art/demo/`, but the live game no longer loads those files manually.
 
-At runtime the reference scene:
+The reference scene directly declares the lobby background, player sprite, and Alex portrait as Godot `Texture2D` resources. Godot imports those SVGs through its normal asset pipeline and packages the imported textures into the Web PCK.
 
-1. reads the SVG text;
-2. rasterizes it through Godot `Image.load_svg_from_string()`;
-3. creates an `ImageTexture`;
-4. applies it to the room/background/sprite/portrait controls.
+This corrects the first Slice 9 browser deployment, where the UI rendered but the world art was blank because runtime `FileAccess` paths were not exported.
 
-This keeps authored source art resolution-independent while avoiding reliance on editor-generated SVG import metadata during headless and Web validation.
+Validation now includes:
+
+- a complete Godot import pass before headless resource tests;
+- direct scene loading with the imported art;
+- texture-presence checks in the visual demo;
+- Pages export checks that the required Umbrella art resource names are present in `index.pck`.
+
+The authored SVGs remain resolution-independent source assets while the runtime receives normal packaged Godot textures.
 
 ## Roadmap re-baseline
 
@@ -126,10 +130,10 @@ Godot 4.7.2 CI passes:
 
 1. visual-direction/theme resource validation;
 2. raw SVG art-file validation;
-3. runtime SVG rasterization;
-4. reference-room background texture creation;
-5. player sprite texture creation;
-6. dialogue portrait texture creation;
+3. Godot SVG import completion;
+4. direct reference-room background texture loading;
+5. direct player sprite texture loading;
+6. direct dialogue portrait texture loading;
 7. comic-noir theme application;
 8. preserved Umbrella Quest movement/hotspots;
 9. hotspot reveal;

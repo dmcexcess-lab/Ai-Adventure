@@ -387,6 +387,10 @@ It is allowed to use separate demo-local state/content where that protects canon
 
 The visual pipeline favors static 2D illustrated assets, SVG/texture-based authored elements, and lightweight Godot UI styling compatible with Web export. It must not require dynamic 3D, compute shaders, or heavy runtime effects.
 
-The current reference room stores source illustrations as raw SVG files under `art/demo/`. The demo runtime reads those files with `FileAccess`, rasterizes them through `Image.load_svg_from_string()`, and creates lightweight `ImageTexture` instances. This avoids depending on editor-import metadata in headless/Web validation while preserving resolution-independent authored source art.
+The current reference room stores authored illustrations as SVG files under `art/demo/`. Those SVGs are referenced directly by the Godot scene as `Texture2D` resources. Godot's normal import pipeline rasterizes them into engine texture resources and the Web exporter packages those imported resources into the PCK.
+
+Do **not** use `FileAccess` to load visual source files by path at runtime. The first Slice 9 deployment did that and the browser build omitted the unreferenced source files, producing a blank world while the UI still rendered.
+
+CI now runs Godot's import-completion pass before resource tests. The Pages workflow also checks the exported PCK for the three required Umbrella reference-art resource names before deployment.
 
 The reusable UI skin lives at `ui/theme/comic_noir_theme.tres` and is applied to the Umbrella Quest reference scene.
