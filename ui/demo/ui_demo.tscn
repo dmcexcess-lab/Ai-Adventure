@@ -1,11 +1,7 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://ui/demo/ui_demo.gd" id="1_demo"]
-[ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
-[ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
 [ext_resource type="Theme" path="res://ui/theme/comic_noir_theme.tres" id="4_theme"]
-[ext_resource type="Texture2D" path="res://art/demo/community_center_lobby_noir.svg" id="5_bg"]
-[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="6_player"]
 [ext_resource type="Texture2D" path="res://art/demo/alex_portrait_noir.svg" id="7_alex"]
 
 [node name="UIDemo" type="Control"]
@@ -19,14 +15,16 @@ mouse_filter = 0
 theme = ExtResource("4_theme")
 script = ExtResource("1_demo")
 
-[node name="ArtBackground" type="TextureRect" parent="."]
-layout_mode = 0
-offset_right = 640.0
-offset_bottom = 422.0
-mouse_filter = 2
-texture = ExtResource("5_bg")
-expand_mode = 1
-stretch_mode = 0
+[node name="RoomHost" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -58.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
 
 [node name="TopCaption" type="PanelContainer" parent="."]
 layout_mode = 0
@@ -46,116 +44,19 @@ theme_override_constants/margin_bottom = 5
 [node name="Stack" type="VBoxContainer" parent="TopCaption/Margin"]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="TopCaption/Margin/Stack"]
+[node name="RoomTitle" type="Label" parent="TopCaption/Margin/Stack"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
 theme_override_font_sizes/font_size = 13
-text = "UMBRELLA QUEST // VISUAL REFERENCE ROOM"
+text = "UMBRELLA QUEST // COMMUNITY CENTER LOBBY"
 
-[node name="Subtitle" type="Label" parent="TopCaption/Margin/Stack"]
+[node name="RoomSubtitle" type="Label" parent="TopCaption/Margin/Stack"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.54, 0.7, 0.71, 1)
 theme_override_font_sizes/font_size = 8
 text = "WESTSIDE COMMUNITY CENTER // RAIN, 9:17 PM"
-
-[node name="DemoPlayer" type="Control" parent="."]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 297.0
-offset_top = 283.0
-offset_right = 339.0
-offset_bottom = 365.0
-mouse_filter = 2
-script = ExtResource("2_player")
-move_speed = 185.0
-
-[node name="Sprite" type="TextureRect" parent="DemoPlayer"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("6_player")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Hotspots" type="Control" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_bottom = -58.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="UmbrellaRack" type="Control" parent="Hotspots"]
-layout_mode = 0
-offset_left = 42.0
-offset_top = 144.0
-offset_right = 142.0
-offset_bottom = 280.0
-script = ExtResource("3_hotspot")
-hotspot_id = "umbrella_rack"
-display_name = "Umbrella Rack"
-inspect_text = "Rain beads on the metal frame. Most hooks are wet. One isn't."
-primary_text = "The rack shows signs of recent use."
-approach_point = Vector2(96, 326)
-
-[node name="ClaimBoard" type="Control" parent="Hotspots"]
-layout_mode = 0
-offset_left = 176.0
-offset_top = 82.0
-offset_right = 340.0
-offset_bottom = 194.0
-script = ExtResource("3_hotspot")
-hotspot_id = "claim_board"
-display_name = "Lost-and-Found Board"
-inspect_text = "Carbon slips, rain notices, and claim tickets overlap beneath yellowing tape."
-primary_text = "The paper board has recent entries."
-approach_point = Vector2(258, 316)
-
-[node name="VendingMachine" type="Control" parent="Hotspots"]
-layout_mode = 0
-offset_left = 332.0
-offset_top = 106.0
-offset_right = 404.0
-offset_bottom = 258.0
-script = ExtResource("3_hotspot")
-hotspot_id = "vending_machine"
-display_name = "Vending Machine"
-inspect_text = "Cold blue light, six sodas, one mechanical hum, no obvious motive."
-primary_text = "Six sodas. Zero clues."
-approach_point = Vector2(370, 326)
-
-[node name="FrontDesk" type="Control" parent="Hotspots"]
-layout_mode = 0
-offset_left = 416.0
-offset_top = 136.0
-offset_right = 612.0
-offset_bottom = 270.0
-script = ExtResource("3_hotspot")
-hotspot_id = "front_desk"
-display_name = "Alex // Front Desk"
-inspect_text = "Alex watches the rain through the lobby glass and pretends not to watch you."
-primary_text = "Alex looks up."
-approach_point = Vector2(494, 326)
-
-[node name="ExitDoor" type="Control" parent="Hotspots"]
-layout_mode = 0
-offset_left = 540.0
-offset_top = 54.0
-offset_right = 618.0
-offset_bottom = 180.0
-script = ExtResource("3_hotspot")
-hotspot_id = "exit_door"
-display_name = "Rainy Street"
-inspect_text = "Outside: rain, reflected brake lights, and a city that clearly has somewhere else to be."
-primary_text = "The vertical slice currently ends at the lobby."
-approach_point = Vector2(572, 326)
 
 [node name="HudBar" type="PanelContainer" parent="."]
 layout_mode = 1

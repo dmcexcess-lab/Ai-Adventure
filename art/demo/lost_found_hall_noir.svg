@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="422" viewBox="0 0 640 422">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101923"/><stop offset="1" stop-color="#182b32"/></linearGradient>
+<linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#263238"/><stop offset="1" stop-color="#10171b"/></linearGradient>
+<linearGradient id="amber" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c58a43"/><stop offset="1" stop-color="#6f4b29"/></linearGradient>
+</defs>
+<rect width="640" height="422" fill="#0a0e12"/>
+<rect x="0" y="0" width="640" height="292" fill="#151d20"/>
+<path d="M0 44 L640 72 L640 286 L0 286 Z" fill="#1f292b"/>
+<path d="M0 74 L308 112 L308 286 L0 286 Z" fill="#202c2f"/><path d="M640 84 L372 112 L372 286 L640 286 Z" fill="#182326"/>
+<path d="M307 109 L373 109 L392 286 L290 286 Z" fill="#0d1518"/>
+<g fill="#26373a" stroke="#0b0e0f" stroke-width="5"><rect x="58" y="108" width="54" height="144"/><path d="M66 142 h38 M66 176 h38 M66 210 h38" stroke="#516064" stroke-width="2"/><rect x="126" y="108" width="54" height="144"/><path d="M134 142 h38 M134 176 h38 M134 210 h38" stroke="#516064" stroke-width="2"/><rect x="194" y="108" width="54" height="144"/><path d="M202 142 h38 M202 176 h38 M202 210 h38" stroke="#516064" stroke-width="2"/><rect x="408" y="108" width="54" height="144"/><path d="M416 142 h38 M416 176 h38 M416 210 h38" stroke="#516064" stroke-width="2"/><rect x="476" y="108" width="54" height="144"/><path d="M484 142 h38 M484 176 h38 M484 210 h38" stroke="#516064" stroke-width="2"/></g>
+<rect x="266" y="40" width="110" height="18" fill="#d6c58d" opacity=".75"/><path d="M273 58 L248 112 M369 58 L394 112" stroke="#b1a16e" stroke-width="3" opacity=".45"/><path d="M0 421 L0 286 L640 250 L640 421 Z" fill="url(#floor)"/>
+<path d="M0 421 L265 286 M640 421 L382 273 M130 421 L292 283 M520 421 L365 276" stroke="#38464a" stroke-width="2" opacity=".7"/>
+<path d="M0 364 L640 329 M0 398 L640 368" stroke="#1b282c" stroke-width="3"/>
+<rect x="0" y="416" width="640" height="6" fill="#080b0e"/>
+</svg>

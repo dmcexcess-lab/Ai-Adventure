@@ -1,0 +1,158 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
+[ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
+[ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
+[ext_resource type="Texture2D" path="res://art/demo/lost_found_hall_noir.svg" id="4_bg"]
+[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="5_player"]
+
+[node name="DemoRoom" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_room")
+room_id = "lost_found_hall"
+room_title = "LOST & FOUND HALL"
+room_subtitle = "WESTSIDE COMMUNITY CENTER // EAST SERVICE HALL"
+walk_bounds = Rect2(48, 246, 544, 132)
+default_spawn = Vector2(92, 354)
+
+[node name="ArtBackground" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_bg")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="PlayerActor" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 71.0
+offset_top = 272.0
+offset_right = 113.0
+offset_bottom = 354.0
+mouse_filter = 2
+script = ExtResource("2_player")
+move_speed = 185.0
+
+[node name="Sprite" type="TextureRect" parent="PlayerActor"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_player")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Hotspots" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Cabinets" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 210.0
+offset_top = 104.0
+offset_right = 384.0
+offset_bottom = 266.0
+script = ExtResource("3_hotspot")
+hotspot_id = "claim_cabinets"
+display_name = "Claim Cabinets"
+inspect_text = "Metal cubbies, masking-tape labels, and a forest of forgotten handles."
+primary_text = "Cabinet B is among dozens of ordinary compartments."
+approach_point = Vector2(298, 336)
+
+[node name="LobbyDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 106.0
+offset_right = 108.0
+offset_bottom = 284.0
+script = ExtResource("3_hotspot")
+hotspot_id = "hall_lobby"
+display_name = "Lobby"
+inspect_text = "Warm light leaks in from the lobby."
+primary_text = "Return to the lobby."
+approach_point = Vector2(84, 342)
+transition_room = "res://rooms/demo/lobby.tscn"
+transition_spawn = "FromLostFound"
+
+[node name="StorageDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 418.0
+offset_top = 92.0
+offset_right = 510.0
+offset_bottom = 282.0
+script = ExtResource("3_hotspot")
+hotspot_id = "storage_door"
+display_name = "Storage Room"
+inspect_text = "A dented metal door marked STORAGE."
+primary_text = "Enter storage."
+approach_point = Vector2(474, 340)
+transition_room = "res://rooms/demo/storage_room.tscn"
+transition_spawn = "FromHall"
+
+[node name="MaintenanceDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 524.0
+offset_top = 88.0
+offset_right = 616.0
+offset_bottom = 284.0
+script = ExtResource("3_hotspot")
+hotspot_id = "maintenance_door"
+display_name = "Maintenance Corridor"
+inspect_text = "Painted conduit disappears through the maintenance door."
+primary_text = "Enter maintenance."
+approach_point = Vector2(548, 340)
+transition_room = "res://rooms/demo/maintenance_corridor.tscn"
+transition_spawn = "FromHall"
+
+[node name="Spawns" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FromLobby" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 84.0
+offset_top = 350.0
+offset_right = 85.0
+offset_bottom = 351.0
+mouse_filter = 2
+
+[node name="FromStorage" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 478.0
+offset_top = 350.0
+offset_right = 479.0
+offset_bottom = 351.0
+mouse_filter = 2
+
+[node name="FromMaintenance" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 548.0
+offset_top = 350.0
+offset_right = 549.0
+offset_bottom = 351.0
+mouse_filter = 2

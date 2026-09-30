@@ -1,0 +1,181 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
+[ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
+[ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
+[ext_resource type="Texture2D" path="res://art/demo/maintenance_corridor_noir.svg" id="4_bg"]
+[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="5_player"]
+
+[node name="DemoRoom" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_room")
+room_id = "maintenance_corridor"
+room_title = "MAINTENANCE CORRIDOR"
+room_subtitle = "WESTSIDE COMMUNITY CENTER // SERVICE SPINE"
+walk_bounds = Rect2(46, 250, 548, 126)
+default_spawn = Vector2(110, 354)
+
+[node name="ArtBackground" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_bg")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="PlayerActor" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 89.0
+offset_top = 272.0
+offset_right = 131.0
+offset_bottom = 354.0
+mouse_filter = 2
+script = ExtResource("2_player")
+move_speed = 185.0
+
+[node name="Sprite" type="TextureRect" parent="PlayerActor"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_player")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Hotspots" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FusePanel" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 326.0
+offset_top = 104.0
+offset_right = 430.0
+offset_bottom = 258.0
+script = ExtResource("3_hotspot")
+hotspot_id = "fuse_panel"
+display_name = "Electrical Panel"
+inspect_text = "Old breakers, handwritten circuit names, and one fresh inspection sticker."
+primary_text = "The panel is scenery for now; investigation hooks arrive next slice."
+approach_point = Vector2(374, 338)
+
+[node name="HallDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 104.0
+offset_right = 100.0
+offset_bottom = 282.0
+script = ExtResource("3_hotspot")
+hotspot_id = "maintenance_hall"
+display_name = "Lost & Found Hall"
+inspect_text = "The east hall is through here."
+primary_text = "Return to Lost & Found."
+approach_point = Vector2(88, 342)
+transition_room = "res://rooms/demo/lost_found_hall.tscn"
+transition_spawn = "FromMaintenance"
+
+[node name="OfficeDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 136.0
+offset_top = 112.0
+offset_right = 218.0
+offset_bottom = 280.0
+script = ExtResource("3_hotspot")
+hotspot_id = "maintenance_office"
+display_name = "Staff Office"
+inspect_text = "A staff door returns to the office."
+primary_text = "Enter the office."
+approach_point = Vector2(188, 342)
+transition_room = "res://rooms/demo/staff_office.tscn"
+transition_spawn = "FromMaintenance"
+
+[node name="StorageDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 110.0
+offset_right = 332.0
+offset_bottom = 280.0
+script = ExtResource("3_hotspot")
+hotspot_id = "maintenance_storage"
+display_name = "Storage Room"
+inspect_text = "The storage-room service door is scarred by carts."
+primary_text = "Enter storage."
+approach_point = Vector2(300, 342)
+transition_room = "res://rooms/demo/storage_room.tscn"
+transition_spawn = "FromMaintenance"
+
+[node name="LoadingDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 514.0
+offset_top = 92.0
+offset_right = 618.0
+offset_bottom = 282.0
+script = ExtResource("3_hotspot")
+hotspot_id = "loading_door"
+display_name = "Loading Bay"
+inspect_text = "Cold rain smell pushes through the loading-bay door seals."
+primary_text = "Go to the loading bay."
+approach_point = Vector2(548, 342)
+transition_room = "res://rooms/demo/loading_bay.tscn"
+transition_spawn = "FromMaintenance"
+
+[node name="Spawns" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FromHall" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 88.0
+offset_top = 350.0
+offset_right = 89.0
+offset_bottom = 351.0
+mouse_filter = 2
+
+[node name="FromOffice" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 188.0
+offset_top = 350.0
+offset_right = 189.0
+offset_bottom = 351.0
+mouse_filter = 2
+
+[node name="FromStorage" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 300.0
+offset_top = 350.0
+offset_right = 301.0
+offset_bottom = 351.0
+mouse_filter = 2
+
+[node name="FromLoadingBay" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 548.0
+offset_top = 350.0
+offset_right = 549.0
+offset_bottom = 351.0
+mouse_filter = 2

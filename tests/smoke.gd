@@ -10,6 +10,7 @@ const REQUIRED_SCRIPTS := [
 	"res://autoload/scene_router.gd",
 	"res://ui/menus/main_menu.gd",
 	"res://ui/demo/ui_demo.gd",
+	"res://rooms/demo/demo_room.gd",
 	"res://core/game_shell/game_shell.gd",
 	"res://core/interaction/room_controller.gd",
 	"res://core/interaction/player_actor.gd",
@@ -22,6 +23,13 @@ const REQUIRED_VISUALS := [
 
 const REQUIRED_ART_FILES := [
 	"res://art/demo/community_center_lobby_noir.svg",
+	"res://art/demo/exterior_entry_noir.svg",
+	"res://art/demo/front_desk_noir.svg",
+	"res://art/demo/lost_found_hall_noir.svg",
+	"res://art/demo/staff_office_noir.svg",
+	"res://art/demo/storage_room_noir.svg",
+	"res://art/demo/maintenance_corridor_noir.svg",
+	"res://art/demo/loading_bay_noir.svg",
 	"res://art/demo/demo_player_noir.svg",
 	"res://art/demo/alex_portrait_noir.svg",
 ]
@@ -29,6 +37,14 @@ const REQUIRED_ART_FILES := [
 const REQUIRED_SCENES := [
 	"res://ui/menus/main_menu.tscn",
 	"res://ui/demo/ui_demo.tscn",
+	"res://rooms/demo/exterior_entry.tscn",
+	"res://rooms/demo/lobby.tscn",
+	"res://rooms/demo/front_desk.tscn",
+	"res://rooms/demo/lost_found_hall.tscn",
+	"res://rooms/demo/staff_office.tscn",
+	"res://rooms/demo/storage_room.tscn",
+	"res://rooms/demo/maintenance_corridor.tscn",
+	"res://rooms/demo/loading_bay.tscn",
 	"res://core/game_shell/game_shell.tscn",
 	"res://ui/notebook/evidence_notebook.tscn",
 	"res://ui/dialogue/conversation_ui.tscn",

@@ -1,0 +1,148 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
+[ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
+[ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
+[ext_resource type="Texture2D" path="res://art/demo/loading_bay_noir.svg" id="4_bg"]
+[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="5_player"]
+
+[node name="DemoRoom" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_room")
+room_id = "loading_bay"
+room_title = "LOADING BAY / SERVICE EXIT"
+room_subtitle = "WESTSIDE COMMUNITY CENTER // REAR ALLEY"
+walk_bounds = Rect2(46, 246, 548, 132)
+default_spawn = Vector2(118, 354)
+
+[node name="ArtBackground" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_bg")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="PlayerActor" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 97.0
+offset_top = 272.0
+offset_right = 139.0
+offset_bottom = 354.0
+mouse_filter = 2
+script = ExtResource("2_player")
+move_speed = 185.0
+
+[node name="Sprite" type="TextureRect" parent="PlayerActor"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_player")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Hotspots" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="RollupDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 224.0
+offset_top = 74.0
+offset_right = 452.0
+offset_bottom = 280.0
+script = ExtResource("3_hotspot")
+hotspot_id = "rollup_door"
+display_name = "Loading Door"
+inspect_text = "A battered roll-up door faces a rain-black alley."
+primary_text = "The loading door is shut for the night."
+approach_point = Vector2(338, 338)
+
+[node name="MaintenanceDoor" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 104.0
+offset_right = 112.0
+offset_bottom = 284.0
+script = ExtResource("3_hotspot")
+hotspot_id = "loading_maintenance"
+display_name = "Maintenance Corridor"
+inspect_text = "The service corridor returns inside."
+primary_text = "Go back inside."
+approach_point = Vector2(92, 342)
+transition_room = "res://rooms/demo/maintenance_corridor.tscn"
+transition_spawn = "FromLoadingBay"
+
+[node name="ServiceExit" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 518.0
+offset_top = 104.0
+offset_right = 618.0
+offset_bottom = 284.0
+script = ExtResource("3_hotspot")
+hotspot_id = "service_exit"
+display_name = "Service Alley"
+inspect_text = "The alley wraps around to the front awning."
+primary_text = "Follow the alley to the front entrance."
+approach_point = Vector2(540, 342)
+transition_room = "res://rooms/demo/exterior_entry.tscn"
+transition_spawn = "FromLoadingBay"
+
+[node name="Puddle" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 300.0
+offset_right = 468.0
+offset_bottom = 360.0
+script = ExtResource("3_hotspot")
+hotspot_id = "loading_puddle"
+display_name = "Oil-Slick Puddle"
+inspect_text = "Amber security light breaks into cyan rain across a thin oil sheen."
+primary_text = "A visual focal point, not evidence yet."
+approach_point = Vector2(406, 350)
+
+[node name="Spawns" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FromMaintenance" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 350.0
+offset_right = 93.0
+offset_bottom = 351.0
+mouse_filter = 2
+
+[node name="FromExterior" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 540.0
+offset_top = 350.0
+offset_right = 541.0
+offset_bottom = 351.0
+mouse_filter = 2

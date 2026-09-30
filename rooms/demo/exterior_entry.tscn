@@ -1,0 +1,135 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
+[ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
+[ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
+[ext_resource type="Texture2D" path="res://art/demo/exterior_entry_noir.svg" id="4_bg"]
+[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="5_player"]
+
+[node name="DemoRoom" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_room")
+room_id = "exterior_entry"
+room_title = "EXTERIOR ENTRY / AWNING"
+room_subtitle = "WESTSIDE COMMUNITY CENTER // RAIN, 9:17 PM"
+walk_bounds = Rect2(40, 255, 560, 125)
+default_spawn = Vector2(320, 356)
+
+[node name="ArtBackground" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_bg")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="PlayerActor" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 299.0
+offset_top = 274.0
+offset_right = 341.0
+offset_bottom = 356.0
+mouse_filter = 2
+script = ExtResource("2_player")
+move_speed = 185.0
+
+[node name="Sprite" type="TextureRect" parent="PlayerActor"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_player")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Hotspots" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LobbyDoors" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 438.0
+offset_top = 116.0
+offset_right = 580.0
+offset_bottom = 294.0
+script = ExtResource("3_hotspot")
+hotspot_id = "lobby_doors"
+display_name = "Community Center Doors"
+inspect_text = "Rain-smeared glass. Warm lobby light cuts a rectangle into the sidewalk."
+primary_text = "Go inside."
+approach_point = Vector2(492, 344)
+transition_room = "res://rooms/demo/lobby.tscn"
+transition_spawn = "FromExterior"
+
+[node name="ServiceAlley" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 132.0
+offset_right = 156.0
+offset_bottom = 314.0
+script = ExtResource("3_hotspot")
+hotspot_id = "service_alley"
+display_name = "Service Alley"
+inspect_text = "A narrow alley bends toward the loading bay behind the building."
+primary_text = "Follow the service alley."
+approach_point = Vector2(104, 344)
+transition_room = "res://rooms/demo/loading_bay.tscn"
+transition_spawn = "FromExterior"
+
+[node name="Drain" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 240.0
+offset_top = 310.0
+offset_right = 332.0
+offset_bottom = 366.0
+script = ExtResource("3_hotspot")
+hotspot_id = "street_drain"
+display_name = "Storm Drain"
+inspect_text = "Rainwater carries cigarette ash, leaves, and city grit toward the drain."
+primary_text = "Nothing useful yet."
+approach_point = Vector2(286, 354)
+
+[node name="Spawns" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FromLobby" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 488.0
+offset_top = 352.0
+offset_right = 489.0
+offset_bottom = 353.0
+mouse_filter = 2
+
+[node name="FromLoadingBay" type="Control" parent="Spawns"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 352.0
+offset_right = 93.0
+offset_bottom = 353.0
+mouse_filter = 2
