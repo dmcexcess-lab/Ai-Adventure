@@ -38,6 +38,9 @@ jobs:
       - name: Engine version
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --version
 
+      - name: Import texture assets
+        run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --editor --path . --quit-after 2
+
       - name: Resource smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/smoke.gd
 
