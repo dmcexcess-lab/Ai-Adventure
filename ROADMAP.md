@@ -25,7 +25,7 @@ Umbrella Quest is deliberately non-canon, but it is the authoritative compact pr
   - Establish player/NPC sprite and portrait language.
   - Preserve all existing demo interactions and canon isolation.
 
-- [ ] **Slice 10 — Multi-room Umbrella Quest world skeleton**
+- [x] **Slice 10 — Multi-room Umbrella Quest world skeleton**
   - Exterior entry / awning.
   - Lobby.
   - Front desk.

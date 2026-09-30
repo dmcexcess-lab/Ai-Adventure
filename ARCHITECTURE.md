@@ -394,3 +394,50 @@ Do **not** use `FileAccess` to load visual source files by path at runtime. The 
 CI now runs Godot's import-completion pass before resource tests. The Pages workflow also checks the exported PCK for the three required Umbrella reference-art resource names before deployment.
 
 The reusable UI skin lives at `ui/theme/comic_noir_theme.tres` and is applied to the Umbrella Quest reference scene.
+
+
+### Umbrella multi-room runtime
+
+Slice 10 expands the non-canon vertical slice into eight separately authored room scenes under `rooms/demo/`:
+
+1. exterior entry / awning;
+2. lobby;
+3. front desk;
+4. Lost & Found hall;
+5. staff office;
+6. storage room;
+7. maintenance corridor;
+8. loading bay / service exit.
+
+The persistent `ui/demo/ui_demo.tscn` shell owns the noir HUD, notebook, character panel, dialogue panel, and demo-local investigation state. Its `RoomHost` swaps one demo room scene at a time.
+
+Each demo room uses `rooms/demo/demo_room.gd` and reuses the production interaction primitives:
+
+- `AdventurePlayerActor` for click-to-walk movement;
+- `AdventureHotspot` for hover, inspect, primary actions, approach points, witness IDs, and transition metadata;
+- authored walk bounds;
+- named destination spawn markers;
+- direct imported `Texture2D` background art.
+
+The demo room controller emits room-local signals for:
+
+- status feedback;
+- hover labels;
+- witness conversation requests;
+- ordinary hotspot activation;
+- transitions.
+
+Demo transitions intentionally do **not** call the canonical `SceneRouter`. The shell resolves the target demo scene and spawn marker locally, preserving strict isolation from Chapter One `GameState`.
+
+The demo-local in-memory save snapshot now includes current demo room path and player foot position in addition to evidence/trust state. Loading restores the saved room and safe player position without touching canonical save slots.
+
+The Slice 10 graph is deliberately interconnected rather than linear. The lobby branches toward reception and Lost & Found, the service rooms cross-connect through maintenance, and the loading bay loops back to the exterior.
+
+A protected `demo_world_smoke.gd` test verifies:
+
+- all eight room scenes load;
+- each room has imported background art, shared player visuals, and representative hotspots;
+- every transition target belongs to the demo graph;
+- every transition spawn exists in the destination scene;
+- every room has an outgoing route;
+- the entire graph is reachable from the lobby.

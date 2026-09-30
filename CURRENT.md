@@ -2,183 +2,188 @@
 
 ## Status
 
-**Umbrella Quest Slice 9 — Visual direction foundation: COMPLETE**
+**Umbrella Quest Slice 10 — Multi-room world skeleton: COMPLETE**
 
 Chapter One production remains paused.
 
-Umbrella Quest is now the project's non-canon **visual and mechanical vertical slice** and the repository roadmap has been re-baselined around it.
+Umbrella Quest is now a traversable eight-room compact world using the Slice 9 comic-noir visual language and the production point-and-click interaction primitives.
 
-## Authoritative visual target
+## Demo world
 
-The finished-product direction is now locked as:
+The complete Slice 10 map is now playable:
 
-**polished comic-book adventure presentation with dark, gritty cityscapes.**
+1. **Exterior Entry / Awning**
+   - rainy front entrance;
+   - community-center doors;
+   - service-alley route.
+2. **Community Center Lobby**
+   - Slice 9 reference artwork preserved;
+   - umbrella rack;
+   - claim board;
+   - vending machine;
+   - routes to exterior, front desk, and Lost & Found.
+3. **Front Desk**
+   - dedicated reception composition;
+   - Alex staged as the representative NPC;
+   - closing-log placeholder;
+   - staff-office route.
+4. **Lost & Found Hall**
+   - claim cabinets;
+   - lobby return;
+   - storage and maintenance branches.
+5. **Staff Office**
+   - shift/corkboard focal area;
+   - reception return;
+   - maintenance access.
+6. **Storage Room**
+   - lost-property overflow shelving;
+   - hall return;
+   - service connection to maintenance.
+7. **Maintenance Corridor**
+   - electrical-panel focal area;
+   - links to Lost & Found, office, storage, and loading bay.
+8. **Loading Bay / Service Exit**
+   - roll-up loading door;
+   - rear service staging;
+   - maintenance return;
+   - exterior loop.
 
-`VISUAL_DIRECTION.md` is authoritative for:
+The map is intentionally interconnected rather than a one-way sequence.
 
-- comic-panel composition;
-- dark urban palette;
-- environment wear/material language;
-- practical lighting;
-- character silhouette/sprite treatment;
-- portrait treatment;
-- case-file/noir UI;
-- later combat presentation.
+## Room presentation
 
-The visual target is intentionally much higher than the original rectangle/greybox demo.
+Seven new authored SVG environment backgrounds join the Slice 9 lobby reference art.
 
-## Reference room
+Every room is composed from the start around:
 
-The Umbrella Quest community-center lobby is now the first visual reference room.
+- a dominant focal area;
+- foreground / midground / background separation;
+- readable floor staging;
+- heavy comic shadow/outline language;
+- charcoal, slate, dirty teal, amber, and restrained warning accents;
+- obvious doorway silhouettes;
+- room-scale player readability.
 
-The old primitive room blocks have been replaced by an authored illustrated lobby containing:
+This is the world-skeleton art pass, not the Slice 14 finished graphics pass.
 
-- rain-streaked city windows;
-- exterior skyline and reflected city light;
-- worn civic-building architecture;
-- physical lost-and-found board;
-- vending machine;
-- umbrella rack;
-- front desk;
-- exit door;
-- floor perspective/tile staging;
-- cool exterior versus warm practical-light contrast;
-- heavy comic outline/shadow language.
+## Demo room architecture
 
-Existing hotspot positions and interaction behavior remain intact over the illustration.
+The Umbrella shell now contains a persistent `RoomHost`.
 
-## Character visual language
+Each room is a separate scene using the shared:
 
-The demo player is now represented by a full-body comic-noir sprite instead of geometric body blocks.
+- player actor;
+- hotspot contract;
+- approach-before-action behavior;
+- inspect behavior;
+- held hotspot reveal;
+- named spawn-marker convention.
 
-The visual language uses:
+A new demo-local room controller handles transitions without using canonical `SceneRouter` or `GameState`.
 
-- heavy outer contour;
-- broad shadow shapes;
-- muted urban clothing;
-- restrained warm skin tone;
-- limited high-value detail;
-- readable silhouette at room scale.
+This is deliberate: Umbrella Quest remains mechanically representative while staying isolated from ANAMNESIS story state.
 
-This is the baseline for later production sprites rather than a claim that the Slice 9 sprite is final animation-quality art.
+## Navigation and save behavior
 
-## Dialogue portrait language
+Transitions preserve authored entry positions through named destination spawn markers.
 
-Alex now has a dedicated comic-book portrait integrated into the conversation panel.
+The persistent shell keeps:
 
-The dialogue layout now provides a portrait-capable composition with:
+- notebook state;
+- demo evidence;
+- hypothesis UI;
+- dialogue state;
+- trust;
+- character UI.
 
-- identity header;
-- role line;
-- trust state;
-- large portrait area;
-- larger authored dialogue-line area;
-- numbered topic/evidence actions.
+The in-memory demo save now records:
 
-## Comic-noir UI skin
+- current demo room;
+- player foot position;
+- collected demo evidence;
+- Alex trust.
 
-A reusable `comic_noir_theme.tres` now styles the reference slice.
+Demo load can therefore restore a position in any of the eight rooms without writing to Chapter One save slots.
 
-The skin establishes:
+## Representative interaction staging
 
-- near-black/charcoal panels;
-- restrained teal/cyan interactive accent;
-- warm amber evidence/focus accent;
-- off-white body text;
-- hard rectangular borders;
-- stronger hover/pressed/focus states;
-- designed ItemList selections;
-- consistent separators.
+Slice 10 keeps story content intentionally light.
 
-The notebook, hypotheses, character panel, dialogue panel, and bottom interaction strip now share the same visual family.
+Representative interaction points now include:
 
-## Web-safe art pipeline
+- existing umbrella-rack and claim-board evidence examples;
+- Alex at the front desk;
+- closing log;
+- claim cabinets;
+- shift board;
+- overflow shelves;
+- electrical panel;
+- loading-bay focal props;
+- exterior environmental details.
 
-Source art remains SVG under `art/demo/`, but the live game no longer loads those files manually.
-
-The reference scene directly declares the lobby background, player sprite, and Alex portrait as Godot `Texture2D` resources. Godot imports those SVGs through its normal asset pipeline and packages the imported textures into the Web PCK.
-
-This corrects the first Slice 9 browser deployment, where the UI rendered but the world art was blank because runtime `FileAccess` paths were not exported.
-
-Validation now includes:
-
-- a complete Godot import pass before headless resource tests;
-- direct scene loading with the imported art;
-- texture-presence checks in the visual demo;
-- Pages export checks that the required Umbrella art resource names are present in `index.pck`.
-
-The authored SVGs remain resolution-independent source assets while the runtime receives normal packaged Godot textures.
-
-## Roadmap re-baseline
-
-The authoritative production order is now:
-
-1. Slice 9 — visual direction foundation — **complete**
-2. Slice 10 — multi-room Umbrella Quest world skeleton
-3. Slice 11 — Umbrella investigation loop
-4. Slice 12 — Umbrella RPG integration
-5. Slice 13 — Umbrella combat slice
-6. Slice 14 — Umbrella full graphics production pass
-7. Slice 15 — Umbrella polish/usability closure
-8. Slice 16+ — return to Chapter One
-
-Combat is now explicitly part of the finished concept, but remains bounded rather than replacing investigation as the primary gameplay grammar.
+Full authored clue progression belongs to Slice 11.
 
 ## Validation
 
-Godot 4.7.2 CI passes:
+Godot 4.7.2 CI now protects:
 
-1. visual-direction/theme resource validation;
-2. raw SVG art-file validation;
-3. Godot SVG import completion;
-4. direct reference-room background texture loading;
-5. direct player sprite texture loading;
-6. direct dialogue portrait texture loading;
-7. comic-noir theme application;
-8. preserved Umbrella Quest movement/hotspots;
-9. hotspot reveal;
-10. notebook modal;
-11. character modal;
-12. dialogue modal;
-13. local demo save/load;
-14. canonical ANAMNESIS state isolation;
-15. all protected interaction/evidence/deduction/dialogue/RPG/persistence regressions;
-16. real main-scene startup.
+1. all eight demo room scenes load;
+2. all seven new environment SVGs import;
+3. every room has background art;
+4. every room has the shared player visual contract;
+5. every room exposes representative hotspots;
+6. every transition target is a valid demo room;
+7. every transition names a real destination spawn;
+8. no room is an outgoing-route orphan;
+9. the entire demo graph is reachable from the lobby;
+10. persistent Umbrella shell UI still opens correctly;
+11. hotspot reveal still works after the multi-room conversion;
+12. existing lobby evidence interactions still work;
+13. demo-local room/position save-load works;
+14. canonical ANAMNESIS state remains untouched;
+15. all interaction/evidence/deduction/dialogue/RPG/persistence regressions remain green;
+16. real main-scene startup remains green.
+
+The Pages export also checks that all eight room-background art resources, the shared player art, and Alex portrait are actually packaged into the Web PCK.
 
 ## NEXT OPERATION
 
-**Umbrella Quest Slice 10 — Multi-room world skeleton**
+**Umbrella Quest Slice 11 — Umbrella investigation loop**
 
 Execute without requesting design decisions:
 
-1. Expand Umbrella Quest from the reference lobby into the complete compact demo map:
-   - exterior entry / awning;
-   - lobby;
-   - front desk;
-   - Lost & Found hall;
-   - staff office;
-   - storage room;
-   - maintenance corridor;
-   - loading bay / service exit.
-2. Build each room with final-art composition in mind from the start:
-   - comic-noir palette;
-   - authored focal areas;
-   - clear walkable staging;
-   - foreground/midground/background separation;
-   - readable interaction silhouettes.
-3. Reuse the Slice 9 comic-noir theme, sprite scale, and portrait language.
-4. Establish all room transitions and spawn points.
-5. Keep the umbrella story content lightweight/placeholding in this slice; full investigation content belongs to Slice 11.
-6. Add representative hotspots/NPC positions sufficient to evaluate navigation and visual readability.
-7. Keep Umbrella Quest state isolated from canonical Chapter One state.
-8. Add protected tests proving:
-   - every demo room loads;
-   - every required transition target exists;
-   - the whole room graph is traversable;
-   - no primary room is orphaned;
-   - Slice 9 visual assets/theme still load.
-9. Run all existing regressions and main-scene startup.
-10. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
-11. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
+1. Turn the eight-room world into a complete non-canon missing-umbrella investigation with a clear beginning, middle, and resolution.
+2. Define the compact case spine:
+   - establish exactly which umbrella is missing;
+   - determine when/where it moved;
+   - identify the credible movement chain through the building;
+   - determine who moved it and why;
+   - resolve the case.
+3. Add authored demo evidence distributed across the existing rooms. Use clue/evidence grammar rather than inventory-key puzzles.
+4. Give critical findings at least two acquisition routes where practical so the mini-case cannot softlock.
+5. Expand Alex and add the minimum additional witnesses needed to exercise topic dialogue and evidence presentation across multiple rooms.
+6. Make the notebook genuinely drive progression:
+   - acquired evidence;
+   - visible support;
+   - contradictions;
+   - player-selected hypotheses;
+   - established deductions.
+7. Add a compact authored deduction chain that gates later investigation topics/areas logically without exposing undiscovered clue identities.
+8. Preserve the existing four-skill UI, but do **not** make the full RPG route matrix yet; Slice 12 owns meaningful skill-specific alternate paths.
+9. Keep combat out of this slice; Slice 13 owns combat.
+10. Add a quest-resolution state and ending beat proving the umbrella case can be completed start-to-finish.
+11. Keep all Umbrella state isolated from canonical Chapter One state and save slots.
+12. Add protected tests for:
+    - fresh-case start;
+    - required evidence availability;
+    - deduction progression;
+    - witness/evidence interaction;
+    - at least one alternate evidence route;
+    - complete case resolution;
+    - no room/navigation regressions;
+    - canon-state isolation.
+13. Run all existing regressions and main-scene startup.
+14. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
+15. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
 
-Do not start Slice 11 in the same turn unless the user explicitly asks for multiple slices.
+Do not start Slice 12 in the same turn unless the user explicitly asks for multiple slices.
