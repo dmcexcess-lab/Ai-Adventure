@@ -27,7 +27,7 @@ func _run() -> void:
 		root.add_child(menu)
 		await process_frame
 		if menu.find_child("DemoButton", true, false) == null:
-			failures.append("main menu is missing the non-canon UI demo button")
+			failures.append("main menu is missing the non-canon Umbrella visual slice button")
 		menu.queue_free()
 
 	var demo_scene := load("res://ui/demo/ui_demo.tscn") as PackedScene
@@ -41,6 +41,7 @@ func _run() -> void:
 	await process_frame
 
 	for node_name in [
+		"ArtBackground",
 		"DemoPlayer",
 		"Hotspots",
 		"NotebookPanel",
@@ -55,6 +56,18 @@ func _run() -> void:
 	]:
 		if demo.find_child(node_name, true, false) == null:
 			failures.append("UI demo missing required control: %s" % node_name)
+
+	var art_background := demo.find_child("ArtBackground", true, false)
+	if art_background == null or art_background.get("texture") == null:
+		failures.append("visual reference room background art is missing")
+	var player_sprite := demo.find_child("Sprite", true, false)
+	if player_sprite == null or player_sprite.get("texture") == null:
+		failures.append("visual reference player sprite is missing")
+	var portrait := demo.find_child("Portrait", true, false)
+	if portrait == null or portrait.get("texture") == null:
+		failures.append("dialogue portrait art is missing")
+	if demo.get("theme") == null:
+		failures.append("comic-noir UI theme is not applied")
 
 	var hotspots := demo.find_child("Hotspots", true, false)
 	if hotspots == null or hotspots.get_child_count() < 5:
@@ -112,7 +125,7 @@ func _run() -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("UI_DEMO_OK: launch, controls, modals, hotspots, reveal, local save/load, and canon isolation are valid")
+		print("UMBRELLA_VISUAL_OK: launch, controls, modals, hotspots, reveal, local save/load, and canon isolation are valid")
 		quit(0)
 		return
 

@@ -96,7 +96,7 @@ func _ready() -> void:
 	_setup_filters()
 	_refresh_notebook()
 	_refresh_hypotheses()
-	_set_status("UI sandbox ready. Click to walk; hover objects; right-click to inspect.")
+	_set_status("Visual reference room ready. Click to walk; hover objects; right-click to inspect.")
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -155,7 +155,7 @@ func _register_hotspots() -> void:
 
 
 func _on_hotspot_hover(label: String) -> void:
-	context_label.text = "UI DEMO // COMMUNITY CENTER" if label.is_empty() else label.to_upper()
+	context_label.text = "UMBRELLA QUEST // COMMUNITY CENTER" if label.is_empty() else label.to_upper()
 
 
 func _on_hotspot_action(hotspot: Node, action: StringName) -> void:
@@ -205,7 +205,7 @@ func _activate_hotspot(hotspot: Node) -> void:
 		"vending_machine":
 			_set_status("The vending machine offers six kinds of soda and no investigative insight.")
 		"exit_door":
-			_set_status("This is only a UI sandbox. Use EXIT in the bottom bar to return to the title screen.")
+			_set_status("The visual reference slice currently ends at this lobby. Use EXIT to return to the title screen.")
 		_:
 			_set_status(String(hotspot.get("primary_text")))
 
@@ -231,7 +231,7 @@ func _open_notebook(mode: String) -> void:
 		_show_hypothesis_tab()
 	else:
 		_show_evidence_tab()
-	context_label.text = "UI DEMO // NOTEBOOK"
+	context_label.text = "UMBRELLA QUEST // CASE FILE"
 
 
 func _show_evidence_tab() -> void:
@@ -375,7 +375,7 @@ func _record_hypothesis() -> void:
 func _open_character() -> void:
 	_close_all_modals()
 	character_panel.visible = true
-	context_label.text = "UI DEMO // CHARACTER"
+	context_label.text = "UMBRELLA QUEST // CHARACTER"
 
 
 func _open_dialogue() -> void:
@@ -386,7 +386,7 @@ func _open_dialogue() -> void:
 	dialogue_mode.text = "TOPICS / RESPONSES"
 	present_button.text = "PRESENT EVIDENCE"
 	_refresh_dialogue_choices()
-	context_label.text = "UI DEMO // CONVERSATION"
+	context_label.text = "UMBRELLA QUEST // CONVERSATION"
 
 
 func _refresh_dialogue_choices() -> void:
@@ -485,14 +485,14 @@ func _set_reveal(value: bool) -> void:
 	for hotspot in hotspots.get_children():
 		if hotspot.has_method("set_reveal"):
 			hotspot.call("set_reveal", value)
-	context_label.text = "INTERACTABLES" if value else "UI DEMO // COMMUNITY CENTER"
+	context_label.text = "INTERACTABLES" if value else "UMBRELLA QUEST // COMMUNITY CENTER"
 
 
 func _close_all_modals() -> void:
 	notebook_panel.visible = false
 	character_panel.visible = false
 	dialogue_panel.visible = false
-	context_label.text = "UI DEMO // COMMUNITY CENTER"
+	context_label.text = "UMBRELLA QUEST // COMMUNITY CENTER"
 
 
 func _modal_open() -> bool:

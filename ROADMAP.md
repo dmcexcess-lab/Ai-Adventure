@@ -1,138 +1,100 @@
 # Roadmap
 
-The user only says **next slice** / **continue**. The assistant executes the next unchecked slice, updates this file and `CURRENT.md`, commits/pushes, verifies the resulting head, then returns the next prompt.
+The user normally says **next slice** / **continue**. The assistant executes the next unchecked slice, updates this file and `CURRENT.md`, commits/pushes, verifies the resulting head, then returns the next prompt.
 
 ## Phase A — Foundation and engine
 
 - [x] **Slice 1 — Design lock**
-  - Establish project north star.
-  - Translate canon into Chapter One.
-  - Lock engine architecture, investigation grammar, RPG scope, and chapter structure.
-  - Establish finite production slices.
-
 - [x] **Slice 2 — Godot web bootstrap**
-  - Create Godot 4 project.
-  - 640x480 viewport and scaling.
-  - Main menu, game shell, room router.
-  - One temporary room.
-  - Web export configuration.
-  - GitHub Pages workflow or repository-appropriate static deployment path.
-  - Smoke-test project startup.
-
 - [x] **Slice 3 — Interaction and room framework**
-  - Point-and-click movement.
-  - Hotspots.
-  - Context actions.
-  - Room transitions.
-  - Interaction feedback.
-  - Hotspot reveal accessibility key.
-
 - [x] **Slice 4 — Canonical state and persistence**
-  - GameState.
-  - Save schema.
-  - Manual save/load UI.
-  - Auto-save.
-  - Browser persistence.
-  - Serialization tests.
-
 - [x] **Slice 5 — Evidence notebook**
-  - Clue definitions.
-  - Evidence acquisition.
-  - Notebook UI.
-  - Evidence detail/upgrades.
-  - Evidence filtering.
-  - Tests.
-
 - [x] **Slice 6 — Deduction engine**
-  - Hypothesis selection.
-  - Authored rule evaluator.
-  - Established/refuted/unsupported states.
-  - Contradiction presentation.
-  - Tests.
-
 - [x] **Slice 7 — Dialogue and witness framework**
-  - Topic dialogue.
-  - Evidence presentation.
-  - Conditional nodes/effects.
-  - Trust.
-  - Conversation UI.
-  - Tests.
-
 - [x] **Slice 8 — Light RPG layer**
-  - Observation, Reasoning, Empathy, Resolve.
-  - Opening background choice.
-  - Deterministic checks.
-  - Alternate-route handling.
-  - Character panel.
 
-## Phase B — Chapter One content
+## Phase B — Umbrella Quest vertical slice
 
-- [ ] **Slice 9 — Chapter One content skeleton**
-  - All primary rooms.
-  - Navigation.
-  - Scene transitions.
-  - Placeholder actors/backgrounds.
-  - Full chapter flag graph.
-  - Start-to-ending greybox route.
+Umbrella Quest is deliberately non-canon, but it is the authoritative compact proof of the finished game. It must eventually exercise the complete gameplay language—including investigation, dialogue, RPG routing, combat, persistence, and final-style presentation—before Chapter One production resumes.
 
-- [ ] **Slice 10 — Act I: The Impossible Packet**
-  - Opening sequence.
-  - Workstation investigation.
-  - Building records.
-  - First witness.
-  - Deductions 1-2.
+- [ ] **Slice 9 — Visual direction foundation**
+  - Lock polished comic-book / dark gritty city art direction.
+  - Add authoritative visual-production rules.
+  - Replace the demo lobby greybox with the first reference-quality illustrated room pass.
+  - Establish final-style UI skin.
+  - Establish player/NPC sprite and portrait language.
+  - Preserve all existing demo interactions and canon isolation.
 
-- [ ] **Slice 11 — Act II: The Missing Witness**
-  - Café/social hub.
-  - Records office.
-  - erased-witness traces.
-  - Alternate critical clue routes.
-  - Deduction 3.
+- [ ] **Slice 10 — Multi-room Umbrella Quest world skeleton**
+  - Exterior entry / awning.
+  - Lobby.
+  - Front desk.
+  - Lost & Found hall.
+  - Staff office.
+  - Storage room.
+  - Maintenance corridor.
+  - Loading bay / service exit.
+  - Final-style composition from the start.
+  - Full navigation and transitions.
 
-- [ ] **Slice 12 — Act III: The Seam**
-  - Transit anomaly.
-  - Observation overlook.
-  - Utility room.
-  - invariant-time evidence.
-  - Deductions 4-5.
+- [ ] **Slice 11 — Umbrella investigation loop**
+  - Complete umbrella case spine.
+  - Authored clues.
+  - Witnesses.
+  - Notebook progression.
+  - Hypotheses/deductions.
+  - Alternate evidence routes.
+  - Quest resolution skeleton.
 
-- [ ] **Slice 13 — Act IV: The Sender**
-  - identity-signature investigation.
-  - contradiction challenges.
-  - optional deep evidence.
-  - Deductions 6-9.
+- [ ] **Slice 12 — Umbrella RPG integration**
+  - Meaningful Observation route.
+  - Meaningful Reasoning route.
+  - Meaningful Empathy route.
+  - Meaningful Resolve route.
+  - Deterministic failures with alternate progress.
+  - Background choice reflected through the full mini-quest.
 
-- [ ] **Slice 14 — Act V: The Threshold**
-  - threshold site.
-  - final conversations.
-  - evidence-dependent ending variants.
-  - chapter-complete state.
-  - Chapter Two hook.
+- [ ] **Slice 13 — Umbrella combat slice**
+  - Compact representative combat encounter.
+  - Exploration-to-combat transition.
+  - Final intended combat grammar.
+  - Combat UI and feedback.
+  - Failure/consequence handling.
+  - Return to investigation flow.
 
-## Phase C — Presentation and closure
+- [ ] **Slice 14 — Umbrella full graphics production pass**
+  - Finished-quality background pass across all demo rooms.
+  - Finished demo character sprites.
+  - Dialogue portraits.
+  - Animation minimum set.
+  - Lighting/FX polish.
+  - Combat presentation polish.
 
-- [ ] **Slice 15 — Final art/audio pass**
-  - Replace greybox visuals.
-  - Period-appropriate UI polish.
-  - Character animation minimum set.
-  - Ambient loops and interaction audio.
-  - Dialogue readability/accessibility.
+- [ ] **Slice 15 — Umbrella polish and usability closure**
+  - Full start-to-finish vertical-slice playtest.
+  - UI/UX corrections from user feedback.
+  - Pacing and readability cleanup.
+  - Save/load regression.
+  - Firefox/Web verification.
+  - Mark Umbrella Quest vertical slice complete.
 
-- [ ] **Slice 16 — Full progression QA**
-  - Golden path.
-  - Alternate critical-clue path.
-  - save/load regression.
-  - fresh-browser persistence test.
-  - fix all progression blockers.
+## Phase C — Chapter One content
 
-- [ ] **Slice 17 — Web release closure**
-  - Production web export.
-  - Firefox verification.
-  - deployment verification.
-  - exact live-build link in `CURRENT.md`.
-  - release notes.
-  - mark Chapter One complete.
+Chapter One resumes only after the Umbrella Quest vertical slice proves the visual and gameplay language.
 
-When Slice 17 is complete and verified, respond:
+- [ ] **Slice 16 — Chapter One content skeleton**
+- [ ] **Slice 17 — Act I: The Impossible Packet**
+- [ ] **Slice 18 — Act II: The Missing Witness**
+- [ ] **Slice 19 — Act III: The Seam**
+- [ ] **Slice 20 — Act IV: The Sender**
+- [ ] **Slice 21 — Act V: The Threshold**
+
+## Phase D — Chapter One presentation and closure
+
+- [ ] **Slice 22 — Chapter One final art/audio pass**
+- [ ] **Slice 23 — Full progression QA**
+- [ ] **Slice 24 — Web release closure**
+
+When Slice 24 is complete and verified, respond:
 
 **ok final slice done play chapter one**

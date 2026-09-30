@@ -363,3 +363,23 @@ The project should remain modest enough for ordinary desktop Firefox:
 - Main remains playable after implementation slices once the first playable scaffold exists.
 - Every slice updates `CURRENT.md`.
 - Do not expand scope during implementation unless a concrete blocker demands it.
+
+
+## Umbrella Quest vertical-slice contract
+
+Before Chapter One content production resumes, the non-canon Umbrella Quest must prove the final gameplay and presentation language.
+
+It is allowed to use separate demo-local state/content where that protects canon-state isolation, but reusable systems should continue to use the same interaction, notebook, dialogue, RPG, persistence, and later combat contracts intended for Chapter One.
+
+### Visual architecture
+
+`VISUAL_DIRECTION.md` is authoritative for:
+- room composition;
+- palette;
+- lighting;
+- sprite/portrait language;
+- UI skin;
+- dialogue/notebook presentation;
+- later combat presentation.
+
+The visual pipeline favors static 2D illustrated assets, SVG/texture-based authored elements, and lightweight Godot UI styling compatible with Web export. It must not require dynamic 3D, compute shaders, or heavy runtime effects.

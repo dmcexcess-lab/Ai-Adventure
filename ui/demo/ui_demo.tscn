@@ -1,8 +1,12 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://ui/demo/ui_demo.gd" id="1_demo"]
 [ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
 [ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
+[ext_resource type="Theme" path="res://ui/theme/comic_noir_theme.tres" id="4_theme"]
+[ext_resource type="Texture2D" path="res://art/demo/community_center_lobby_noir.svg" id="5_bg"]
+[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="6_player"]
+[ext_resource type="Texture2D" path="res://art/demo/alex_portrait_noir.svg" id="7_alex"]
 
 [node name="UIDemo" type="Control"]
 layout_mode = 3
@@ -12,169 +16,60 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
+theme = ExtResource("4_theme")
 script = ExtResource("1_demo")
 
-[node name="Backdrop" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="ArtBackground" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 422.0
 mouse_filter = 2
-color = Color(0.055, 0.065, 0.075, 1)
+texture = ExtResource("5_bg")
+expand_mode = 1
+stretch_mode = 0
 
-[node name="Wall" type="ColorRect" parent="."]
+[node name="TopCaption" type="PanelContainer" parent="."]
 layout_mode = 0
 offset_left = 18.0
-offset_top = 44.0
-offset_right = 622.0
-offset_bottom = 238.0
-mouse_filter = 2
-color = Color(0.13, 0.15, 0.155, 1)
-
-[node name="Floor" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 18.0
-offset_top = 238.0
-offset_right = 622.0
-offset_bottom = 404.0
-mouse_filter = 2
-color = Color(0.095, 0.105, 0.105, 1)
-
-[node name="Title" type="Label" parent="."]
-layout_mode = 0
-offset_left = 24.0
 offset_top = 12.0
-offset_right = 420.0
-offset_bottom = 36.0
+offset_right = 390.0
+offset_bottom = 54.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.63, 0.92, 0.79, 1)
-theme_override_font_sizes/font_size = 14
-text = "NON-CANON UI DEMO // COMMUNITY CENTER"
 
-[node name="Subtitle" type="Label" parent="."]
-layout_mode = 0
-offset_left = 390.0
-offset_top = 14.0
-offset_right = 616.0
-offset_bottom = 34.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.48, 0.53, 0.53, 1)
-theme_override_font_sizes/font_size = 9
-text = "THE MISSING BLUE UMBRELLA"
-horizontal_alignment = 2
+[node name="Margin" type="MarginContainer" parent="TopCaption"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
 
-[node name="Desk" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 422.0
-offset_top = 166.0
-offset_right = 604.0
-offset_bottom = 248.0
-mouse_filter = 2
-color = Color(0.22, 0.18, 0.14, 1)
+[node name="Stack" type="VBoxContainer" parent="TopCaption/Margin"]
+layout_mode = 2
 
-[node name="DeskLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 452.0
-offset_top = 183.0
-offset_right = 574.0
-offset_bottom = 207.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.76, 0.72, 0.63, 1)
-text = "FRONT DESK"
-horizontal_alignment = 1
+[node name="Title" type="Label" parent="TopCaption/Margin/Stack"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
+theme_override_font_sizes/font_size = 13
+text = "UMBRELLA QUEST // VISUAL REFERENCE ROOM"
 
-[node name="RackVisual" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 48.0
-offset_top = 154.0
-offset_right = 132.0
-offset_bottom = 268.0
-mouse_filter = 2
-color = Color(0.12, 0.18, 0.19, 1)
-
-[node name="RackLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 50.0
-offset_top = 180.0
-offset_right = 130.0
-offset_bottom = 224.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.60, 0.69, 0.69, 1)
-text = "UMBRELLA\nRACK"
-horizontal_alignment = 1
-
-[node name="BoardVisual" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 184.0
-offset_top = 92.0
-offset_right = 332.0
-offset_bottom = 184.0
-mouse_filter = 2
-color = Color(0.26, 0.22, 0.16, 1)
-
-[node name="BoardLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 198.0
-offset_top = 118.0
-offset_right = 318.0
-offset_bottom = 158.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.84, 0.78, 0.60, 1)
-text = "LOST + FOUND\nNOTICE BOARD"
-horizontal_alignment = 1
-
-[node name="VendingVisual" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 338.0
-offset_top = 116.0
-offset_right = 398.0
-offset_bottom = 246.0
-mouse_filter = 2
-color = Color(0.14, 0.20, 0.26, 1)
-
-[node name="VendingLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 342.0
-offset_top = 158.0
-offset_right = 394.0
-offset_bottom = 208.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.62, 0.75, 0.84, 1)
-text = "SODA"
-horizontal_alignment = 1
-
-[node name="DoorVisual" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 548.0
-offset_top = 72.0
-offset_right = 610.0
-offset_bottom = 166.0
-mouse_filter = 2
-color = Color(0.16, 0.14, 0.13, 1)
-
-[node name="DoorLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 554.0
-offset_top = 108.0
-offset_right = 604.0
-offset_bottom = 132.0
-mouse_filter = 2
-text = "EXIT"
-horizontal_alignment = 1
+[node name="Subtitle" type="Label" parent="TopCaption/Margin/Stack"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.54, 0.7, 0.71, 1)
+theme_override_font_sizes/font_size = 8
+text = "WESTSIDE COMMUNITY CENTER // RAIN, 9:17 PM"
 
 [node name="DemoPlayer" type="Control" parent="."]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 309.0
-offset_top = 335.0
-offset_right = 327.0
+offset_left = 297.0
+offset_top = 283.0
+offset_right = 339.0
 offset_bottom = 365.0
 mouse_filter = 2
 script = ExtResource("2_player")
+move_speed = 185.0
 
-[node name="Body" type="ColorRect" parent="DemoPlayer"]
+[node name="Sprite" type="TextureRect" parent="DemoPlayer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -182,16 +77,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.65, 0.83, 0.76, 1)
-
-[node name="Head" type="ColorRect" parent="DemoPlayer"]
-layout_mode = 0
-offset_left = 4.0
-offset_top = -8.0
-offset_right = 14.0
-offset_bottom = 2.0
-mouse_filter = 2
-color = Color(0.75, 0.86, 0.80, 1)
+texture = ExtResource("6_player")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Hotspots" type="Control" parent="."]
 unique_name_in_owner = true
@@ -199,7 +87,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = -48.0
+offset_bottom = -58.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -213,7 +101,7 @@ offset_bottom = 280.0
 script = ExtResource("3_hotspot")
 hotspot_id = "umbrella_rack"
 display_name = "Umbrella Rack"
-inspect_text = "A steel rack with a few damp umbrellas and one suspiciously dry hook."
+inspect_text = "Rain beads on the metal frame. Most hooks are wet. One isn't."
 primary_text = "The rack shows signs of recent use."
 approach_point = Vector2(96, 326)
 
@@ -226,7 +114,7 @@ offset_bottom = 194.0
 script = ExtResource("3_hotspot")
 hotspot_id = "claim_board"
 display_name = "Lost-and-Found Board"
-inspect_text = "Handwritten claim tickets are pinned in tidy rows."
+inspect_text = "Carbon slips, rain notices, and claim tickets overlap beneath yellowing tape."
 primary_text = "The paper board has recent entries."
 approach_point = Vector2(258, 316)
 
@@ -235,41 +123,41 @@ layout_mode = 0
 offset_left = 332.0
 offset_top = 106.0
 offset_right = 404.0
-offset_bottom = 254.0
+offset_bottom = 258.0
 script = ExtResource("3_hotspot")
 hotspot_id = "vending_machine"
 display_name = "Vending Machine"
-inspect_text = "It hums with complete indifference to your missing umbrella."
+inspect_text = "Cold blue light, six sodas, one mechanical hum, no obvious motive."
 primary_text = "Six sodas. Zero clues."
 approach_point = Vector2(370, 326)
 
 [node name="FrontDesk" type="Control" parent="Hotspots"]
 layout_mode = 0
 offset_left = 416.0
-offset_top = 148.0
+offset_top = 136.0
 offset_right = 612.0
-offset_bottom = 258.0
+offset_bottom = 270.0
 script = ExtResource("3_hotspot")
 hotspot_id = "front_desk"
 display_name = "Alex // Front Desk"
-inspect_text = "Alex is bored enough to help and busy enough to appreciate direct questions."
+inspect_text = "Alex watches the rain through the lobby glass and pretends not to watch you."
 primary_text = "Alex looks up."
 approach_point = Vector2(494, 326)
 
 [node name="ExitDoor" type="Control" parent="Hotspots"]
 layout_mode = 0
 offset_left = 540.0
-offset_top = 62.0
-offset_right = 616.0
-offset_bottom = 176.0
+offset_top = 54.0
+offset_right = 618.0
+offset_bottom = 180.0
 script = ExtResource("3_hotspot")
 hotspot_id = "exit_door"
-display_name = "Lobby Exit"
-inspect_text = "The outside world. Not part of this sandbox."
-primary_text = "The demo ends at the lobby."
+display_name = "Rainy Street"
+inspect_text = "Outside: rain, reflected brake lights, and a city that clearly has somewhere else to be."
+primary_text = "The vertical slice currently ends at the lobby."
 approach_point = Vector2(572, 326)
 
-[node name="HudBar" type="ColorRect" parent="."]
+[node name="HudBar" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 12
 anchor_right = 1.0
@@ -278,95 +166,78 @@ offset_top = -58.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
-color = Color(0.035, 0.045, 0.05, 1)
 
-[node name="ContextLabel" type="Label" parent="HudBar"]
+[node name="HudGrid" type="HBoxContainer" parent="HudBar"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Feedback" type="VBoxContainer" parent="HudBar/HudGrid"]
+custom_minimum_size = Vector2(322, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="ContextLabel" type="Label" parent="HudBar/HudGrid/Feedback"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 10.0
-offset_top = 4.0
-offset_right = 326.0
-offset_bottom = 23.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.63, 0.92, 0.79, 1)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.69, 0.43, 1)
 theme_override_font_sizes/font_size = 10
-text = "UI DEMO // COMMUNITY CENTER"
+text = "UMBRELLA QUEST // COMMUNITY CENTER"
 
-[node name="StatusLabel" type="Label" parent="HudBar"]
+[node name="StatusLabel" type="Label" parent="HudBar/HudGrid/Feedback"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 10.0
-offset_top = 25.0
-offset_right = 326.0
-offset_bottom = 53.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.64, 0.69, 0.69, 1)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.67, 0.72, 0.7, 1)
 theme_override_font_sizes/font_size = 9
-text = "UI sandbox ready."
+text = "Visual slice ready."
 autowrap_mode = 2
+vertical_alignment = 1
 
-[node name="NoteButton" type="Button" parent="HudBar"]
+[node name="NoteButton" type="Button" parent="HudBar/HudGrid"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 330.0
-offset_top = 8.0
-offset_right = 374.0
-offset_bottom = 49.0
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
 text = "NOTE"
 
-[node name="EvidenceButton" type="Button" parent="HudBar"]
+[node name="EvidenceButton" type="Button" parent="HudBar/HudGrid"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 378.0
-offset_top = 8.0
-offset_right = 424.0
-offset_bottom = 49.0
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
 text = "EVID"
 
-[node name="CharacterButton" type="Button" parent="HudBar"]
+[node name="CharacterButton" type="Button" parent="HudBar/HudGrid"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 428.0
-offset_top = 8.0
-offset_right = 474.0
-offset_bottom = 49.0
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
 text = "CHAR"
 
-[node name="SaveButton" type="Button" parent="HudBar"]
+[node name="SaveButton" type="Button" parent="HudBar/HudGrid"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 478.0
-offset_top = 8.0
-offset_right = 522.0
-offset_bottom = 49.0
+custom_minimum_size = Vector2(43, 0)
+layout_mode = 2
 text = "SAVE"
 
-[node name="LoadButton" type="Button" parent="HudBar"]
+[node name="LoadButton" type="Button" parent="HudBar/HudGrid"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 526.0
-offset_top = 8.0
-offset_right = 570.0
-offset_bottom = 49.0
+custom_minimum_size = Vector2(43, 0)
+layout_mode = 2
 text = "LOAD"
 
-[node name="ExitButton" type="Button" parent="HudBar"]
+[node name="ExitButton" type="Button" parent="HudBar/HudGrid"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 574.0
-offset_top = 8.0
-offset_right = 632.0
-offset_bottom = 49.0
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
 text = "EXIT"
 
 [node name="NotebookPanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 20.0
-offset_top = 24.0
-offset_right = 620.0
-offset_bottom = 414.0
+offset_left = 24.0
+offset_top = 30.0
+offset_right = 616.0
+offset_bottom = 410.0
 
 [node name="Margin" type="MarginContainer" parent="NotebookPanel"]
 layout_mode = 2
@@ -385,9 +256,9 @@ layout_mode = 2
 [node name="Title" type="Label" parent="NotebookPanel/Margin/Stack/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.63, 0.92, 0.79, 1)
+theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
 theme_override_font_sizes/font_size = 16
-text = "DEMO NOTEBOOK"
+text = "CASE FILE // UMBRELLA"
 
 [node name="EvidenceTabButton" type="Button" parent="NotebookPanel/Margin/Stack/Header"]
 unique_name_in_owner = true
@@ -408,18 +279,23 @@ text = "CLOSE"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 6
 
 [node name="FilterRow" type="HBoxContainer" parent="NotebookPanel/Margin/Stack/EvidencePanel"]
 layout_mode = 2
 
 [node name="FilterText" type="Label" parent="NotebookPanel/Margin/Stack/EvidencePanel/FilterRow"]
 layout_mode = 2
-text = "FILTER"
+theme_override_colors/font_color = Color(0.55, 0.68, 0.69, 1)
+text = "FILTER // "
 
 [node name="FilterOption" type="OptionButton" parent="NotebookPanel/Margin/Stack/EvidencePanel/FilterRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Rule" type="HSeparator" parent="NotebookPanel/Margin/Stack/EvidencePanel"]
+layout_mode = 2
 
 [node name="Body" type="HSplitContainer" parent="NotebookPanel/Margin/Stack/EvidencePanel"]
 layout_mode = 2
@@ -441,29 +317,31 @@ theme_override_constants/separation = 8
 [node name="EvidenceTitle" type="Label" parent="NotebookPanel/Margin/Stack/EvidencePanel/Body/Detail"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
 theme_override_font_sizes/font_size = 14
 text = "EVIDENCE"
+autowrap_mode = 2
 
 [node name="EvidenceMeta" type="Label" parent="NotebookPanel/Margin/Stack/EvidencePanel/Body/Detail"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.58, 0.68, 0.67, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.52, 0.66, 0.67, 1)
+theme_override_font_sizes/font_size = 9
 autowrap_mode = 2
 
 [node name="EvidenceBody" type="Label" parent="NotebookPanel/Margin/Stack/EvidencePanel/Body/Detail"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.78, 0.80, 0.77, 1)
+theme_override_colors/font_color = Color(0.82, 0.82, 0.76, 1)
 theme_override_font_sizes/font_size = 11
 autowrap_mode = 2
 
 [node name="EvidenceTags" type="Label" parent="NotebookPanel/Margin/Stack/EvidencePanel/Body/Detail"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.49, 0.66, 0.63, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.62, 0.72, 0.63, 1)
+theme_override_font_sizes/font_size = 9
 autowrap_mode = 2
 
 [node name="HypothesisPanel" type="HSplitContainer" parent="NotebookPanel/Margin/Stack"]
@@ -471,11 +349,11 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
-split_offset = 250
+split_offset = 245
 
 [node name="HypothesisList" type="ItemList" parent="NotebookPanel/Margin/Stack/HypothesisPanel"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(230, 0)
+custom_minimum_size = Vector2(228, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -488,6 +366,7 @@ theme_override_constants/separation = 8
 [node name="HypothesisTitle" type="Label" parent="NotebookPanel/Margin/Stack/HypothesisPanel/Detail"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
 theme_override_font_sizes/font_size = 14
 autowrap_mode = 2
 text = "HYPOTHESIS"
@@ -495,13 +374,13 @@ text = "HYPOTHESIS"
 [node name="HypothesisStatus" type="Label" parent="NotebookPanel/Margin/Stack/HypothesisPanel/Detail"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.63, 0.92, 0.79, 1)
+theme_override_colors/font_color = Color(0.55, 0.78, 0.74, 1)
 theme_override_font_sizes/font_size = 10
 
 [node name="HypothesisBody" type="Label" parent="NotebookPanel/Margin/Stack/HypothesisPanel/Detail"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.80, 0.77, 1)
+theme_override_colors/font_color = Color(0.82, 0.82, 0.76, 1)
 theme_override_font_sizes/font_size = 11
 autowrap_mode = 2
 
@@ -509,8 +388,8 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.58, 0.68, 0.67, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.52, 0.66, 0.67, 1)
+theme_override_font_sizes/font_size = 9
 autowrap_mode = 2
 
 [node name="HypothesisTestButton" type="Button" parent="NotebookPanel/Margin/Stack/HypothesisPanel/Detail"]
@@ -522,10 +401,10 @@ text = "RECORD HYPOTHESIS"
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 32.0
-offset_top = 34.0
-offset_right = 608.0
-offset_bottom = 410.0
+offset_left = 38.0
+offset_top = 42.0
+offset_right = 602.0
+offset_bottom = 402.0
 
 [node name="Margin" type="MarginContainer" parent="CharacterPanel"]
 layout_mode = 2
@@ -544,9 +423,9 @@ layout_mode = 2
 [node name="Title" type="Label" parent="CharacterPanel/Margin/Stack/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.63, 0.92, 0.79, 1)
+theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
 theme_override_font_sizes/font_size = 16
-text = "DEMO TESTER // CHARACTER"
+text = "FIELD PROFILE // DEMO TESTER"
 
 [node name="CharacterCloseButton" type="Button" parent="CharacterPanel/Margin/Stack/Header"]
 unique_name_in_owner = true
@@ -560,7 +439,7 @@ text = "THE GENERALIST"
 
 [node name="Sentence" type="Label" parent="CharacterPanel/Margin/Stack"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.62, 0.70, 0.68, 1)
+theme_override_colors/font_color = Color(0.62, 0.72, 0.7, 1)
 text = "“I am here to break the interface before the interface breaks the player.”"
 autowrap_mode = 2
 
@@ -575,19 +454,20 @@ split_offset = 150
 [node name="Skills" type="Label" parent="CharacterPanel/Margin/Stack/Body"]
 layout_mode = 2
 custom_minimum_size = Vector2(140, 0)
+theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
 text = "OBSERVATION  2\nREASONING    2\nEMPATHY      2\nRESOLVE      2"
 
 [node name="Descriptions" type="Label" parent="CharacterPanel/Margin/Stack/Body"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.68, 0.71, 0.69, 1)
+theme_override_colors/font_color = Color(0.72, 0.74, 0.7, 1)
 theme_override_font_sizes/font_size = 10
 text = "Observation — Notice visual problems.\n\nReasoning — Spot inconsistent interaction logic.\n\nEmpathy — Notice confusing wording.\n\nResolve — Keep clicking until something gives."
 autowrap_mode = 2
 
 [node name="Failures" type="Label" parent="CharacterPanel/Margin/Stack"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 0.65, 0.62, 1)
+theme_override_colors/font_color = Color(0.64, 0.55, 0.46, 1)
 theme_override_font_sizes/font_size = 10
 text = "FAILED APPROACHES\n• Tried to interrogate the vending machine // no useful response"
 autowrap_mode = 2
@@ -596,17 +476,17 @@ autowrap_mode = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 26.0
-offset_top = 30.0
-offset_right = 614.0
-offset_bottom = 410.0
+offset_left = 28.0
+offset_top = 32.0
+offset_right = 612.0
+offset_bottom = 408.0
 
 [node name="Margin" type="MarginContainer" parent="DialoguePanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
 
 [node name="Stack" type="VBoxContainer" parent="DialoguePanel/Margin"]
 layout_mode = 2
@@ -618,14 +498,14 @@ layout_mode = 2
 [node name="Name" type="Label" parent="DialoguePanel/Margin/Stack/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.63, 0.92, 0.79, 1)
+theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
 theme_override_font_sizes/font_size = 16
 text = "ALEX"
 
 [node name="DialogueTrust" type="Label" parent="DialoguePanel/Margin/Stack/Header"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.58, 0.68, 0.67, 1)
+theme_override_colors/font_color = Color(0.55, 0.72, 0.71, 1)
 text = "TRUST 0"
 
 [node name="DialogueCloseButton" type="Button" parent="DialoguePanel/Margin/Stack/Header"]
@@ -635,19 +515,34 @@ text = "EXIT"
 
 [node name="Role" type="Label" parent="DialoguePanel/Margin/Stack"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.50, 0.58, 0.57, 1)
-theme_override_font_sizes/font_size = 10
-text = "COMMUNITY CENTER FRONT DESK"
+theme_override_colors/font_color = Color(0.50, 0.60, 0.59, 1)
+theme_override_font_sizes/font_size = 9
+text = "WESTSIDE COMMUNITY CENTER // FRONT DESK"
 
 [node name="Rule" type="HSeparator" parent="DialoguePanel/Margin/Stack"]
 layout_mode = 2
 
-[node name="DialogueLine" type="Label" parent="DialoguePanel/Margin/Stack"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 90)
+[node name="DialogueRow" type="HBoxContainer" parent="DialoguePanel/Margin/Stack"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.84, 0.81, 1)
-theme_override_font_sizes/font_size = 13
+custom_minimum_size = Vector2(0, 126)
+theme_override_constants/separation = 12
+
+[node name="PortraitFrame" type="PanelContainer" parent="DialoguePanel/Margin/Stack/DialogueRow"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="Portrait" type="TextureRect" parent="DialoguePanel/Margin/Stack/DialogueRow/PortraitFrame"]
+layout_mode = 2
+texture = ExtResource("7_alex")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DialogueLine" type="Label" parent="DialoguePanel/Margin/Stack/DialogueRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.86, 0.85, 0.79, 1)
+theme_override_font_sizes/font_size = 12
 text = "Alex looks up from the front desk. “Lost something?”"
 autowrap_mode = 2
 vertical_alignment = 1
@@ -659,8 +554,8 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.58, 0.68, 0.67, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.52, 0.66, 0.67, 1)
+theme_override_font_sizes/font_size = 9
 text = "TOPICS / RESPONSES"
 
 [node name="PresentButton" type="Button" parent="DialoguePanel/Margin/Stack/ModeRow"]
