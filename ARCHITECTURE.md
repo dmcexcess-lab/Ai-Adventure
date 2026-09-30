@@ -151,18 +151,42 @@ Every room is a Godot scene implementing a small common interface.
 
 Required child concepts:
 - visual background;
-- navigation polygon or simple walk bounds;
-- hotspot container;
+- simple authored walk bounds;
+- `PlayerActor`;
+- `Hotspots` container;
 - optional NPC actors;
-- spawn markers.
+- named spawn markers for transitions.
+
+The reusable Slice 3 room controller owns:
+- click-to-walk dispatch;
+- movement clamping to walk bounds;
+- hotspot registration;
+- approach-before-primary-action behavior;
+- inspect dispatch;
+- held hotspot reveal;
+- transition requests through `SceneRouter`;
+- status/hover signals to the shell HUD.
 
 Rooms do not hardcode cross-chapter systems.
 
+### Hotspot contract
+
+A hotspot declares:
+- stable `hotspot_id`;
+- player-facing label;
+- inspect text;
+- primary-action feedback;
+- optional approach point;
+- optional destination room + destination spawn;
+- enabled/disabled state.
+
+Hotspots emit primary/inspect actions and hover changes. They do not own case-state logic.
+
 ## Movement
 
-Point-and-click destination movement.
+Point-and-click destination movement uses a lightweight visual actor. Destinations are clamped to an authored per-room `Rect2` walk region.
 
-Chapter One does not need pathfinding more complex than a NavigationRegion2D over each room. The avatar is a visual actor, not a physics simulation.
+This is intentionally simpler than general pathfinding for the current room layouts. NavigationRegion2D remains available if a later authored room genuinely needs obstacle routing; it is not required by default.
 
 ## Testing strategy
 
