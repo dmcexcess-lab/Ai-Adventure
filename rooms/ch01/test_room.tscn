@@ -1,0 +1,73 @@
+[gd_scene format=3]
+
+[node name="TestRoom" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.09, 0.11, 0.13, 1)
+
+[node name="Window" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 382.0
+offset_top = 66.0
+offset_right = 594.0
+offset_bottom = 244.0
+color = Color(0.13, 0.19, 0.22, 1)
+
+[node name="Desk" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 54.0
+offset_top = 276.0
+offset_right = 584.0
+offset_bottom = 386.0
+color = Color(0.15, 0.12, 0.1, 1)
+
+[node name="Monitor" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 116.0
+offset_top = 194.0
+offset_right = 298.0
+offset_bottom = 310.0
+color = Color(0.05, 0.23, 0.22, 1)
+
+[node name="Packet" type="Label" parent="."]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 218.0
+offset_right = 287.0
+offset_bottom = 284.0
+theme_override_colors/font_color = Color(0.63, 0.92, 0.79, 1)
+theme_override_font_sizes/font_size = 11
+text = "PACKET 03\nTIMESTAMP: INVALID\n...SURVIVED."
+horizontal_alignment = 1
+
+[node name="RoomTitle" type="Label" parent="."]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 16.0
+offset_right = 360.0
+offset_bottom = 52.0
+theme_override_colors/font_color = Color(0.63, 0.7, 0.72, 1)
+text = "TEMPORARY ROOM // HER'S WORKSTATION"
+
+[node name="Instruction" type="Label" parent="."]
+layout_mode = 0
+offset_left = 88.0
+offset_top = 402.0
+offset_right = 552.0
+offset_bottom = 426.0
+theme_override_colors/font_color = Color(0.48, 0.52, 0.54, 1)
+text = "Bootstrap complete. Investigation interaction arrives next."
+horizontal_alignment = 1

@@ -1,0 +1,35 @@
+; Engine configuration file.
+; ANAMNESIS: The Third Witness
+; Godot 4.7.2 stable target.
+
+config_version=5
+
+[application]
+
+config/name="ANAMNESIS: The Third Witness"
+run/main_scene="res://ui/menus/main_menu.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[autoload]
+
+SceneRouter="*res://autoload/scene_router.gd"
+
+[display]
+
+window/size/viewport_width=640
+window/size/viewport_height=480
+window/size/window_width_override=960
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+textures/canvas_textures/default_texture_filter=0
+
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true

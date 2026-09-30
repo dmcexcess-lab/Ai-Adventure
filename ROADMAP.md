@@ -10,7 +10,7 @@ The user only says **next slice** / **continue**. The assistant executes the nex
   - Lock engine architecture, investigation grammar, RPG scope, and chapter structure.
   - Establish finite production slices.
 
-- [ ] **Slice 2 — Godot web bootstrap**
+- [x] **Slice 2 — Godot web bootstrap**
   - Create Godot 4 project.
   - 640x480 viewport and scaling.
   - Main menu, game shell, room router.
