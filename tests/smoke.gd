@@ -4,7 +4,11 @@ const REQUIRED_RESOURCES := [
 	"res://autoload/scene_router.gd",
 	"res://ui/menus/main_menu.tscn",
 	"res://core/game_shell/game_shell.tscn",
+	"res://core/interaction/room_controller.gd",
+	"res://core/interaction/player_actor.gd",
+	"res://core/interaction/hotspot.gd",
 	"res://rooms/ch01/test_room.tscn",
+	"res://rooms/ch01/corridor_room.tscn",
 ]
 
 
@@ -26,7 +30,7 @@ func _init() -> void:
 			failures.append("failed to load %s" % path)
 
 	if failures.is_empty():
-		print("SMOKE_OK: bootstrap resources load and project settings are valid")
+		print("SMOKE_OK: project, interaction scripts, and linked room resources load")
 		quit(0)
 		return
 
