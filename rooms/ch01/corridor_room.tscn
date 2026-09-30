@@ -146,10 +146,11 @@ offset_right = 560.0
 offset_bottom = 316.0
 script = ExtResource("3_hotspot")
 hotspot_id = "corridor_office_door"
-display_name = "Building Office"
-inspect_text = "The office keeps tenant and maintenance records independently from your workstation."
-primary_text = "The office is a Chapter One location. Its investigation content arrives with Act I."
+display_name = "Mara Bell // Building Manager"
+inspect_text = "Mara Bell manages the building and signs its maintenance records by hand."
+primary_text = "Mara looks up from the maintenance desk."
 approach_point = Vector2(486, 336)
+witness_id = "mara_bell"
 
 [node name="Spawns" type="Node2D" parent="."]
 

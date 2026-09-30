@@ -9,6 +9,7 @@ const MANUAL_SLOT := "manual_1"
 @onready var save_button: Button = %SaveButton
 @onready var load_button: Button = %LoadButton
 @onready var evidence_notebook: Control = $EvidenceNotebook
+@onready var conversation_ui: Control = $ConversationUI
 
 var _current_room: Node
 var _last_status := "CASE ACTIVE // Click to walk. Hover objects for context."
@@ -33,6 +34,7 @@ func _ready() -> void:
 	save_button.pressed.connect(_on_save_pressed)
 	load_button.pressed.connect(_on_load_pressed)
 	evidence_notebook.connect("closed", Callable(self, "_on_notebook_closed"))
+	conversation_ui.connect("closed", Callable(self, "_on_conversation_closed"))
 
 	_scene_router.call("attach_room_host", %RoomHost)
 	_scene_router.call("load_first_room")
@@ -40,6 +42,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if bool(conversation_ui.call("is_open")):
+		return
+
 	if bool(evidence_notebook.call("is_open")):
 		if event.is_action_pressed("menu_back") or event.is_action_pressed("notebook") or event.is_action_pressed("evidence"):
 			evidence_notebook.call("close_notebook")
@@ -69,8 +74,10 @@ func _on_room_changed(_room_path: String, room: Node) -> void:
 		room.connect("status_requested", Callable(self, "_on_status_requested"))
 	if room.has_signal("hover_label_changed"):
 		room.connect("hover_label_changed", Callable(self, "_on_hover_label_changed"))
+	if room.has_signal("conversation_requested"):
+		room.connect("conversation_requested", Callable(self, "_on_conversation_requested"))
 
-	if bool(evidence_notebook.call("is_open")):
+	if bool(evidence_notebook.call("is_open")) or bool(conversation_ui.call("is_open")):
 		room.process_mode = Node.PROCESS_MODE_DISABLED
 
 	var title := String(room.get("room_title"))
@@ -93,19 +100,41 @@ func _on_hover_label_changed(message: String) -> void:
 
 
 func _open_notebook() -> void:
+	if bool(conversation_ui.call("is_open")):
+		return
 	evidence_notebook.call("open_notebook")
 	if is_instance_valid(_current_room):
 		_current_room.process_mode = Node.PROCESS_MODE_DISABLED
 	context_label.text = "CASE NOTEBOOK"
-	_set_status("Evidence is recorded automatically. Filter by tag to review the case.")
+	_set_status("Evidence is recorded automatically. Filter by tag or test a hypothesis.")
 
 
 func _on_notebook_closed() -> void:
-	if is_instance_valid(_current_room):
+	if is_instance_valid(_current_room) and not bool(conversation_ui.call("is_open")):
 		_current_room.process_mode = Node.PROCESS_MODE_INHERIT
 		var title := String(_current_room.get("room_title"))
 		context_label.text = title.to_upper() if not title.is_empty() else "LOCATION"
 	_set_status("Returned to investigation.")
+
+
+func _on_conversation_requested(witness_id: String) -> void:
+	if bool(evidence_notebook.call("is_open")):
+		evidence_notebook.call("close_notebook")
+	if bool(conversation_ui.call("open_conversation", witness_id)):
+		if is_instance_valid(_current_room):
+			_current_room.process_mode = Node.PROCESS_MODE_DISABLED
+		context_label.text = "CONVERSATION"
+		_set_status("Choose a topic or present relevant evidence.")
+	else:
+		_set_status("That witness is unavailable.")
+
+
+func _on_conversation_closed() -> void:
+	if is_instance_valid(_current_room) and not bool(evidence_notebook.call("is_open")):
+		_current_room.process_mode = Node.PROCESS_MODE_INHERIT
+		var title := String(_current_room.get("room_title"))
+		context_label.text = title.to_upper() if not title.is_empty() else "LOCATION"
+	_set_status("Conversation ended.")
 
 
 func _on_save_pressed() -> void:
@@ -121,6 +150,8 @@ func _on_load_pressed() -> void:
 	if _save_service == null:
 		_set_status("LOAD unavailable.")
 		return
+	if bool(conversation_ui.call("is_open")):
+		conversation_ui.call("close_conversation")
 	if bool(_save_service.call("load_slot", MANUAL_SLOT)):
 		_set_status("CASE RESTORED // Slot 1")
 		if bool(evidence_notebook.call("is_open")):

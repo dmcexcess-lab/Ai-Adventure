@@ -50,7 +50,7 @@ The user only says **next slice** / **continue**. The assistant executes the nex
   - Contradiction presentation.
   - Tests.
 
-- [ ] **Slice 7 — Dialogue and witness framework**
+- [x] **Slice 7 — Dialogue and witness framework**
   - Topic dialogue.
   - Evidence presentation.
   - Conditional nodes/effects.

@@ -50,6 +50,9 @@ jobs:
       - name: Deduction smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/deduction_smoke.gd
 
+      - name: Dialogue smoke test
+        run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/dialogue_smoke.gd
+
       - name: Persistence smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/persistence_smoke.gd
 

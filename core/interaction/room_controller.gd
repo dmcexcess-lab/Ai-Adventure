@@ -3,6 +3,7 @@ class_name AdventureRoom
 
 signal status_requested(text: String)
 signal hover_label_changed(text: String)
+signal conversation_requested(witness_id: String)
 
 @export var room_id := ""
 @export var room_title := ""
@@ -121,6 +122,11 @@ func _on_player_arrived() -> void:
 
 func _complete_primary_action(hotspot: Node, serial: int) -> void:
 	if serial != _interaction_serial or not is_instance_valid(hotspot):
+		return
+
+	var witness_id := String(hotspot.get("witness_id"))
+	if not witness_id.is_empty():
+		conversation_requested.emit(witness_id)
 		return
 
 	var evidence_feedback := _grant_hotspot_evidence(hotspot)
