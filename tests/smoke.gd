@@ -18,6 +18,9 @@ const REQUIRED_SCRIPTS := [
 
 const REQUIRED_VISUALS := [
 	"res://ui/theme/comic_noir_theme.tres",
+]
+
+const REQUIRED_ART_FILES := [
 	"res://art/demo/community_center_lobby_noir.svg",
 	"res://art/demo/demo_player_noir.svg",
 	"res://art/demo/alex_portrait_noir.svg",
@@ -58,6 +61,12 @@ func _init() -> void:
 	for path in REQUIRED_VISUALS:
 		if load(path) == null:
 			failures.append("failed to load visual resource %s" % path)
+
+	for path in REQUIRED_ART_FILES:
+		if not FileAccess.file_exists(path):
+			failures.append("missing visual art file %s" % path)
+		elif FileAccess.get_file_as_string(path).is_empty():
+			failures.append("visual art file is empty %s" % path)
 
 	for path in REQUIRED_SCENES:
 		var scene := load(path) as PackedScene
