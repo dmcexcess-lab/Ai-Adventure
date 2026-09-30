@@ -38,8 +38,11 @@ jobs:
       - name: Engine version
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --version
 
-      - name: Script smoke test
+      - name: Resource smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/smoke.gd
+
+      - name: Interaction smoke test
+        run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/interaction_smoke.gd
 
       - name: Main scene startup
         run: timeout 30s .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --quit-after 3

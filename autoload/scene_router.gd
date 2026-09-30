@@ -1,12 +1,13 @@
 extends Node
 
-signal room_changed(room_path: String)
+signal room_changed(room_path: String, room: Node)
 
 const MAIN_MENU := "res://ui/menus/main_menu.tscn"
 const GAME_SHELL := "res://core/game_shell/game_shell.tscn"
 const FIRST_TEST_ROOM := "res://rooms/ch01/test_room.tscn"
 
 var _room_host: Control
+var current_room: Node
 
 
 func _ready() -> void:
@@ -19,6 +20,7 @@ func start_new_game() -> void:
 
 func return_to_menu() -> void:
 	_room_host = null
+	current_room = null
 	get_tree().change_scene_to_file(MAIN_MENU)
 
 
@@ -26,7 +28,11 @@ func attach_room_host(host: Control) -> void:
 	_room_host = host
 
 
-func go_to_room(room_path: String) -> bool:
+func load_first_room() -> bool:
+	return go_to_room(FIRST_TEST_ROOM)
+
+
+func go_to_room(room_path: String, spawn_marker: String = "") -> bool:
 	if not is_instance_valid(_room_host):
 		push_error("SceneRouter: no room host is attached.")
 		return false
@@ -37,6 +43,7 @@ func go_to_room(room_path: String) -> bool:
 		return false
 
 	for child in _room_host.get_children():
+		_room_host.remove_child(child)
 		child.queue_free()
 
 	var room := packed.instantiate()
@@ -44,7 +51,11 @@ func go_to_room(room_path: String) -> bool:
 	if room is Control:
 		(room as Control).set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
-	room_changed.emit(room_path)
+	current_room = room
+	if room.has_method("enter_at"):
+		room.call("enter_at", spawn_marker)
+
+	room_changed.emit(room_path, room)
 	return true
 
 

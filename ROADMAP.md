@@ -19,7 +19,7 @@ The user only says **next slice** / **continue**. The assistant executes the nex
   - GitHub Pages workflow or repository-appropriate static deployment path.
   - Smoke-test project startup.
 
-- [ ] **Slice 3 — Interaction and room framework**
+- [x] **Slice 3 — Interaction and room framework**
   - Point-and-click movement.
   - Hotspots.
   - Context actions.

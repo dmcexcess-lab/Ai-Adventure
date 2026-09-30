@@ -1,0 +1,157 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://core/interaction/room_controller.gd" id="1_room"]
+[ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
+[ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
+
+[node name="CorridorRoom" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_room")
+room_id = "ch01_corridor"
+room_title = "Apartment Corridor"
+walk_bounds = Rect2(34, 232, 568, 160)
+default_spawn = Vector2(92, 356)
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.095, 0.09, 0.085, 1)
+
+[node name="FarWall" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 70.0
+offset_right = 560.0
+offset_bottom = 288.0
+mouse_filter = 2
+color = Color(0.14, 0.13, 0.115, 1)
+
+[node name="OfficeDoorVisual" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 102.0
+offset_right = 548.0
+offset_bottom = 304.0
+mouse_filter = 2
+color = Color(0.105, 0.085, 0.075, 1)
+
+[node name="ApartmentDoorVisual" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 92.0
+offset_right = 84.0
+offset_bottom = 318.0
+mouse_filter = 2
+color = Color(0.10, 0.085, 0.078, 1)
+
+[node name="IntercomVisual" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 326.0
+offset_top = 164.0
+offset_right = 366.0
+offset_bottom = 216.0
+mouse_filter = 2
+color = Color(0.18, 0.20, 0.19, 1)
+
+[node name="RoomTitle" type="Label" parent="."]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 15.0
+offset_right = 410.0
+offset_bottom = 44.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.58, 0.62, 0.61, 1)
+text = "APARTMENT CORRIDOR // BUILDING OFFICE"
+
+[node name="PlayerActor" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 18.0
+offset_bottom = 36.0
+mouse_filter = 2
+script = ExtResource("2_player")
+
+[node name="Body" type="ColorRect" parent="PlayerActor"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.58, 0.63, 0.62, 1)
+
+[node name="Head" type="ColorRect" parent="PlayerActor"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -8.0
+offset_right = 14.0
+offset_bottom = 4.0
+mouse_filter = 2
+color = Color(0.72, 0.64, 0.56, 1)
+
+[node name="Hotspots" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="BackDoorHotspot" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 82.0
+offset_right = 92.0
+offset_bottom = 326.0
+script = ExtResource("3_hotspot")
+hotspot_id = "corridor_back_door"
+display_name = "Her's Door"
+inspect_text = "Your room is behind that door. The impossible packet is still inside."
+transition_room = "res://rooms/ch01/test_room.tscn"
+transition_spawn = "FromCorridor"
+approach_point = Vector2(88, 350)
+
+[node name="IntercomHotspot" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 314.0
+offset_top = 150.0
+offset_right = 380.0
+offset_bottom = 232.0
+script = ExtResource("3_hotspot")
+hotspot_id = "corridor_intercom"
+display_name = "Intercom"
+inspect_text = "A building intercom with a paper service sticker dated yesterday."
+primary_text = "The office line rings once, then cuts to static."
+approach_point = Vector2(346, 310)
+
+[node name="OfficeDoorHotspot" type="Control" parent="Hotspots"]
+layout_mode = 0
+offset_left = 420.0
+offset_top = 92.0
+offset_right = 560.0
+offset_bottom = 316.0
+script = ExtResource("3_hotspot")
+hotspot_id = "corridor_office_door"
+display_name = "Building Office"
+inspect_text = "The office keeps tenant and maintenance records independently from your workstation."
+primary_text = "The office is a Chapter One location. Its investigation content arrives with Act I."
+approach_point = Vector2(486, 336)
+
+[node name="Spawns" type="Node2D" parent="."]
+
+[node name="FromWorkstation" type="Marker2D" parent="Spawns"]
+position = Vector2(102, 356)
