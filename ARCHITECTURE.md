@@ -512,3 +512,96 @@ A protected `umbrella_case_smoke.gd` test covers:
 - bad-hypothesis refutation;
 - final case resolution;
 - canon-state isolation.
+
+
+### Umbrella RPG runtime
+
+Slice 12 applies the production four-skill/background model directly to the non-canon Umbrella Quest while preserving Chapter One state isolation.
+
+Umbrella Quest now begins with a blocking local background choice using the same four profiles exposed by `SkillService`:
+
+- **The Watcher** — Observation 3, Reasoning 2, Empathy 1, Resolve 1;
+- **The Analyst** — Observation 2, Reasoning 3, Empathy 1, Resolve 1;
+- **The Reader** — Observation 2, Reasoning 1, Empathy 3, Resolve 1;
+- **The Anchor** — Observation 1, Reasoning 2, Empathy 1, Resolve 3.
+
+The demo copies the selected profile into local Umbrella state. It never calls `SkillService.apply_background()`, so canonical `GameState.background_id`, canonical skill values, and canonical failed approaches are untouched.
+
+`SkillService` now exposes a pure `evaluate_values(skill_values, skill_id, threshold, modifier)` helper. Canonical `evaluate_check()` delegates to the same helper, allowing sandbox/local content to use exactly the same deterministic rule without temporarily mutating GameState.
+
+The rule remains:
+
+`base skill + contextual modifier >= authored threshold`
+
+Umbrella skill checks store explicit:
+
+- check ID;
+- skill;
+- base value;
+- contextual modifier;
+- total;
+- threshold;
+- pass/fail;
+- context;
+- fallback hint.
+
+Failed approaches persist in demo-local state with attempt count and remain visible in the Character panel.
+
+The current representative routes are:
+
+1. **Observation / Watcher**
+   - rack-residue check;
+   - threshold 3;
+   - success discovers `watcher_transfer_residue`;
+   - the extra physical evidence can replace a witness/documentary support item in the first-transfer deduction.
+2. **Reasoning / Analyst**
+   - rear-fan timing reconstruction;
+   - threshold 4;
+   - closing-log context supplies +1;
+   - the same deterministic check can therefore visibly fail at 3/4, direct the player toward a timing anchor, then pass at 4/4 after that context is found;
+   - success discovers `analyst_service_timing`.
+3. **Empathy / Reader**
+   - Mina protective-tell read;
+   - threshold 3;
+   - success discovers `reader_protective_tell` and a motive-oriented route toward the drying explanation.
+4. **Resolve / Anchor**
+   - direct challenge for Mina's exact physical route;
+   - threshold 3;
+   - success discovers both Mina's ordinary second-transfer statement and `anchor_exact_route`;
+   - this creates a faster witness route through the service-movement deduction.
+
+Failures do not dead-end the case. Every failed representative check records an authored fallback such as:
+
+- use the paper record / Alex instead of the rack read;
+- find the front-desk closing log, transfer tag, or Mina instead of relying on the fan timer alone;
+- ask about policy or present physical evidence after a failed Empathy read;
+- reconstruct the route from records and traces after a failed Resolve challenge.
+
+The Slice 11 universal non-skill route remains fully valid for every background.
+
+The Umbrella Character panel now reflects:
+
+- selected background title;
+- authored background sentence;
+- all four current skill values;
+- production skill descriptions;
+- recorded failed approaches and fallback hints.
+
+The demo-local save snapshot now additionally preserves:
+
+- Umbrella background ID;
+- Umbrella skill values;
+- failed approaches;
+- last skill-check results.
+
+A protected `umbrella_rpg_smoke.gd` test verifies:
+
+- all four fixed profiles;
+- deterministic threshold behavior;
+- contextual modifiers;
+- each representative skill route;
+- failed-route fallback recording;
+- Analyst fail-then-context-then-pass behavior;
+- universal case solvability under every background;
+- RPG-aware demo save/load;
+- canonical background/skill/failure isolation.
