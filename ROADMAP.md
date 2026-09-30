@@ -37,7 +37,7 @@ Umbrella Quest is deliberately non-canon, but it is the authoritative compact pr
   - Final-style composition from the start.
   - Full navigation and transitions.
 
-- [ ] **Slice 11 — Umbrella investigation loop**
+- [x] **Slice 11 — Umbrella investigation loop**
   - Complete umbrella case spine.
   - Authored clues.
   - Witnesses.
