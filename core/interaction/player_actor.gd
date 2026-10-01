@@ -5,12 +5,12 @@ signal arrived
 
 const PC3_ATLAS: Texture2D = preload("res://art/characters/pc3/pc3_reference_atlas.webp")
 const POSE_REGIONS := {
-	"front": Rect2(5, 2, 47, 116),
-	"walk_left_3q": Rect2(63, 5, 50, 114),
-	"idle_right_3q": Rect2(127, 4, 42, 115),
-	"side_right": Rect2(179, 6, 65, 112),
-	"rear_right_3q": Rect2(245, 5, 46, 114),
-	"combat": Rect2(293, 15, 66, 103),
+	"front": Rect2(3, 1, 28, 70),
+	"walk_left_3q": Rect2(38, 3, 30, 68),
+	"idle_right_3q": Rect2(76, 2, 25, 69),
+	"side_right": Rect2(107, 4, 39, 67),
+	"rear_right_3q": Rect2(147, 3, 28, 68),
+	"combat": Rect2(176, 9, 40, 62),
 }
 
 @export var move_speed := 210.0

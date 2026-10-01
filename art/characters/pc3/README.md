@@ -16,18 +16,18 @@ The runtime atlas is a Web-sized derivative of that exact accepted sheet, not a 
 
 ## Runtime atlas
 
-`pc3_reference_atlas.webp` is 360x120 and preserves alpha.
+`pc3_reference_atlas.webp` is 216x72 and preserves alpha. It is intentionally Web-sized for the 42x82 room actor footprint.
 
 Pose regions:
 
 | Pose ID | Region |
 | --- | --- |
-| `front` | `Rect2(5, 2, 47, 116)` |
-| `walk_left_3q` | `Rect2(63, 5, 50, 114)` |
-| `idle_right_3q` | `Rect2(127, 4, 42, 115)` |
-| `side_right` | `Rect2(179, 6, 65, 112)` |
-| `rear_right_3q` | `Rect2(245, 5, 46, 114)` |
-| `combat` | `Rect2(293, 15, 66, 103)` |
+| `front` | `Rect2(3, 1, 28, 70)` |
+| `walk_left_3q` | `Rect2(38, 3, 30, 68)` |
+| `idle_right_3q` | `Rect2(76, 2, 25, 69)` |
+| `side_right` | `Rect2(107, 4, 39, 67)` |
+| `rear_right_3q` | `Rect2(147, 3, 28, 68)` |
+| `combat` | `Rect2(176, 9, 40, 62)` |
 
 Do not replace this character with a generic room sprite. Room scenes select an authored default pose and perspective profile; movement selects direction-appropriate poses at runtime.
 
