@@ -72,7 +72,7 @@ jobs:
           grep -a -q "storage_room_production.png" build/web/index.pck
           grep -a -q "maintenance_corridor_production.png" build/web/index.pck
           grep -a -q "loading_bay_production.png" build/web/index.pck
-          grep -a -q "demo_player_noir.svg" build/web/index.pck
+          grep -a -q "pc3_reference_atlas.webp" build/web/index.pck
           grep -a -q "alex_sprite_noir.svg" build/web/index.pck
           grep -a -q "alex_portrait_noir.svg" build/web/index.pck
           grep -a -q "mina_portrait_noir.svg" build/web/index.pck

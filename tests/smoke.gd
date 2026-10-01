@@ -31,7 +31,7 @@ const REQUIRED_VISUALS := [
 	"res://art/demo/production/storage_room_production.png",
 	"res://art/demo/production/maintenance_corridor_production.png",
 	"res://art/demo/production/loading_bay_production.png",
-	"res://art/demo/demo_player_noir.svg",
+	"res://art/characters/pc3/pc3_reference_atlas.webp",
 	"res://art/demo/alex_sprite_noir.svg",
 	"res://art/demo/alex_portrait_noir.svg",
 	"res://art/demo/mina_portrait_noir.svg",

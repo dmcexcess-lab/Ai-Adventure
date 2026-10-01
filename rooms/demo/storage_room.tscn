@@ -1,10 +1,9 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
 [ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
 [ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
 [ext_resource type="Texture2D" path="res://art/demo/production/storage_room_production.png" id="4_bg"]
-[ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="5_player"]
 [ext_resource type="Script" path="res://rooms/demo/ambient_fx.gd" id="6_fx"]
 
 [node name="DemoRoom" type="Control"]
@@ -58,6 +57,11 @@ offset_bottom = 354.0
 mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
+default_pose_id = "rear_right_3q"
+perspective_far_scale = 0.76
+perspective_near_scale = 1.04
+perspective_top_y = 248.0
+perspective_bottom_y = 378.0
 
 [node name="Sprite" type="TextureRect" parent="PlayerActor"]
 layout_mode = 1
@@ -67,7 +71,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("5_player")
 expand_mode = 1
 stretch_mode = 5
 
