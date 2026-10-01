@@ -5,6 +5,8 @@ const FIRST_ROOM := "res://rooms/demo/lobby.tscn"
 const CASE_CATALOG := preload("res://content/demo/umbrella_case.gd")
 const ALEX_PORTRAIT := preload("res://art/demo/alex_portrait_noir.svg")
 const MINA_PORTRAIT := preload("res://art/demo/mina_portrait_noir.svg")
+const COMBAT_ENGINE := preload("res://core/combat/bounded_combat.gd")
+const COMBAT_CATALOG := preload("res://content/demo/umbrella_combat.gd")
 
 @onready var room_host: Control = %RoomHost
 @onready var room_title_label: Label = %RoomTitle
@@ -64,6 +66,18 @@ const MINA_PORTRAIT := preload("res://art/demo/mina_portrait_noir.svg")
 @onready var resolution_text: Label = %ResolutionText
 @onready var resolution_close_button: Button = %ResolutionCloseButton
 
+@onready var combat_overlay: Control = %CombatOverlay
+@onready var combat_round: Label = %CombatRound
+@onready var combat_player_condition: Label = %CombatPlayerCondition
+@onready var combat_opponent_condition: Label = %CombatOpponentCondition
+@onready var combat_leverage: Label = %CombatLeverage
+@onready var combat_intent: Label = %CombatIntent
+@onready var combat_log: Label = %CombatLog
+@onready var combat_strike_button: Button = %CombatStrikeButton
+@onready var combat_guard_button: Button = %CombatGuardButton
+@onready var combat_maneuver_button: Button = %CombatManeuverButton
+@onready var combat_disengage_button: Button = %CombatDisengageButton
+
 var _current_room: Control
 var _current_room_path := ""
 
@@ -85,6 +99,13 @@ var _demo_skill_values: Dictionary = {}
 var _demo_failed_approaches: Dictionary = {}
 var _demo_skill_checks: Dictionary = {}
 
+var _combat_definition: Dictionary = {}
+var _combat_engine: RefCounted = COMBAT_ENGINE.new()
+var _combat_state: Dictionary = {}
+var _combat_completed := false
+var _combat_outcome := ""
+var _combat_consequence := ""
+
 var _has_demo_save := false
 var _saved_room_path := ""
 var _saved_foot := Vector2.ZERO
@@ -97,10 +118,14 @@ var _saved_background_id := ""
 var _saved_skill_values: Dictionary = {}
 var _saved_failed_approaches: Dictionary = {}
 var _saved_skill_checks: Dictionary = {}
+var _saved_combat_completed := false
+var _saved_combat_outcome := ""
+var _saved_combat_consequence := ""
 
 
 func _ready() -> void:
 	_load_case_catalog()
+	_load_combat_catalog()
 	_reset_demo_case()
 
 	note_button.pressed.connect(_open_notebook.bind("hypothesis"))
@@ -123,14 +148,167 @@ func _ready() -> void:
 	present_button.pressed.connect(_toggle_dialogue_evidence)
 	resolution_close_button.pressed.connect(_close_all_modals)
 
+	combat_strike_button.pressed.connect(_combat_action.bind("strike"))
+	combat_guard_button.pressed.connect(_combat_action.bind("guard"))
+	combat_maneuver_button.pressed.connect(_combat_action.bind("maneuver"))
+	combat_disengage_button.pressed.connect(_combat_action.bind("disengage"))
+
 	_build_demo_background_choices()
 	_setup_filters()
 	_refresh_notebook()
 	_refresh_hypotheses()
 	_refresh_character_panel()
+	_refresh_combat_ui()
 	_load_demo_room(FIRST_ROOM)
 	_open_demo_background_choice()
 	_set_status("Choose how you approach problems. The profile is fixed for this Umbrella Quest run.")
+
+
+func _load_combat_catalog() -> void:
+	var provider: Object = COMBAT_CATALOG.new()
+	var encounter_value: Variant = provider.call("get_loading_bay_encounter")
+	if encounter_value is Dictionary:
+		_combat_definition = (encounter_value as Dictionary).duplicate(true)
+
+
+func _reset_demo_combat() -> void:
+	_combat_engine = COMBAT_ENGINE.new()
+	_combat_state.clear()
+	_combat_completed = false
+	_combat_outcome = ""
+	_combat_consequence = ""
+	if combat_overlay != null:
+		combat_overlay.visible = false
+	if save_button != null:
+		save_button.disabled = false
+	if load_button != null:
+		load_button.disabled = false
+	_refresh_combat_ui()
+
+
+func _combat_is_active() -> bool:
+	return bool(_combat_state.get("active", false))
+
+
+func _maybe_trigger_demo_combat() -> bool:
+	if _demo_background_id.is_empty() or _combat_definition.is_empty():
+		return false
+	if _combat_completed or _combat_is_active():
+		return false
+	if _current_room_path != String(_combat_definition.get("room_path", "")):
+		return false
+	var trigger_deduction := String(_combat_definition.get("trigger_deduction", ""))
+	if trigger_deduction.is_empty() or not _is_demo_deduction_established(trigger_deduction):
+		return false
+	_start_demo_combat()
+	return true
+
+
+func _start_demo_combat() -> void:
+	if _combat_completed or _combat_is_active() or _combat_definition.is_empty():
+		return
+	_close_all_modals()
+	_combat_engine = COMBAT_ENGINE.new()
+	_combat_state = _combat_engine.call("start", _combat_definition, _demo_skill_values)
+	combat_overlay.visible = true
+	save_button.disabled = true
+	load_button.disabled = true
+	context_label.text = "UMBRELLA QUEST // LOADING BAY COMBAT"
+	_set_status("A soaked trespasser tries to force past. Choose an action; all combat math is deterministic and visible.")
+	_refresh_combat_ui()
+
+
+func _combat_action(action_id: String) -> Dictionary:
+	if not _combat_is_active():
+		return {"ok": false, "error": "combat_not_active"}
+	var result: Dictionary = _combat_engine.call("perform_action", action_id)
+	_combat_state = _combat_engine.call("get_state")
+	_refresh_combat_ui()
+	if bool(_combat_state.get("completed", false)):
+		_finish_demo_combat()
+	return result
+
+
+func _finish_demo_combat() -> void:
+	if not bool(_combat_state.get("completed", false)):
+		return
+	_combat_completed = true
+	_combat_outcome = String(_combat_state.get("outcome", ""))
+	_combat_consequence = String(_combat_state.get("consequence", ""))
+	combat_overlay.visible = false
+	save_button.disabled = false
+	load_button.disabled = false
+	context_label.text = _room_context()
+	_refresh_character_panel()
+
+	match _combat_outcome:
+		"victory":
+			_set_status("COMBAT ENDED // You hold the bay. The trespasser retreats into the rain. Investigation resumes.")
+		"disengaged":
+			_set_status("COMBAT ENDED // You break contact safely. The trespasser bolts. Investigation resumes.")
+		"forced_disengage":
+			_set_status("COMBAT CONSEQUENCE // You are forced back with bruised ribs. The trespasser flees; the case remains open.")
+		_:
+			_set_status("COMBAT ENDED // Investigation resumes.")
+
+
+func _refresh_combat_ui() -> void:
+	if combat_overlay == null:
+		return
+	var active := _combat_is_active()
+	if _combat_state.is_empty():
+		combat_round.text = "ROUND -"
+		combat_player_condition.text = "YOU  - / -"
+		combat_opponent_condition.text = "OPPONENT  - / -"
+		combat_leverage.text = "LEVERAGE -"
+		combat_intent.text = "NEXT INTENT // -"
+		combat_log.text = "Combat has not started."
+	else:
+		var round_number := int(_combat_state.get("round", 1))
+		combat_round.text = "ROUND %d" % round_number
+		combat_player_condition.text = "YOU  %d / %d" % [
+			int(_combat_state.get("player_condition", 0)),
+			int(_combat_state.get("player_max_condition", 0))
+		]
+		combat_opponent_condition.text = "%s  %d / %d" % [
+			String(_combat_state.get("opponent_name", "OPPONENT")).to_upper(),
+			int(_combat_state.get("opponent_condition", 0)),
+			int(_combat_state.get("opponent_max_condition", 0))
+		]
+		combat_leverage.text = "LEVERAGE %d // GUARD %d" % [
+			int(_combat_state.get("leverage", 0)),
+			int(_combat_state.get("guard", 0))
+		]
+		combat_intent.text = "NEXT INTENT // %s" % _next_combat_intent_label()
+		var log_lines := PackedStringArray()
+		for line_value in _combat_state.get("log", []):
+			log_lines.append(String(line_value))
+		combat_log.text = "\n".join(log_lines)
+	for button in [combat_strike_button, combat_guard_button, combat_maneuver_button, combat_disengage_button]:
+		if button != null:
+			button.disabled = not active
+
+
+func _next_combat_intent_label() -> String:
+	if _combat_definition.is_empty() or not _combat_is_active():
+		return "-"
+	var intents_value: Variant = _combat_definition.get("intents", [])
+	if not intents_value is Array or (intents_value as Array).is_empty():
+		return "-"
+	var intents: Array = intents_value
+	var round_index := maxi(0, int(_combat_state.get("round", 1)) - 1)
+	var intent_value: Variant = intents[round_index % intents.size()]
+	if not intent_value is Dictionary:
+		return "-"
+	var intent: Dictionary = intent_value
+	return "%s // %d DAMAGE" % [
+		String(intent.get("name", "ATTACK")).to_upper(),
+		int(intent.get("damage", 0))
+	]
+
+
+func _combat_action_ids() -> Array[String]:
+	return _combat_engine.call("get_action_ids")
 
 
 func _build_demo_background_choices() -> void:
@@ -318,10 +496,27 @@ func _refresh_character_panel() -> void:
 			var fallback := String(failed.get("fallback_hint", ""))
 			if not fallback.is_empty():
 				failure_lines.append("  FALLBACK: %s" % fallback)
+
+	if _combat_completed:
+		failure_lines.append("")
+		failure_lines.append("COMBAT OUTCOME // %s" % _combat_outcome.replace("_", " ").to_upper())
+		if not _combat_consequence.is_empty():
+			failure_lines.append("CONSEQUENCE // %s" % _combat_consequence.replace("_", " ").to_upper())
 	character_failures.text = "\n".join(failure_lines)
 
-
 func _unhandled_input(event: InputEvent) -> void:
+	if _combat_is_active():
+		if event is InputEventKey and event.pressed and not event.echo:
+			var combat_key := event as InputEventKey
+			var combat_index := _number_key_index(combat_key.keycode)
+			var combat_actions := ["strike", "guard", "maneuver", "disengage"]
+			if combat_index >= 0 and combat_index < combat_actions.size():
+				_combat_action(combat_actions[combat_index])
+			elif combat_key.keycode == KEY_ESCAPE:
+				_set_status("Combat is active. Use STRIKE, GUARD, MANEUVER, or DISENGAGE.")
+		get_viewport().set_input_as_handled()
+		return
+
 	if background_overlay.visible:
 		if event is InputEventKey and event.pressed and not event.echo:
 			var background_key := event as InputEventKey
@@ -405,7 +600,7 @@ func _load_demo_room(room_path: String, spawn_marker: String = "", restore_foot 
 		_current_room.call("enter_at", spawn_marker)
 	context_label.text = _room_context()
 	_set_status("Entered %s. Click to walk; hover objects; right-click to inspect." % String(_current_room.get("room_title")).to_lower())
-
+	_maybe_trigger_demo_combat()
 
 func _on_demo_room_status(message: String) -> void:
 	_set_status(message)
@@ -522,6 +717,7 @@ func _reset_demo_case() -> void:
 	_demo_failed_approaches.clear()
 	_demo_skill_checks.clear()
 	_case_resolved = false
+	_reset_demo_combat()
 	_acquire_demo_clue("case_request", false)
 	_acquire_demo_clue("forecast_board", false)
 	_refresh_character_panel()
@@ -604,8 +800,8 @@ func _select_demo_hypothesis(deduction_id: String) -> Dictionary:
 	else:
 		_set_status("Hypothesis recorded: %s" % String(evaluation.get("status", "unsupported")).to_upper())
 	_refresh_hypotheses()
+	_maybe_trigger_demo_combat()
 	return evaluation
-
 
 func _is_demo_deduction_established(deduction_id: String) -> bool:
 	if not _demo_deductions.has(deduction_id):
@@ -1046,6 +1242,9 @@ func _change_demo_trust(witness_id: String, amount: int) -> void:
 	_demo_trust[witness_id] = clampi(_get_demo_trust(witness_id) + amount, -3, 3)
 
 func _demo_save() -> void:
+	if _combat_is_active():
+		_set_status("DEMO SAVE LOCKED // Finish or disengage from the active encounter first.")
+		return
 	if _demo_background_id.is_empty():
 		_open_demo_background_choice()
 		_set_status("Choose an approach before saving the Umbrella Quest.")
@@ -1064,10 +1263,16 @@ func _demo_save() -> void:
 	_saved_skill_values = _demo_skill_values.duplicate(true)
 	_saved_failed_approaches = _demo_failed_approaches.duplicate(true)
 	_saved_skill_checks = _demo_skill_checks.duplicate(true)
+	_saved_combat_completed = _combat_completed
+	_saved_combat_outcome = _combat_outcome
+	_saved_combat_consequence = _combat_consequence
 	_has_demo_save = true
-	_set_status("DEMO SAVE // room, case, profile, skills, failed approaches, and position stored in memory.")
+	_set_status("DEMO SAVE // room, case, RPG, combat outcome, and position stored in memory.")
 
 func _demo_load() -> void:
+	if _combat_is_active():
+		_set_status("DEMO LOAD LOCKED // Active combat must resolve before loading a safe snapshot.")
+		return
 	if not _has_demo_save:
 		_set_status("DEMO LOAD // no snapshot yet. Press SAVE first.")
 		return
@@ -1080,12 +1285,21 @@ func _demo_load() -> void:
 	_demo_skill_values = _saved_skill_values.duplicate(true)
 	_demo_failed_approaches = _saved_failed_approaches.duplicate(true)
 	_demo_skill_checks = _saved_skill_checks.duplicate(true)
+	_combat_engine = COMBAT_ENGINE.new()
+	_combat_state.clear()
+	_combat_completed = _saved_combat_completed
+	_combat_outcome = _saved_combat_outcome
+	_combat_consequence = _saved_combat_consequence
 	background_overlay.visible = false
+	combat_overlay.visible = false
+	save_button.disabled = false
+	load_button.disabled = false
 	_load_demo_room(_saved_room_path, "", _saved_foot)
 	_refresh_notebook()
 	_refresh_hypotheses()
 	_refresh_character_panel()
-	_set_status("DEMO LOAD // investigation + RPG snapshot restored. %s" % _case_objective())
+	_refresh_combat_ui()
+	_set_status("DEMO LOAD // safe investigation + RPG/combat outcome snapshot restored. %s" % _case_objective())
 
 func _set_reveal(value: bool) -> void:
 	if is_instance_valid(_current_room):
@@ -1099,10 +1313,14 @@ func _close_all_modals() -> void:
 	dialogue_panel.visible = false
 	resolution_panel.visible = false
 	background_overlay.visible = _demo_background_id.is_empty()
-	context_label.text = "UMBRELLA QUEST // APPROACH" if background_overlay.visible else _room_context()
+	combat_overlay.visible = _combat_is_active()
+	if _combat_is_active():
+		context_label.text = "UMBRELLA QUEST // LOADING BAY COMBAT"
+	else:
+		context_label.text = "UMBRELLA QUEST // APPROACH" if background_overlay.visible else _room_context()
 
 func _modal_open() -> bool:
-	return background_overlay.visible or notebook_panel.visible or character_panel.visible or dialogue_panel.visible or resolution_panel.visible
+	return _combat_is_active() or background_overlay.visible or notebook_panel.visible or character_panel.visible or dialogue_panel.visible or resolution_panel.visible
 
 func _return_to_menu() -> void:
 	get_tree().change_scene_to_file(MAIN_MENU)
