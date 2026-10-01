@@ -11,6 +11,8 @@ const REQUIRED_SCRIPTS := [
 	"res://ui/menus/main_menu.gd",
 	"res://ui/demo/ui_demo.gd",
 	"res://content/demo/umbrella_case.gd",
+	"res://content/demo/umbrella_combat.gd",
+	"res://core/combat/bounded_combat.gd",
 	"res://rooms/demo/demo_room.gd",
 	"res://core/game_shell/game_shell.gd",
 	"res://core/interaction/room_controller.gd",
@@ -35,6 +37,7 @@ const REQUIRED_ART_FILES := [
 	"res://art/demo/alex_portrait_noir.svg",
 	"res://art/demo/mina_portrait_noir.svg",
 	"res://art/demo/mina_sprite_noir.svg",
+	"res://art/demo/combat_intruder_noir.svg",
 ]
 
 const REQUIRED_SCENES := [

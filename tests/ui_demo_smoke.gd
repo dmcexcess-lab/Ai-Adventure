@@ -55,6 +55,7 @@ func _run() -> void:
 		"CharacterPanel",
 		"BackgroundOverlay",
 		"DialoguePanel",
+		"CombatOverlay",
 		"NoteButton",
 		"EvidenceButton",
 		"CharacterButton",
@@ -74,6 +75,9 @@ func _run() -> void:
 	var portrait := demo.find_child("DialoguePortrait", true, false)
 	if portrait == null or portrait.get("texture") == null:
 		failures.append("dialogue portrait art is missing")
+	var combat_visual := demo.find_child("OpponentVisual", true, false)
+	if combat_visual == null or combat_visual.get("texture") == null:
+		failures.append("combat opponent art is missing")
 	if demo.get("theme") == null:
 		failures.append("comic-noir UI theme is not applied")
 
