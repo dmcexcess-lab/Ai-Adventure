@@ -46,7 +46,7 @@ Current production status:
   - Use appropriate texture filtering for scaled comic art.
   - Protect scale, angle, perspective, combat pose, and unchanged gameplay footprint in CI.
 
-- [ ] **Slice 16 — PC/#3 production implementation**
+- [x] **Slice 16 — PC/#3 production implementation**
   - Use the accepted #3 identity; do not redesign the protagonist.
   - Replace the destructively downsampled 216x72 runtime atlas with a high-resolution derivative of the accepted 2172x724 source sheet.
   - Preserve scene-authored angle selection, perspective scaling, gameplay foot position, movement poses, and combat pose.

@@ -2,73 +2,120 @@
 
 ## Status
 
-**Umbrella Quest Slice 16 — PC/#3 production implementation: IN PROGRESS**
+**Umbrella Quest Slice 16 — PC/#3 production implementation: COMPLETE**
 
 Chapter One production is blocked.
 
-The repository acceptance rule remains:
+## User-accepted production status
 
-**User-accepted production-complete: the eight environment backgrounds only.**
+**Still accepted as production-complete: the eight environment backgrounds only.**
 
-Slice 16 is producing a credible deployed #3 candidate. Automated completion of this slice does not automatically change that acceptance statement.
+Slice 16 is technically complete and deployed-candidate ready, but #3 remains pending user visual acceptance. CI success is not treated as artistic approval.
 
-## Problem being corrected
+## What Slice 16 fixed
 
 The accepted #3 source sheet is **2172x724**.
 
-The prototype runtime atlas was only:
+The previous live runtime atlas was only:
 
 **216x72**
 
-Its individual poses retained only about 62-70 pixels of vertical source detail, then were rendered around 130-175 pixels tall in the game.
+Its individual pose crops retained roughly 62-70 pixels of vertical detail and were then enlarged to a much larger on-screen figure.
 
-That destructive downsample was the main reason the otherwise-correct scene-aware pose system looked soft and cheap beside the accepted backgrounds.
-
-## Slice 16 implementation
-
-The live player source is being replaced by:
+The live player now uses:
 
 `art/characters/pc3/pc3_reference_atlas_hd.webp`
 
-Dimensions:
+Runtime dimensions:
 
 **864x288**
 
-It is derived from the exact accepted source sheet. No new protagonist design or art-generation call is involved.
+The six live pose crops now retain roughly **248-280 pixels** of source height before the engine downsamples them into the room.
 
-The six live pose regions now retain roughly 248-280 pixels of source height before downsampling into the room.
+This removes the biggest known fidelity defect in the PC pipeline without redesigning #3.
 
-The following runtime behavior remains unchanged:
+## Preserved runtime contract
 
-- same #3 identity;
-- same costume;
-- same six key poses;
-- same room-authored resting angles;
-- same movement-direction pose selection;
-- same horizontal mirroring;
-- same far/near perspective system;
-- same bottom-center pivot;
-- same fixed gameplay foot position;
-- same loading-bay combat-pose override;
-- same investigation/combat mechanics.
+The following remain unchanged:
 
-## Production status after Slice 16 implementation
+- accepted #3 identity and clothing;
+- six key poses;
+- room-authored idle angle;
+- direction-aware movement pose;
+- horizontal mirroring;
+- room-authored far/near perspective scaling;
+- bottom-center visual pivot;
+- fixed 42x82 gameplay actor footprint;
+- foot coordinate;
+- approach points;
+- transition positions;
+- save positions;
+- loading-bay combat pose override;
+- all investigation/RPG/combat rules.
 
-Even after technical closure, #3 remains **pending user visual acceptance**.
+The character-art change is therefore presentation-only.
 
-The next production slice does not assume the current Alex/Mina/opponent/portrait assets are final.
+## Protected source-fidelity contract
 
-## NEXT OPERATION AFTER SLICE 16
+The production-visual regression now fails if:
+
+- the live PC stops using the HD atlas;
+- the atlas drops below roughly 800x280;
+- the active pose source crop falls below 240 pixels high;
+- the visible PC returns to prototype-small staging;
+- the gameplay footprint grows with the visual;
+- room-authored default angles drift;
+- near perspective stops being larger than far perspective;
+- the Web export omits the HD atlas.
+
+The Pages packaging gate now explicitly requires:
+
+`pc3_reference_atlas_hd.webp`
+
+## Production acceptance note
+
+Automated tests prove that the accepted source is being used at sufficient runtime fidelity and that the actor is staged correctly.
+
+They do **not** prove that the result has been artistically accepted.
+
+Until the user approves #3 in the deployed build, repository language must continue to distinguish:
+
+- **Slice 16 implementation complete**
+from
+- **#3 user-accepted production-complete**
+
+## NEXT OPERATION
 
 **Slice 17 — NPC + portrait art production**
 
-1. Keep the accepted room backgrounds untouched.
-2. Treat Alex, Mina, the loading-bay opponent, and both dialogue portraits as prototype until replaced/accepted.
-3. Bring those characters to the environment quality bar.
-4. Make room sprite and portrait identity correspondence obvious.
-5. Stage NPC scale/perspective coherently inside their accepted rooms.
-6. Keep gameplay/witness/combat rules unchanged.
-7. Protect resource packaging and staging with tests.
-8. Keep the title screen visibly marked DEVELOPMENT BUILD.
-9. Do not claim user acceptance merely because CI passes.
-10. Do not begin UI production or Chapter One in the same turn.
+Execute without requesting design decisions:
+
+1. Keep the eight accepted environment backgrounds unchanged.
+2. Keep the Slice 16 #3 runtime unchanged unless a concrete integration defect is discovered.
+3. Treat these current live assets as prototype until replaced/accepted:
+   - Alex room sprite;
+   - Mina room sprite;
+   - loading-bay opponent;
+   - Alex dialogue portrait;
+   - Mina dialogue portrait.
+4. Bring the NPC room art to the accepted environment quality bar:
+   - strong comic silhouette;
+   - believable anatomy;
+   - scene-coherent lighting;
+   - proper room scale/perspective;
+   - no flat placeholder/vector look.
+5. Make each portrait unmistakably depict the same identity as its room sprite.
+6. Preserve Alex/Mina witness logic, trust, evidence presentation, and all dialogue content.
+7. Preserve combat rules and only replace the opponent presentation.
+8. Remove prototype character resources from the live player path when production replacements exist.
+9. Keep the title screen visibly marked **DEVELOPMENT BUILD**.
+10. Add regression coverage for:
+    - live NPC resource paths;
+    - room staging;
+    - portrait correspondence metadata where mechanically representable;
+    - Web PCK packaging.
+11. Do not claim user visual acceptance merely because CI passes.
+12. Update `ROADMAP.md`, `ARCHITECTURE.md`, `VISUAL_DIRECTION.md`, and `CURRENT.md`.
+13. Commit/push, follow CI and Web deployment to terminal success, and verify exact `main` head.
+
+Do not begin Slice 18 or Chapter One in the same turn unless explicitly requested.
