@@ -20,6 +20,7 @@ const POSE_REGIONS := {
 @export var perspective_near_scale := 1.04
 @export var perspective_top_y := 236.0
 @export var perspective_bottom_y := 390.0
+@export var visual_display_size := Vector2(84.0, 164.0)
 
 var _destination_position := Vector2.ZERO
 var _destination_foot := Vector2.ZERO
@@ -40,9 +41,7 @@ func _ready() -> void:
 	_destination_foot = get_foot_position()
 	_visual = get_node_or_null("Sprite") as TextureRect
 	_build_pose_cache()
-	if _visual != null:
-		_visual_base_position = _visual.position
-		_visual.pivot_offset = Vector2(_visual.size.x * 0.5, _visual.size.y)
+	_configure_visual_rect()
 	_apply_default_pose()
 	_update_visual_scale()
 	set_process(true)
@@ -112,6 +111,14 @@ func get_visual_perspective_scale() -> float:
 	return _perspective_scale()
 
 
+func get_visual_display_size() -> Vector2:
+	return visual_display_size
+
+
+func get_visual_rendered_height() -> float:
+	return visual_display_size.y * _perspective_scale()
+
+
 func set_combat_pose(active: bool) -> void:
 	if active:
 		_context_pose_id = "combat"
@@ -144,6 +151,20 @@ func _process(delta: float) -> void:
 	_idle_phase += delta * 1.8
 	_apply_idle_motion()
 	_update_visual_scale()
+
+
+func _configure_visual_rect() -> void:
+	if _visual == null:
+		return
+	_visual.set_anchors_preset(Control.PRESET_TOP_LEFT, false)
+	_visual.size = visual_display_size
+	_visual.position = Vector2(
+		(size.x - visual_display_size.x) * 0.5,
+		size.y - visual_display_size.y
+	)
+	_visual.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	_visual_base_position = _visual.position
+	_visual.pivot_offset = Vector2(visual_display_size.x * 0.5, visual_display_size.y)
 
 
 func _build_pose_cache() -> void:

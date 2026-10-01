@@ -2,17 +2,17 @@
 
 ## Status
 
-**Post-Slice 14 PC / #3 scene-aware visual integration: COMPLETE**
+**Umbrella Quest production rebaseline: ACTIVE — Slice 15 in progress**
 
-Umbrella Quest Slice 14 remains complete. Slice 15 has not started.
+Chapter One production is blocked.
 
-Chapter One production remains paused.
+The repository previously overstated the production status of the vertical slice. The user has corrected the acceptance state:
 
-Umbrella Quest now has the finished visual language required for the vertical-slice proof: production room backgrounds, coherent character art, portraits, ambient weather/light motion, player movement presence, and integrated combat feedback.
+## What is actually production-complete
 
-## Production room backgrounds
+**Only the eight environment backgrounds.**
 
-All eight Umbrella Quest locations now use packaged production PNG backgrounds:
+Accepted production backgrounds:
 
 1. Exterior Entry / Awning
 2. Community Center Lobby
@@ -23,219 +23,74 @@ All eight Umbrella Quest locations now use packaged production PNG backgrounds:
 7. Maintenance Corridor
 8. Loading Bay / Service Exit
 
-The live runtime paths are under:
+Runtime location:
 
 `art/demo/production/`
 
-These replace the earlier reference/world-skeleton SVG backgrounds at runtime.
+These backgrounds are the visual quality bar for everything else.
 
-The existing gameplay map was deliberately preserved:
+## What is not production-complete
 
-- hotspot rectangles;
-- approach points;
-- walk bounds;
-- room transitions;
-- spawn markers;
-- evidence hooks;
-- witness positions;
-- combat trigger location.
+The following remain prototype / pre-production regardless of whether their mechanics are functional or automated tests pass:
 
-The graphics pass does not rewrite the case or navigation.
-
-## Finished visual language
-
-The production room set follows `VISUAL_DIRECTION.md`:
-
-- polished comic-book / graphic-novel treatment;
-- dark worn municipal/city spaces;
-- strong ink/silhouette separation;
-- layered foreground, midground, and background depth;
-- charcoal / slate / dirty teal base palette;
-- amber practical-light contrast;
-- wet/rainy exterior texture;
-- focal separation around interaction zones;
-- no greybox presentation.
-
-## PC / #3 scene-aware character integration
-
-The Umbrella player now uses the accepted PC design as the master visual reference for future #3 production.
-
-The runtime uses one six-pose atlas:
-
-`art/characters/pc3/pc3_reference_atlas.webp`
-
-The accepted source sheet and generation metadata are recorded under:
-
-`art/characters/pc3/README.md`
-
-All eight rooms use this same identity rather than a generic duplicated sprite.
-
-Each room now authors its own default angle and perspective range. Current room defaults intentionally vary among:
-- side profile;
-- idle three-quarter;
-- rear three-quarter.
-
-Walking automatically selects:
-- side profile for horizontal travel;
-- rear three-quarter when moving deeper into the room;
-- walking three-quarter when moving toward the camera.
-
-The visible PC scales with foot-Y perspective while the gameplay foot coordinate remains unchanged.
-
-The loading-bay encounter switches to the accepted combat-ready key pose and restores the loading-bay default after combat.
-
-This visual integration is intended to prevent a second protagonist-design pass when Chapter One/#3 production begins.
-
-## Character pass
-
-Alex now has:
-
-Alex now has:
-
-- standalone front-desk room sprite;
-- upgraded dialogue portrait.
-
-Mina now has:
-
-- upgraded standalone staff-office sprite;
-- upgraded dialogue portrait.
-
-The loading-bay opponent now shares the same production character language rather than reading as a prototype icon.
-
-Room sprites remain intentionally simpler than portraits so they stay readable at 640x480.
-
-## Ambient motion
-
-Every Umbrella room now contains a lightweight `AmbientFX` layer.
-
-Depending on the room, it supplies:
-
-- rain streaks over exterior/window regions;
-- restrained amber practical-light pulse.
-
-The effect is drawn through lightweight Godot CanvasItem calls and remains compatible with the Web/Compatibility target.
-
-No dynamic 3D, runtime-generated texture, heavy particle, or post-processing system was introduced.
-
-## Player animation
-
-The shared player actor now adds presentation motion without changing its movement contract:
-
-- walk bob;
-- slight walk lean/rotation;
-- subtle idle presence.
-
-Click-to-walk destinations, speed, approach behavior, arrival signals, saves, and room bounds remain unchanged.
-
-## Combat presentation
-
-Slice 13 combat rules are unchanged.
-
-Slice 14 adds restrained visual response only:
-
-- Strike recoil/flash;
-- Guard panel pulse;
-- Maneuver silhouette sway;
-- Disengage fade pulse.
-
-The loading-bay world remains visible behind combat, preserving the authored room rather than switching to a disconnected battle screen.
-
-## Production asset packaging
-
-The Pages workflow now fails if the exported PCK does not contain:
-
-- all eight production room PNGs;
-- the PC/#3 master pose atlas;
-- Alex sprite;
+- PC/#3 runtime art and presentation;
+- Alex room sprite;
+- Mina room sprite;
+- combat opponent art;
 - Alex portrait;
-- Mina sprite;
 - Mina portrait;
-- combat opponent art.
+- HUD and bottom bar;
+- Notebook / evidence / hypothesis presentation;
+- dialogue presentation;
+- Character panel;
+- combat presentation;
+- main menu;
+- Settings UI (currently absent);
+- room-transition presentation;
+- foreground/depth treatment;
+- character animation quality;
+- audio/music/ambience/SFX (currently absent);
+- save/load UX;
+- accessibility polish;
+- case-closed ending presentation;
+- final full-run QA.
 
-Critical production art remains directly referenced as Godot resources.
+Functional completeness is not production acceptance.
 
-## Validation
+## Slice 15 — PC/#3 staging repair
 
-Godot 4.7.2 CI passes:
+The first production-completion repair addresses a concrete runtime defect in the current protagonist implementation.
 
-1. clean production PNG import;
-2. all production visual resources;
-3. all eight room scenes;
-4. production background path contract;
-5. AmbientFX presence in every room;
-6. active player walk/idle animation process;
-7. one shared PC/#3 atlas across all eight rooms;
-8. authored per-room default angles;
-9. runtime far/near perspective scaling;
-10. combat-pose entry and restoration;
-11. standalone Alex staging;
-8. standalone Mina staging;
-9. dialogue portrait resources;
-10. combat visual resources;
-11. interaction regression;
-12. evidence regression;
-13. deduction regression;
-14. dialogue regression;
-15. RPG regression;
-16. UI demo regression;
-17. eight-room graph regression;
-18. complete Umbrella investigation regression;
-19. Umbrella RPG regression;
-20. Umbrella combat regression;
-21. persistence regression;
-22. real main-scene startup.
+The accepted source character sheet is 2172x724, but the prototype runtime atlas was reduced to 216x72. The room actor then displayed those roughly 70-pixel-tall poses inside a 42x82 visual rectangle, making the protagonist implausibly small beside the environment and 168-pixel NPC staging.
 
-No Slice 9-13 gameplay contract was intentionally changed.
+Slice 15 keeps the same accepted identity and the same room-aware pose/perspective mechanics, but changes the rendered presentation:
+
+- gameplay actor footprint remains 42x82;
+- visible character rectangle becomes 84x164;
+- visible art is bottom-centered on the unchanged gameplay foot position;
+- room-authored perspective scaling still affects only the visual;
+- linear texture filtering is used when scaling the current atlas;
+- movement angle selection remains unchanged;
+- loading-bay combat pose behavior remains unchanged.
+
+This is a staging/runtime repair. It does **not** by itself certify the current character artwork as production-complete. Final character-art acceptance belongs to Slice 16.
+
+## Production rule
+
+A subsystem is only called production-complete when:
+
+1. it meets the accepted environment-background quality bar or its equivalent for that subsystem;
+2. it is integrated into the real player path;
+3. its Web build is verified;
+4. automated regression protects its functional contract;
+5. it has no knowingly prototype-facing presentation remaining.
 
 ## NEXT OPERATION
 
-**Umbrella Quest Slice 15 — Polish and usability closure**
+Finish **Slice 15 — Production rebaseline + PC/#3 staging repair** through CI, merge, post-merge validation, and Web deployment.
 
-Execute without requesting design decisions:
+After Slice 15 closes, the next operation is:
 
-1. Treat the current Umbrella Quest as the complete vertical slice and run a start-to-finish usability/production review rather than adding new feature systems.
-2. Exercise the real player path from title screen through:
-   - background selection;
-   - exploration/navigation;
-   - evidence acquisition;
-   - notebook hypotheses/deductions;
-   - Alex dialogue;
-   - Mina dialogue;
-   - skill routes and failures;
-   - loading-bay combat;
-   - post-combat investigation;
-   - final umbrella recovery;
-   - case-closed state.
-3. Correct player-facing friction found by that review:
-   - unclear objectives;
-   - confusing button labels;
-   - modal overlap;
-   - weak feedback;
-   - unreadable text;
-   - poor hotspot discoverability;
-   - transition ambiguity;
-   - save/load messaging;
-   - combat readability;
-   - case-resolution clarity.
-4. Preserve the locked case solution, skill rules, combat math, room graph, and final visual direction unless a concrete usability bug requires a narrow change.
-5. Check all eight rooms for visual/hotspot alignment after the production-art swap and adjust hotspot rectangles/approach points only where the new art demonstrably requires it.
-6. Verify 640x480 layout safety:
-   - no clipped modal text;
-   - no overlapping buttons;
-   - dialogue choices remain visible;
-   - Character/Notebook/Combat panels fit;
-   - resolution panel fits.
-7. Verify keyboard and mouse parity where currently supported:
-   - 1-9 dialogue/background choices;
-   - 1-4 combat;
-   - notebook/evidence/character shortcuts;
-   - Escape/back behavior;
-   - held hotspot reveal.
-8. Run local save/load through multiple rooms and after completed combat; confirm active-combat save/load remains safely blocked.
-9. Run the full vertical-slice automated regression suite and real main-scene startup.
-10. Strengthen tests for any usability bug corrected in this slice.
-11. Perform final Web export/package validation and Firefox-oriented deployment checks available in CI.
-12. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md` to mark Umbrella Quest vertical slice complete.
-13. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
+**Slice 16 — Character art production**
 
-Do not begin Chapter One Slice 16 in the same turn unless the user explicitly asks for multiple slices.
+Do not begin Chapter One.
