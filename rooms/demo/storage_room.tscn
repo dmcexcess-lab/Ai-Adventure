@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
 [ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
 [ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
-[ext_resource type="Texture2D" path="res://art/demo/storage_room_noir.svg" id="4_bg"]
+[ext_resource type="Texture2D" path="res://art/demo/production/storage_room_production.png" id="4_bg"]
 [ext_resource type="Texture2D" path="res://art/demo/demo_player_noir.svg" id="5_player"]
 
 [node name="DemoRoom" type="Control"]
