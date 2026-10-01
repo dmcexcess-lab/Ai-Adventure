@@ -70,6 +70,15 @@ Umbrella Quest is deliberately non-canon, but it is the authoritative compact pr
   - Lighting/FX polish.
   - Combat presentation polish.
 
+- [x] **Post-Slice 14 visual maintenance — PC / #3 scene-aware integration**
+  - Accept one master PC/#3 visual identity reference.
+  - Package a single six-pose runtime atlas from that accepted reference.
+  - Give each room an authored default PC angle.
+  - Select direction-appropriate walking poses at runtime.
+  - Scale the PC by authored room perspective while preserving foot position.
+  - Use the combat key pose during the loading-bay encounter.
+  - Keep the exact movement, investigation, RPG, and combat rules unchanged.
+
 - [ ] **Slice 15 — Umbrella polish and usability closure**
   - Full start-to-finish vertical-slice playtest.
   - UI/UX corrections from user feedback.

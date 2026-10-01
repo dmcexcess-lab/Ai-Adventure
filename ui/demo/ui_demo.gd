@@ -206,12 +206,21 @@ func _maybe_trigger_demo_combat() -> bool:
 	return true
 
 
+func _set_demo_player_combat_pose(active: bool) -> void:
+	if not is_instance_valid(_current_room):
+		return
+	var player := _current_room.find_child("PlayerActor", true, false)
+	if player != null and player.has_method("set_combat_pose"):
+		player.call("set_combat_pose", active)
+
+
 func _start_demo_combat() -> void:
 	if _combat_completed or _combat_is_active() or _combat_definition.is_empty():
 		return
 	_close_all_modals()
 	_combat_engine = COMBAT_ENGINE.new()
 	_combat_state = _combat_engine.call("start", _combat_definition, _demo_skill_values)
+	_set_demo_player_combat_pose(true)
 	combat_overlay.visible = true
 	save_button.disabled = true
 	load_button.disabled = true
@@ -266,6 +275,7 @@ func _finish_demo_combat() -> void:
 	_combat_completed = true
 	_combat_outcome = String(_combat_state.get("outcome", ""))
 	_combat_consequence = String(_combat_state.get("consequence", ""))
+	_set_demo_player_combat_pose(false)
 	combat_overlay.visible = false
 	save_button.disabled = false
 	load_button.disabled = false

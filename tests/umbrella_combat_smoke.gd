@@ -52,6 +52,11 @@ func _test_victory_path() -> void:
 	if action_ids != ["strike", "guard", "maneuver", "disengage"]:
 		failures.append("combat action set is not the locked four-action grammar")
 
+	var active_room: Node = demo.get("_current_room")
+	var combat_player := active_room.find_child("PlayerActor", true, false) if active_room != null else null
+	if combat_player == null or String(combat_player.call("get_current_pose_id")) != "combat":
+		failures.append("loading-bay combat did not switch PC/#3 to the combat reference pose")
+
 	var initial: Dictionary = demo.get("_combat_state")
 	if not bool(initial.get("active", false)):
 		failures.append("loading-bay encounter did not trigger")
@@ -72,6 +77,8 @@ func _test_victory_path() -> void:
 		failures.append("two Anchor strikes did not produce the authored victory")
 	if bool(demo.call("_combat_is_active")):
 		failures.append("victory did not return control to investigation")
+	if combat_player != null and String(combat_player.call("get_current_pose_id")) != String(combat_player.call("get_default_pose_id")):
+		failures.append("combat completion did not restore the loading-bay default PC/#3 pose")
 	var overlay := demo.find_child("CombatOverlay", true, false)
 	if overlay == null or overlay.visible:
 		failures.append("combat overlay remained visible after victory")

@@ -11,6 +11,17 @@ const ROOM_PATHS := [
 	"res://rooms/demo/loading_bay.tscn",
 ]
 
+const EXPECTED_DEFAULT_POSES := {
+	"res://rooms/demo/exterior_entry.tscn": "side_right",
+	"res://rooms/demo/lobby.tscn": "idle_right_3q",
+	"res://rooms/demo/front_desk.tscn": "idle_right_3q",
+	"res://rooms/demo/lost_found_hall.tscn": "side_right",
+	"res://rooms/demo/staff_office.tscn": "idle_right_3q",
+	"res://rooms/demo/storage_room.tscn": "rear_right_3q",
+	"res://rooms/demo/maintenance_corridor.tscn": "side_right",
+	"res://rooms/demo/loading_bay.tscn": "idle_right_3q",
+}
+
 var failures: Array[String] = []
 
 
@@ -19,6 +30,7 @@ func _init() -> void:
 
 
 func _run() -> void:
+	var seen_default_poses: Dictionary = {}
 	for path in ROOM_PATHS:
 		var packed := load(path) as PackedScene
 		if packed == null:
@@ -48,8 +60,33 @@ func _run() -> void:
 			var sprite := player.find_child("Sprite", true, false)
 			if sprite == null or sprite.get("texture") == null:
 				failures.append("production player sprite missing: %s" % path)
+			else:
+				var pose_texture := sprite.get("texture") as AtlasTexture
+				if pose_texture == null:
+					failures.append("PC/#3 sprite is not sourced from the master pose atlas: %s" % path)
+				elif pose_texture.atlas == null or String(pose_texture.atlas.resource_path) != "res://art/characters/pc3/pc3_reference_atlas.webp":
+					failures.append("PC/#3 pose atlas path is wrong: %s" % path)
 			if not player.is_processing():
 				failures.append("player idle/walk animation process is not active: %s" % path)
+
+			var default_pose := String(player.call("get_default_pose_id"))
+			seen_default_poses[default_pose] = true
+			if default_pose != String(EXPECTED_DEFAULT_POSES.get(path, "")):
+				failures.append("room PC default pose mismatch: %s -> %s" % [path, default_pose])
+
+			var far_scale := float(player.get("perspective_far_scale"))
+			var near_scale := float(player.get("perspective_near_scale"))
+			if near_scale <= far_scale:
+				failures.append("room PC perspective does not grow toward camera: %s" % path)
+
+			var top_y := float(player.get("perspective_top_y"))
+			var bottom_y := float(player.get("perspective_bottom_y"))
+			player.call("place_at_foot", Vector2(320.0, top_y))
+			var measured_far := float(player.call("get_visual_perspective_scale"))
+			player.call("place_at_foot", Vector2(320.0, bottom_y))
+			var measured_near := float(player.call("get_visual_perspective_scale"))
+			if measured_near <= measured_far:
+				failures.append("runtime PC perspective interpolation failed: %s" % path)
 
 		if path.ends_with("front_desk.tscn"):
 			var alex := room.find_child("AlexVisual", true, false)
@@ -62,6 +99,9 @@ func _run() -> void:
 
 		room.queue_free()
 		await process_frame
+
+	if seen_default_poses.size() < 3:
+		failures.append("PC/#3 scene staging does not use enough distinct authored default angles")
 
 	var demo_scene := load("res://ui/demo/ui_demo.tscn") as PackedScene
 	if demo_scene == null:
@@ -86,7 +126,7 @@ func _run() -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("PRODUCTION_VISUAL_OK: eight production PNG rooms, ambient layers, animated player staging, NPC art, portraits, and combat visual resources are valid")
+		print("PRODUCTION_VISUAL_OK: eight production PNG rooms, PC/#3 master atlas poses/perspective, ambient layers, NPC art, portraits, and combat visual resources are valid")
 		quit(0)
 		return
 	for failure in failures:
