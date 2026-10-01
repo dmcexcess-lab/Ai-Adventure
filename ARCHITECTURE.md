@@ -700,3 +700,87 @@ A protected `umbrella_combat_smoke.gd` test verifies:
 - no completed-encounter retrigger;
 - case completion after combat consequence;
 - canon-state isolation.
+
+
+### Umbrella production-visual runtime
+
+Slice 14 promotes the Umbrella Quest from reference/world-skeleton art to a production presentation set while preserving all Slice 9-13 gameplay contracts.
+
+#### Environment assets
+
+All eight playable Umbrella rooms now reference packaged production PNG backgrounds under:
+
+`art/demo/production/`
+
+The locked runtime files are:
+
+- `exterior_entry_production.png`;
+- `community_center_lobby_production.png`;
+- `front_desk_production.png`;
+- `lost_found_hall_production.png`;
+- `staff_office_production.png`;
+- `storage_room_production.png`;
+- `maintenance_corridor_production.png`;
+- `loading_bay_production.png`.
+
+Room hotspot geometry, walk bounds, transitions, spawn markers, witness IDs, evidence hooks, RPG checks, and combat trigger rules are unchanged. Production art is therefore a presentation replacement rather than a gameplay-map rewrite.
+
+The earlier SVG environment files remain useful as authored/reference source material, but they are no longer the live room-background resources for Umbrella Quest.
+
+#### Character assets
+
+The live character layer uses coherent comic-noir SVG resources:
+
+- `demo_player_noir.svg`;
+- `alex_sprite_noir.svg`;
+- `mina_sprite_noir.svg`;
+- `alex_portrait_noir.svg`;
+- `mina_portrait_noir.svg`;
+- `combat_intruder_noir.svg`.
+
+Alex now has a standalone room sprite in the front-desk scene rather than depending on baked background figure language. Mina retains standalone staging in the staff office. Dialogue portraits and room sprites are intentionally more detailed at different scales while sharing the same silhouette, palette, and ink rules.
+
+#### Lightweight motion and ambience
+
+`rooms/demo/ambient_fx.gd` is a reusable Web-safe `Control` layer.
+
+Each demo room instantiates it above the background and below characters/hotspots. Room-specific authored rectangles control:
+
+- rain streaks in exterior/window areas;
+- restrained warm practical-light pulse.
+
+The effect uses only lightweight `CanvasItem` drawing. It does not allocate runtime textures, use post-processing, or require shaders/3D.
+
+`AdventurePlayerActor` now keeps its existing click-to-walk contract while adding:
+
+- restrained walk bob;
+- slight walk rotation;
+- subtle idle presence.
+
+Movement destinations, speed math, arrival signaling, and collision-free walk-region semantics remain unchanged.
+
+Combat keeps the exact Slice 13 deterministic resolver. The shell adds only presentation feedback:
+
+- Strike recoil/flash;
+- Guard panel pulse;
+- Maneuver silhouette sway;
+- Disengage fade pulse.
+
+These Tweens do not delay, reroll, or alter combat resolution.
+
+#### Visual validation contract
+
+`tests/production_visual_smoke.gd` protects the production presentation by asserting:
+
+- all eight room scenes load;
+- every room uses a `res://art/demo/production/*_production.png` background;
+- every room has an AmbientFX layer;
+- shared player art loads and its animation process is active;
+- Alex has standalone front-desk staging;
+- Mina has standalone staff-office staging;
+- dialogue portrait resources load;
+- combat opponent art and panel load.
+
+The Web Pages workflow checks the exported PCK for all eight production PNG names plus the player, Alex, Mina, portrait, and combat assets.
+
+Production-critical art must remain statically referenced by Godot resources. Runtime path loading is prohibited for shipped visual assets.

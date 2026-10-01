@@ -62,7 +62,7 @@ Umbrella Quest is deliberately non-canon, but it is the authoritative compact pr
   - Failure/consequence handling.
   - Return to investigation flow.
 
-- [ ] **Slice 14 — Umbrella full graphics production pass**
+- [x] **Slice 14 — Umbrella full graphics production pass**
   - Finished-quality background pass across all demo rooms.
   - Finished demo character sprites.
   - Dialogue portraits.
