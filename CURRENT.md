@@ -2,7 +2,9 @@
 
 ## Status
 
-**Umbrella Quest Slice 14 — Full graphics production pass: COMPLETE**
+**Post-Slice 14 PC / #3 scene-aware visual integration: COMPLETE**
+
+Umbrella Quest Slice 14 remains complete. Slice 15 has not started.
 
 Chapter One production remains paused.
 
@@ -54,9 +56,39 @@ The production room set follows `VISUAL_DIRECTION.md`:
 - focal separation around interaction zones;
 - no greybox presentation.
 
+## PC / #3 scene-aware character integration
+
+The Umbrella player now uses the accepted PC design as the master visual reference for future #3 production.
+
+The runtime uses one six-pose atlas:
+
+`art/characters/pc3/pc3_reference_atlas.webp`
+
+The accepted source sheet and generation metadata are recorded under:
+
+`art/characters/pc3/README.md`
+
+All eight rooms use this same identity rather than a generic duplicated sprite.
+
+Each room now authors its own default angle and perspective range. Current room defaults intentionally vary among:
+- side profile;
+- idle three-quarter;
+- rear three-quarter.
+
+Walking automatically selects:
+- side profile for horizontal travel;
+- rear three-quarter when moving deeper into the room;
+- walking three-quarter when moving toward the camera.
+
+The visible PC scales with foot-Y perspective while the gameplay foot coordinate remains unchanged.
+
+The loading-bay encounter switches to the accepted combat-ready key pose and restores the loading-bay default after combat.
+
+This visual integration is intended to prevent a second protagonist-design pass when Chapter One/#3 production begins.
+
 ## Character pass
 
-The player sprite is now a more detailed production comic silhouette.
+Alex now has:
 
 Alex now has:
 
@@ -113,7 +145,7 @@ The loading-bay world remains visible behind combat, preserving the authored roo
 The Pages workflow now fails if the exported PCK does not contain:
 
 - all eight production room PNGs;
-- player sprite;
+- the PC/#3 master pose atlas;
 - Alex sprite;
 - Alex portrait;
 - Mina sprite;
@@ -132,7 +164,11 @@ Godot 4.7.2 CI passes:
 4. production background path contract;
 5. AmbientFX presence in every room;
 6. active player walk/idle animation process;
-7. standalone Alex staging;
+7. one shared PC/#3 atlas across all eight rooms;
+8. authored per-room default angles;
+9. runtime far/near perspective scaling;
+10. combat-pose entry and restoration;
+11. standalone Alex staging;
 8. standalone Mina staging;
 9. dialogue portrait resources;
 10. combat visual resources;

@@ -729,9 +729,9 @@ The earlier SVG environment files remain useful as authored/reference source mat
 
 #### Character assets
 
-The live character layer uses coherent comic-noir SVG resources:
+The live character layer uses the accepted PC/#3 pose atlas plus coherent comic-noir NPC resources:
 
-- `demo_player_noir.svg`;
+- `art/characters/pc3/pc3_reference_atlas.webp`;
 - `alex_sprite_noir.svg`;
 - `mina_sprite_noir.svg`;
 - `alex_portrait_noir.svg`;
@@ -784,3 +784,62 @@ These Tweens do not delay, reroll, or alter combat resolution.
 The Web Pages workflow checks the exported PCK for all eight production PNG names plus the player, Alex, Mina, portrait, and combat assets.
 
 Production-critical art must remain statically referenced by Godot resources. Runtime path loading is prohibited for shipped visual assets.
+
+
+### PC / #3 master sprite runtime
+
+The post-Slice-14 visual-maintenance pass replaces the earlier generic player-room sprite with one accepted protagonist identity that is intended to carry forward into #3 production.
+
+Authoritative runtime reference:
+
+`art/characters/pc3/pc3_reference_atlas.webp`
+
+Reference/provenance and pose-region documentation:
+
+`art/characters/pc3/README.md`
+
+The atlas is a Web-sized derivative of the accepted OpenAI image-generation character sheet, not a separate redesign.
+
+`AdventurePlayerActor` owns the pose atlas. Room scenes no longer embed their own player texture.
+
+The six runtime key poses are:
+
+- front neutral;
+- walking three-quarter;
+- idle three-quarter;
+- side-profile walk;
+- rear three-quarter;
+- combat-ready.
+
+Each room authors:
+
+- default resting pose;
+- far perspective scale;
+- near perspective scale;
+- top-Y perspective reference;
+- bottom-Y perspective reference.
+
+The actor preserves its existing fixed control footprint and foot-position math. Only the child visual scales, around a bottom-center pivot. Therefore perspective changes do not move the gameplay foot position, approach point, save position, or transition position.
+
+Movement chooses pose by direction:
+
+- dominant horizontal movement → side profile, mirrored as needed;
+- movement deeper into the room → rear three-quarter;
+- movement toward camera → walking three-quarter;
+- arrival → room-authored resting pose.
+
+Perspective scale is interpolated from the player's current foot Y. Rooms can therefore make #3 smaller in the back plane and larger in the near plane without adding per-room sprite assets.
+
+The loading-bay combat shell calls `set_combat_pose(true)` when combat begins and restores the room default when combat ends. This is presentation-only; combat resolution remains the exact Slice 13 deterministic contract.
+
+Visual regression now protects:
+
+- one shared PC/#3 atlas across all eight rooms;
+- authored default pose per room;
+- at least three distinct room-default angles across the vertical slice;
+- near-camera scale greater than far-camera scale;
+- runtime perspective interpolation;
+- combat-pose entry and post-combat pose restoration;
+- Web PCK packaging of the master atlas.
+
+The legacy `art/demo/demo_player_noir.svg` may remain as historical source material, but it is no longer the authoritative runtime protagonist.

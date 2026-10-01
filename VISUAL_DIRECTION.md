@@ -230,3 +230,56 @@ Avoid:
 - runtime texture generation;
 - large particle systems;
 - bloom-heavy post processing.
+
+
+## PC / #3 master visual reference
+
+The accepted Umbrella Quest protagonist design is now also the master visual identity reference for future #3 production.
+
+Authoritative reference metadata is stored in:
+
+`art/characters/pc3/README.md`
+
+Runtime atlas:
+
+`art/characters/pc3/pc3_reference_atlas.webp`
+
+Accepted source:
+- OpenAI image-generation character sheet;
+- generation ID `0420ca57-95db-41ee-b265-c54e2fd401a7`;
+- source filename `gritty_noir_hero_character_sheet.png`.
+
+The design anchor is:
+- messy dark hair;
+- light stubble;
+- charcoal field jacket;
+- muted dark-green sweater and collared shirt;
+- dark trousers;
+- sturdy boots;
+- worn brown cross-body messenger bag;
+- grounded adult proportions;
+- comic-book ink treatment with cool teal shadow accents and restrained amber rim light.
+
+Do not redesign the protagonist independently for each room.
+
+### Scene-aware PC rule
+
+The PC should look authored into the panel, not pasted over it.
+
+Every room therefore defines:
+- an appropriate resting angle;
+- far-plane scale;
+- near-plane scale;
+- the Y range across which perspective scale changes.
+
+Movement changes the key pose by screen direction and mirrors side views when required.
+
+The character's **foot position is invariant**. Perspective changes scale the visible figure around a bottom-center pivot rather than changing gameplay coordinates.
+
+This rule carries forward to Chapter One/#3:
+- reuse the accepted identity;
+- derive new scene-specific poses/views from this reference when genuinely necessary;
+- do not spend a later production slice rediscovering #3's appearance;
+- prefer the accepted OpenAI image-generation reference for future protagonist visual extensions rather than creating a parallel design through a separate art provider.
+
+The current six key poses are sufficient for the Umbrella vertical slice. Add future #3 poses only when an authored Chapter One scene demonstrably needs a new silhouette or camera angle.
