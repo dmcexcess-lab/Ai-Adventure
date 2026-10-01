@@ -14,6 +14,7 @@ const REQUIRED_SCRIPTS := [
 	"res://content/demo/umbrella_combat.gd",
 	"res://core/combat/bounded_combat.gd",
 	"res://rooms/demo/demo_room.gd",
+	"res://rooms/demo/ambient_fx.gd",
 	"res://core/game_shell/game_shell.gd",
 	"res://core/interaction/room_controller.gd",
 	"res://core/interaction/player_actor.gd",
@@ -22,6 +23,20 @@ const REQUIRED_SCRIPTS := [
 
 const REQUIRED_VISUALS := [
 	"res://ui/theme/comic_noir_theme.tres",
+	"res://art/demo/production/community_center_lobby_production.png",
+	"res://art/demo/production/exterior_entry_production.png",
+	"res://art/demo/production/front_desk_production.png",
+	"res://art/demo/production/lost_found_hall_production.png",
+	"res://art/demo/production/staff_office_production.png",
+	"res://art/demo/production/storage_room_production.png",
+	"res://art/demo/production/maintenance_corridor_production.png",
+	"res://art/demo/production/loading_bay_production.png",
+	"res://art/demo/demo_player_noir.svg",
+	"res://art/demo/alex_sprite_noir.svg",
+	"res://art/demo/alex_portrait_noir.svg",
+	"res://art/demo/mina_portrait_noir.svg",
+	"res://art/demo/mina_sprite_noir.svg",
+	"res://art/demo/combat_intruder_noir.svg",
 ]
 
 const REQUIRED_ART_FILES := [

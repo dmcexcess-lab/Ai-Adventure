@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="84" height="168" viewBox="0 0 84 168">
+<defs><linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#435b64"/><stop offset="1" stop-color="#202b30"/></linearGradient><linearGradient id="skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bd8363"/><stop offset="1" stop-color="#855340"/></linearGradient></defs>
+<path d="M17 166L21 97Q15 83 23 67Q29 57 34 53Q24 43 26 29Q29 9 45 7Q64 10 66 30Q67 44 56 54Q65 62 69 78L73 166Z" fill="#11171a" stroke="#040506" stroke-width="7"/>
+<ellipse cx="46" cy="35" rx="18" ry="23" fill="url(#skin)" stroke="#040506" stroke-width="6"/>
+<path d="M28 32Q28 10 46 8Q66 11 65 34Q56 23 47 22Q37 31 28 32Z" fill="#171210" stroke="#040506" stroke-width="4"/>
+<path d="M34 37l7 1M51 37l7 1" stroke="#2c1714" stroke-width="3"/><path d="M39 49q7 4 13-1" stroke="#5d3027" stroke-width="2" fill="none"/>
+<path d="M23 72Q45 58 67 74L63 119L23 119Z" fill="url(#shirt)" stroke="#040506" stroke-width="6"/>
+<path d="M26 78H64" stroke="#a16b41" stroke-width="5"/><path d="M24 85L11 122L23 128L37 87M66 83L78 119L66 125L55 87" fill="#2c3d43" stroke="#040506" stroke-width="6"/>
+<path d="M31 119L27 166M56 119L62 166" stroke="#20272a" stroke-width="16"/><path d="M21 166H38M52 166H70" stroke="#07090a" stroke-width="8"/>
+<rect x="36" y="81" width="20" height="14" fill="#d0bd8d" stroke="#31291e" stroke-width="2"/><path d="M39 86H53M39 90H50" stroke="#69583e" stroke-width="1.5"/>
+</svg>

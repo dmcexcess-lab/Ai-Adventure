@@ -77,6 +77,8 @@ const COMBAT_CATALOG := preload("res://content/demo/umbrella_combat.gd")
 @onready var combat_guard_button: Button = %CombatGuardButton
 @onready var combat_maneuver_button: Button = %CombatManeuverButton
 @onready var combat_disengage_button: Button = %CombatDisengageButton
+@onready var combat_opponent_visual: TextureRect = %CombatOpponentVisual
+@onready var combat_panel: PanelContainer = %CombatPanel
 
 var _current_room: Control
 var _current_room_path := ""
@@ -223,10 +225,39 @@ func _combat_action(action_id: String) -> Dictionary:
 		return {"ok": false, "error": "combat_not_active"}
 	var result: Dictionary = _combat_engine.call("perform_action", action_id)
 	_combat_state = _combat_engine.call("get_state")
+	_play_combat_feedback(action_id)
 	_refresh_combat_ui()
 	if bool(_combat_state.get("completed", false)):
 		_finish_demo_combat()
 	return result
+
+
+func _play_combat_feedback(action_id: String) -> void:
+	if combat_opponent_visual == null or combat_panel == null:
+		return
+
+	combat_opponent_visual.position = Vector2(442.0, 130.0)
+	combat_opponent_visual.rotation = 0.0
+	combat_opponent_visual.modulate = Color.WHITE
+	combat_panel.modulate = Color.WHITE
+
+	var tween := create_tween()
+	match action_id:
+		"strike":
+			combat_opponent_visual.modulate = Color(1.0, 0.72, 0.58, 1.0)
+			tween.tween_property(combat_opponent_visual, "position", Vector2(451.0, 130.0), 0.045)
+			tween.tween_property(combat_opponent_visual, "position", Vector2(442.0, 130.0), 0.10)
+			tween.parallel().tween_property(combat_opponent_visual, "modulate", Color.WHITE, 0.10)
+		"guard":
+			combat_panel.modulate = Color(0.72, 0.90, 0.92, 1.0)
+			tween.tween_property(combat_panel, "modulate", Color.WHITE, 0.16)
+		"maneuver":
+			tween.tween_property(combat_opponent_visual, "rotation", -0.035, 0.06)
+			tween.tween_property(combat_opponent_visual, "rotation", 0.025, 0.06)
+			tween.tween_property(combat_opponent_visual, "rotation", 0.0, 0.08)
+		"disengage":
+			combat_opponent_visual.modulate = Color(0.70, 0.82, 0.85, 0.82)
+			tween.tween_property(combat_opponent_visual, "modulate", Color.WHITE, 0.18)
 
 
 func _finish_demo_combat() -> void:
