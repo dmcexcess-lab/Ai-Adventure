@@ -2,274 +2,298 @@
 
 ## Status
 
-**Umbrella Quest Slice 12 — RPG integration: COMPLETE**
+**Umbrella Quest Slice 13 — Bounded combat: COMPLETE**
 
 Chapter One production remains paused.
 
-Umbrella Quest now exercises the complete investigation + light-RPG grammar intended for the finished game before combat is added.
+Umbrella Quest now proves investigation, dialogue, RPG routing, persistence, **and one bounded combat encounter** inside the same comic-noir exploration presentation.
 
-## Opening background choice
+Combat remains subordinate to investigation.
 
-Starting Umbrella Quest now presents a blocking four-choice approach screen.
+## Encounter trigger
 
-The choices are the same fixed profiles used by Chapter One:
+The encounter is staged in the existing:
 
-1. **The Watcher**
-   - Observation 3
-   - Reasoning 2
-   - Empathy 1
-   - Resolve 1
-   - “I notice what everyone else edits out.”
-2. **The Analyst**
-   - Observation 2
-   - Reasoning 3
-   - Empathy 1
-   - Resolve 1
-   - “I trust the structure before the story.”
-3. **The Reader**
-   - Observation 2
-   - Reasoning 1
-   - Empathy 3
-   - Resolve 1
-   - “People tell me more than they mean to.”
-4. **The Anchor**
-   - Observation 1
-   - Reasoning 2
-   - Empathy 1
-   - Resolve 3
-   - “When something pushes back, I keep going.”
+**Loading Bay / Service Exit**
 
-There is no point allocation.
+It does not trigger merely because the player discovers the room.
 
-This selection is Umbrella-local and does not mutate the canonical Chapter One background or skills.
+The encounter becomes eligible only after the player has established:
 
-## Deterministic skill rule
+**Mina carried 47B through the service route.**
 
-Umbrella Quest now uses the same deterministic math as the production RPG service:
+Entering the loading bay after that deduction starts the encounter.
 
-**skill value + contextual modifier >= authored threshold**
+If that deduction is established while the player is already in the loading bay, combat starts there immediately.
 
-The player receives the actual calculation in the feedback:
+Once completed, the encounter does not retrigger on later room entries.
 
-- skill;
-- base value;
-- modifier;
-- total;
-- threshold;
-- PASS / FAIL.
+## Encounter fiction
 
-There are no hidden rolls.
+The rear service door slams open.
 
-`SkillService` now exposes a pure local-value evaluator so sandbox/demo content can use the exact production math without borrowing or mutating canonical GameState.
+A soaked trespasser, startled to find the player blocking the narrow loading bay, swings a heavy flashlight and tries to force past.
 
-## Observation route — The Watcher
+This encounter is deliberately incidental to the umbrella mystery.
 
-Interacting with the wet lobby umbrella rack now attempts:
+Winning or losing the physical exchange does not rewrite the evidence chain or make the umbrella explanation dependent on combat.
 
-**Observation 3**
+## Presentation
 
-Success reads a subtle adhesive filament + scuff direction and records:
+Combat does **not** change to a detached battle screen.
 
-**Transfer Residue at the Rack**
+The loading-bay room stays visible.
 
-That extra physical evidence supports the first-transfer deduction and can reduce dependence on Alex / the closing log.
+The existing comic-noir shell gains a translucent combat layer containing:
 
-Failure still records the ordinary dry-rack evidence and explicitly redirects the player toward the paper record or Alex.
+- the opponent silhouette;
+- player condition;
+- opponent condition;
+- leverage / guard;
+- next opponent intent;
+- rolling surfaced-resolution log;
+- four action buttons.
 
-## Reasoning route — The Analyst
+Keyboard 1-4 map to the same four actions.
 
-Inspecting the maintenance fan timing attempts:
+The bottom investigation shell remains visually part of the same scene, but interaction behind the combat overlay is blocked until the encounter ends.
 
-**Reasoning 4**
+## Deterministic combat state
 
-The rear timer by itself is underdetermined.
+Starting values:
 
-If the player has already found the front-desk closing log, that independent timing anchor supplies:
+- **Player condition:** 8 / 8
+- **Opponent condition:** 6 / 6
+- **Leverage:** 0
+- **Guard:** 0
 
-**+1 contextual modifier**
+There are no random rolls.
 
-This produces a visible fail/recover pattern for The Analyst:
+The opponent uses a visible repeating intent sequence:
 
-- 3 + 0 = 3 / 4 // FAIL
-- find closing log;
-- 3 + 1 = 4 / 4 // PASS
+1. **RUSH — 3 damage**
+2. **FLASHLIGHT SWING — 2 damage**
+3. **SHOVE — 2 damage**
 
-Success records:
+The next intent is shown before the player chooses an action.
 
-**Service Timing Reconstruction**
+## Action grammar
 
-That evidence supports Mina's service-route deduction and can replace the storage-tag/witness route.
+### 1 // STRIKE
 
-Other backgrounds can still use the normal Slice 11 evidence chain.
+Base:
 
-## Empathy route — The Reader
+**2 damage**
 
-Once Mina becomes relevant, conversation can expose:
+RPG interaction:
 
-**[EMPATHY 3] You're worried about the paperwork, not the accusation.**
+- Resolve 3 adds **+1** direct-action damage.
+- One point of existing leverage can be spent for **+1** damage.
 
-Reader success identifies that Mina reacts to damage to files and donation cartons before she reacts to the theft implication.
+Example Anchor opening strike:
 
-Success records:
+**2 base + 1 Resolve + 0 leverage = 3 damage**
 
-**Mina's Protective Tell**
+### 2 // GUARD
 
-This becomes motive/drying evidence and gives a human shortcut toward the final explanation.
+Base:
 
-Failure makes Mina close off but explicitly preserves fallback routes through policy questions and physical evidence.
+**2 block**
 
-## Resolve route — The Anchor
+RPG interaction:
 
-Mina can also be challenged with:
+- Resolve 3 adds **+1 block**.
 
-**[RESOLVE 3] No procedure. Give me the exact route.**
+Guard applies to the opponent's next surfaced action.
 
-Anchor success gets Mina to stop hedging and state:
+### 3 // MANEUVER
 
-**Cabinet B → storage cart → maintenance corridor → rear drying rail**
+Base:
 
-Success records:
+**+1 leverage**
 
-- Mina's ordinary second-transfer statement;
-- **Mina's Exact Service Route**.
+The resolver checks the strongest of:
 
-This creates a direct witness-supported shortcut through the service-route deduction.
+- Observation;
+- Reasoning;
+- Empathy.
 
-Failure costs trust and redirects the player toward the shift board, transfer tag, fan timer, and evidence presentation.
+If that strongest skill is 3, Maneuver gains another:
 
-## Failed approaches
+**+1 leverage**
 
-Umbrella Quest now keeps demo-local failed-approach state.
+Maneuver also supplies one point of immediate guard.
 
-Each failed approach records:
+This makes existing backgrounds matter without inventing combat attributes.
 
-- check ID;
-- skill;
-- last total;
-- modifier;
-- threshold;
-- context;
-- attempts;
-- authored fallback hint.
+Examples:
 
-The Character panel displays these failures and their fallback routes.
+- Watcher uses Observation expertise;
+- Analyst uses Reasoning expertise;
+- Reader uses Empathy expertise;
+- Anchor lacks the non-Resolve expertise bonus but has stronger direct control through Resolve.
 
-A deterministic failure therefore changes the investigation instead of silently hiding content or creating a dead end.
+### 4 // DISENGAGE
 
-## Character panel
+Deterministic rule:
 
-The Character panel is no longer a placeholder test profile.
+**Resolve + Leverage >= 3**
 
-It now shows:
+Examples:
 
-- selected background;
-- authored sentence;
-- all four real skill values;
-- real production skill descriptions;
-- failed approaches;
-- fallback guidance.
+- Anchor can disengage immediately: **3 + 0 = 3 / 3**
+- Reader can Maneuver first, gain 2 leverage from Empathy expertise, then disengage: **1 + 2 = 3 / 3**
 
-## Universal solvability
+A failed disengage consumes the action and the opponent resolves the already-visible intent.
 
-The complete Slice 11 non-skill investigation remains available.
+## Outcomes
 
-All four backgrounds can still solve the umbrella case through ordinary evidence:
+### Victory
 
-- Ticket 47B;
-- rack / closing-log evidence;
-- Cabinet B trace;
-- shift board + transfer tag;
-- wet-property policy + drying rail.
+Reducing opponent condition to zero ends combat immediately.
 
-Skill success changes the route; it does not determine whether the game can be completed.
+The player remains in the loading bay and resumes the investigation.
 
-## Demo persistence
+### Voluntary disengage
 
-The local Umbrella snapshot now preserves:
+Passing the disengage check breaks contact.
 
-- current room;
-- player position;
-- evidence;
-- deductions;
-- hypotheses;
-- witness trust;
-- case-resolution state;
-- selected Umbrella background;
-- all four Umbrella skill values;
-- failed approaches;
-- last skill-check results.
+The trespasser bolts into the rain.
+
+Investigation resumes in the same room.
+
+### Forced disengage / failure consequence
+
+If player condition reaches zero:
+
+- there is no death screen;
+- there is no reload requirement;
+- there is no case failure.
+
+The player is forced back from the exchange.
+
+Demo state records:
+
+**bruised_ribs**
+
+The Character panel reports the combat outcome and consequence.
+
+The umbrella investigation remains fully completable.
+
+## Save/load safety
+
+Umbrella local persistence now treats combat as an atomic authored event.
+
+While combat is active:
+
+- SAVE is locked;
+- LOAD is locked.
+
+The demo never serializes a half-resolved combat round.
+
+After victory, disengagement, or forced disengagement:
+
+- safe SAVE is restored;
+- safe LOAD is restored;
+- snapshots preserve the completed combat outcome and consequence.
+
+Loading a completed encounter does not restart it.
+
+Loading an intentionally older safe snapshot from before combat can naturally make the encounter eligible again when its trigger conditions are reached.
 
 Canonical Chapter One saves remain untouched.
+
+## Reusable combat resolver
+
+The deterministic rules live in:
+
+`core/combat/bounded_combat.gd`
+
+The loading-bay authored encounter lives in:
+
+`content/demo/umbrella_combat.gd`
+
+The resolver owns no GameState and is not an autoload.
+
+The Umbrella shell supplies:
+
+- encounter definition;
+- local RPG profile.
+
+This keeps the contract reusable for later Chapter One authoring while keeping Slice 13 combat state strictly demo-local.
 
 ## Validation
 
 Godot 4.7.2 CI now protects:
 
-1. all four Umbrella background profiles;
-2. exact fixed skill values;
-3. pure deterministic local-value checks through SkillService;
-4. Observation success route;
-5. Reasoning fail-without-context route;
-6. Reasoning +1 contextual modifier recovery;
-7. Empathy success route;
-8. Resolve success route;
-9. failed-approach math + fallback recording;
-10. RPG-aware local save/load;
-11. full universal case completion under every background;
-12. canonical background isolation;
-13. canonical skill isolation;
-14. canonical failed-approach isolation;
-15. all Slice 11 investigation paths;
-16. all eight-room navigation;
-17. all prior canonical interaction/evidence/deduction/dialogue/RPG/persistence regressions;
-18. real main-scene startup.
+1. loading-bay combat trigger after service-route deduction;
+2. no premature combat requirement in prior Slice 11/12 paths;
+3. four locked combat actions;
+4. authored 8/6 condition values;
+5. surfaced deterministic Strike math;
+6. surfaced opponent intent/damage;
+7. Anchor victory path;
+8. Reader Empathy-assisted Maneuver;
+9. deterministic Reader disengage path;
+10. failed-disengage sequence;
+11. forced-disengage `bruised_ribs` consequence;
+12. clean return to the exploration shell;
+13. completed encounter does not retrigger;
+14. active-combat save rejection;
+15. safe post-combat save/load;
+16. umbrella case completion after the failure consequence;
+17. canonical background/skills/failures/clues/deductions remain untouched;
+18. all Slice 9-12 regressions;
+19. all canonical interaction/evidence/deduction/dialogue/RPG/persistence regressions;
+20. real main-scene startup.
+
+The Web packaging gate also verifies the combat opponent art is physically present in the exported PCK.
 
 ## NEXT OPERATION
 
-**Umbrella Quest Slice 13 — Combat slice**
+**Umbrella Quest Slice 14 — Full graphics production pass**
 
 Execute without requesting design decisions:
 
-1. Preserve the complete Slice 12 investigation and all four RPG routes.
-2. Add one compact, authored combat encounter that proves the finished game's bounded combat grammar without turning Umbrella Quest into a combat game.
-3. Stage the encounter inside the existing comic-noir exploration presentation rather than switching to an unrelated JRPG/arcade screen.
-4. Use the loading-bay / service-exit area as the representative combat location unless current implementation constraints clearly favor another existing room.
-5. Trigger combat from an authored world-state event after enough of the umbrella investigation has progressed that combat can return cleanly to investigation.
-6. Implement a finite combat state with:
-   - player and opponent condition/health;
-   - a small readable action set;
-   - explicit turn/order feedback;
-   - deterministic or fully surfaced resolution math;
-   - no hidden random dice unless the repository explicitly introduces and documents them in this slice.
-7. Keep the action set compact and production-oriented. Senior default:
-   - Strike / direct action;
-   - Guard / reduce or prevent incoming harm;
-   - Maneuver / positional or leverage action;
-   - Disengage / attempt to end the encounter.
-8. Let existing RPG skills influence authored combat options or consequences where appropriate, but do not create a separate combat-stat progression system.
-9. Failure must create a consequence rather than an arbitrary game-over:
-   - injury / pressure / lost leverage;
-   - forced disengagement;
-   - altered witness or investigation state;
-   - or another bounded authored consequence.
-10. Victory, disengagement, and failure/consequence paths must all return to the existing room/investigation shell.
-11. Add combat UI using the established comic-noir skin and 640x480 constraints.
-12. Keep combat state demo-local and isolated from canonical Chapter One state until the production combat contract is proven.
-13. Preserve save/load safety outside active combat. Do not allow a local save snapshot to restore into an invalid half-resolved encounter.
-14. Protect with tests proving:
-   - encounter trigger;
-   - action availability;
-   - deterministic/surfaced resolution;
-   - victory path;
-   - disengage path;
-   - failure/consequence path;
-   - clean return to investigation;
-   - RPG interaction where authored;
-   - case remains completable;
-   - canon-state isolation;
-   - all Slice 9-12 regressions.
-15. Run all existing regressions and main-scene startup.
-16. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
-17. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
+1. Preserve every Slice 9-13 gameplay contract exactly unless a visual integration bug requires a narrow correction.
+2. Upgrade all eight Umbrella Quest rooms from current authored reference/world-skeleton art to finished-production comic-book backgrounds.
+3. Follow `VISUAL_DIRECTION.md` as authoritative:
+   - polished comic-book illustration;
+   - dark gritty city / institutional interiors;
+   - strong ink silhouettes;
+   - layered depth;
+   - controlled dirty teal / charcoal / amber palette;
+   - readable interaction staging;
+   - no placeholder/greybox look.
+4. Bring every room to a consistent final-style quality bar:
+   - exterior entry / awning;
+   - lobby;
+   - front desk;
+   - Lost & Found hall;
+   - staff office;
+   - storage room;
+   - maintenance corridor;
+   - loading bay / service exit.
+5. Upgrade the player sprite and NPC staging art so Alex, Mina, the player, and the combat opponent feel like one coherent finished visual language.
+6. Upgrade dialogue portraits for Alex and Mina to the same final comic-production style.
+7. Add the minimum animation set that materially improves readability:
+   - player movement;
+   - idle presence;
+   - witness presence where justified;
+   - restrained combat feedback;
+   - no animation system expansion for its own sake.
+8. Add restrained lighting/FX polish compatible with Godot Web and the 640x480 budget:
+   - rain;
+   - practical light pools;
+   - subtle room-specific motion where valuable;
+   - no dynamic 3D or heavy post-processing.
+9. Polish the combat presentation so it feels embedded in the loading-bay scene rather than like an overlaid prototype while preserving the exact deterministic combat rules.
+10. Preserve hotspot readability and avoid visual-detail clutter that harms interaction discovery.
+11. Keep all critical art referenced as importable Godot resources so Web export cannot omit it.
+12. Strengthen visual resource/PCK validation for every new production asset.
+13. Protect all Slice 9-13 gameplay tests unchanged where possible.
+14. Run all existing regressions and main-scene startup.
+15. Update `ROADMAP.md`, `ARCHITECTURE.md`, and `CURRENT.md`.
+16. Commit/push, follow CI and Web deployment to terminal status, and verify exact `main` head.
 
-Do not start Slice 14 in the same turn unless the user explicitly asks for multiple slices.
+Do not start Slice 15 in the same turn unless the user explicitly asks for multiple slices.

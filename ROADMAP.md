@@ -54,7 +54,7 @@ Umbrella Quest is deliberately non-canon, but it is the authoritative compact pr
   - Deterministic failures with alternate progress.
   - Background choice reflected through the full mini-quest.
 
-- [ ] **Slice 13 — Umbrella combat slice**
+- [x] **Slice 13 — Umbrella combat slice**
   - Compact representative combat encounter.
   - Exploration-to-combat transition.
   - Final intended combat grammar.

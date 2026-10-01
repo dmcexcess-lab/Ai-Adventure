@@ -605,3 +605,98 @@ A protected `umbrella_rpg_smoke.gd` test verifies:
 - universal case solvability under every background;
 - RPG-aware demo save/load;
 - canonical background/skill/failure isolation.
+
+
+### Umbrella bounded-combat runtime
+
+Slice 13 proves the representative combat grammar without turning investigation into a combat loop.
+
+The reusable deterministic resolver lives at `core/combat/bounded_combat.gd`. It is a plain `RefCounted` object rather than an autoload. It owns no canonical state and accepts:
+
+- one authored encounter definition;
+- the current four RPG skill values.
+
+Umbrella Quest keeps the resulting encounter state local to the demo shell.
+
+The current authored encounter lives in `content/demo/umbrella_combat.gd` and triggers in the existing loading bay only after the required `mina_service_route` deduction is established.
+
+Combat never changes scenes. The loading-bay background, player staging, and investigation shell remain visible. A comic-noir overlay adds the opponent silhouette, condition readouts, intent preview, combat log, and four actions.
+
+The locked representative action grammar is:
+
+1. **Strike**
+   - base damage is authored;
+   - Resolve 3 grants a surfaced +1 direct-action bonus;
+   - one point of existing leverage may be spent for +1 damage.
+2. **Guard**
+   - grants an authored block value for the next opponent action;
+   - Resolve 3 grants +1 additional block.
+3. **Maneuver**
+   - creates leverage;
+   - the strongest of Observation / Reasoning / Empathy is named explicitly;
+   - skill 3 in that strongest non-Resolve skill grants +1 additional leverage;
+   - the maneuver also provides one point of immediate guard.
+4. **Disengage**
+   - resolves as `Resolve + current leverage >= 3`;
+   - success ends the encounter without victory;
+   - failure consumes the player's action and allows the opponent's surfaced response.
+
+There is no random roll.
+
+Opponent behavior is an authored repeating intent sequence. The UI shows the next intent and its raw damage before the player commits:
+
+- RUSH — 3;
+- FLASHLIGHT SWING — 2;
+- SHOVE — 2.
+
+Every resolution records readable math in the combat log, including:
+
+- player base values;
+- RPG-derived bonuses;
+- leverage gained/spent;
+- guard;
+- raw incoming damage;
+- damage after guard;
+- disengage threshold math.
+
+Combat condition is intentionally local and bounded:
+
+- player condition: 8;
+- opponent condition: 6.
+
+The encounter has three terminal outcomes:
+
+- `victory`;
+- `disengaged`;
+- `forced_disengage`.
+
+Dropping to zero condition does **not** produce a game-over. The player is forced back into investigation with the authored `bruised_ribs` consequence recorded in demo-local state and shown on the Character panel. The umbrella case remains completable.
+
+Completed combat never retriggers on later loading-bay entries unless an earlier safe snapshot from before the encounter is deliberately restored.
+
+Save/load safety:
+
+- local SAVE is rejected while combat is active;
+- local LOAD is rejected while combat is active;
+- active half-resolved combat is never serialized;
+- after an encounter ends, safe snapshots preserve only the completed outcome/consequence plus the existing investigation/RPG state;
+- restoring a completed outcome never reopens the encounter.
+
+The UI shell remains the owner of demo combat state, so canonical Chapter One GameState is untouched.
+
+A protected `umbrella_combat_smoke.gd` test verifies:
+
+- authored trigger timing;
+- exact four-action availability;
+- deterministic condition values;
+- surfaced Strike + Resolve math;
+- surfaced opponent damage;
+- victory;
+- RPG-assisted Maneuver leverage;
+- deterministic disengage;
+- forced-disengage consequence;
+- unsafe-save rejection during combat;
+- safe post-combat persistence;
+- no completed-encounter retrigger;
+- case completion after combat consequence;
+- canon-state isolation.
