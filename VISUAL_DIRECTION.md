@@ -170,3 +170,63 @@ From Slice 9 onward:
 - room composition is authored for finished art from the start;
 - Umbrella Quest is a vertical slice, not disposable UI test content;
 - Chapter One production stays paused until the umbrella vertical slice is polished and mechanically representative.
+
+
+## Slice 14 production implementation
+
+Umbrella Quest now has a complete production visual set.
+
+### Runtime background rule
+
+Finished room backgrounds are packaged PNG resources under `art/demo/production/`.
+
+The game must preserve the authored interaction map while art changes. A visual repaint may improve:
+- material detail;
+- lighting;
+- depth;
+- weather;
+- foreground framing;
+- focal contrast.
+
+It must not silently relocate a doorway, witness, clue-bearing prop, or walkable route away from its tested hotspot/staging area.
+
+### Production character rule
+
+Room sprites and portraits share:
+- the same heavy silhouette logic;
+- dark charcoal/slate clothing;
+- dirty teal separation accents;
+- restrained amber highlights;
+- warm, desaturated skin tones;
+- strong facial planes rather than soft photoreal shading.
+
+Room sprites favor silhouette/readability. Portraits carry the facial/emotional detail.
+
+### Motion budget
+
+The production minimum is intentionally small:
+
+- player walk bob/lean;
+- subtle idle presence;
+- animated exterior/window rain;
+- low-amplitude practical-light pulse;
+- restrained combat reaction Tweens.
+
+Additional animation should only be added when it improves state readability, character presence, or scene atmosphere. Do not add an animation framework merely to increase motion density.
+
+### Web constraint
+
+Production polish must remain compatible with the 640x480 Compatibility-renderer target.
+
+Prefer:
+- imported static textures;
+- SVG character assets;
+- CanvasItem draw calls;
+- short Tweens.
+
+Avoid:
+- full-screen shader stacks;
+- dynamic 3D lighting;
+- runtime texture generation;
+- large particle systems;
+- bloom-heavy post processing.

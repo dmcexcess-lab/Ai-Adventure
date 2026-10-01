@@ -603,7 +603,8 @@ grow_vertical = 2
 mouse_filter = 0
 color = Color(0.015, 0.02, 0.025, 0.34)
 
-[node name="OpponentVisual" type="TextureRect" parent="CombatOverlay"]
+[node name="CombatOpponentVisual" type="TextureRect" parent="CombatOverlay"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 442.0
 offset_top = 130.0
@@ -615,6 +616,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="CombatPanel" type="PanelContainer" parent="CombatOverlay"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 22.0
 offset_top = 54.0

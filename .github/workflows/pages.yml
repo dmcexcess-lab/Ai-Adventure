@@ -64,15 +64,16 @@ jobs:
         shell: bash
         run: |
           test -s build/web/index.pck
-          grep -a -q "community_center_lobby_noir.svg" build/web/index.pck
-          grep -a -q "exterior_entry_noir.svg" build/web/index.pck
-          grep -a -q "front_desk_noir.svg" build/web/index.pck
-          grep -a -q "lost_found_hall_noir.svg" build/web/index.pck
-          grep -a -q "staff_office_noir.svg" build/web/index.pck
-          grep -a -q "storage_room_noir.svg" build/web/index.pck
-          grep -a -q "maintenance_corridor_noir.svg" build/web/index.pck
-          grep -a -q "loading_bay_noir.svg" build/web/index.pck
+          grep -a -q "community_center_lobby_production.png" build/web/index.pck
+          grep -a -q "exterior_entry_production.png" build/web/index.pck
+          grep -a -q "front_desk_production.png" build/web/index.pck
+          grep -a -q "lost_found_hall_production.png" build/web/index.pck
+          grep -a -q "staff_office_production.png" build/web/index.pck
+          grep -a -q "storage_room_production.png" build/web/index.pck
+          grep -a -q "maintenance_corridor_production.png" build/web/index.pck
+          grep -a -q "loading_bay_production.png" build/web/index.pck
           grep -a -q "demo_player_noir.svg" build/web/index.pck
+          grep -a -q "alex_sprite_noir.svg" build/web/index.pck
           grep -a -q "alex_portrait_noir.svg" build/web/index.pck
           grep -a -q "mina_portrait_noir.svg" build/web/index.pck
           grep -a -q "mina_sprite_noir.svg" build/web/index.pck

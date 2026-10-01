@@ -1,9 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="84" height="168" viewBox="0 0 84 168">
-<path d="M18 168 L22 94 Q17 82 25 66 Q29 57 32 54 Q22 43 25 27 Q28 9 43 6 Q61 8 64 28 Q65 43 54 54 Q61 61 65 76 L70 168Z" fill="#151a1d" stroke="#050708" stroke-width="7"/>
-<ellipse cx="44" cy="34" rx="17" ry="22" fill="#a97558" stroke="#050708" stroke-width="6"/>
-<path d="M26 32 Q26 8 44 6 Q64 8 64 35 Q51 25 40 24 Q32 24 26 32Z" fill="#101416"/>
-<path d="M24 74 Q43 64 64 75 L61 118 L24 118Z" fill="#273034"/>
-<path d="M26 79 L62 79" stroke="#4f7d7f" stroke-width="6"/>
-<path d="M31 118 L27 168 M56 118 L61 168" stroke="#24292b" stroke-width="15"/>
-<path d="M23 168 H37 M52 168 H68" stroke="#080a0b" stroke-width="8"/>
+<defs><linearGradient id="jacket" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b4b50"/><stop offset="1" stop-color="#1c2529"/></linearGradient><linearGradient id="skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bf8564"/><stop offset="1" stop-color="#89543f"/></linearGradient></defs>
+<path d="M15 167L21 96Q15 82 23 66Q28 58 33 53Q24 43 25 29Q27 10 43 6Q62 8 66 29Q68 44 56 55Q65 63 70 79L73 167Z" fill="#101619" stroke="#040506" stroke-width="7"/>
+<ellipse cx="44" cy="35" rx="18" ry="23" fill="url(#skin)" stroke="#040506" stroke-width="6"/>
+<path d="M25 34Q22 14 38 7Q59-1 68 22L65 43Q56 25 43 25Q33 25 25 34Z" fill="#101417" stroke="#040506" stroke-width="4"/>
+<path d="M31 38q7-4 13 0M48 38q7-4 13 1" fill="none" stroke="#24201e" stroke-width="3"/><path d="M37 50q7 4 14 0" fill="none" stroke="#65362c" stroke-width="2"/>
+<path d="M22 73Q44 59 67 74L64 120L22 120Z" fill="url(#jacket)" stroke="#040506" stroke-width="6"/><path d="M25 79H64" stroke="#4f7f80" stroke-width="6"/>
+<path d="M22 82L8 120L21 127L35 87M67 81L79 119L67 126L54 87" fill="#26353a" stroke="#040506" stroke-width="6"/>
+<path d="M30 120L26 167M56 120L62 167" stroke="#21282a" stroke-width="16"/><path d="M20 167H38M52 167H70" stroke="#07090a" stroke-width="8"/>
+<path d="M29 103H57" stroke="#8ca1a4" stroke-width="2"/><rect x="36" y="83" width="17" height="12" fill="#b95146" stroke="#311513" stroke-width="2"/>
 </svg>
