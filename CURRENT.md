@@ -2,113 +2,73 @@
 
 ## Status
 
-**Umbrella Quest Slice 15 — Production rebaseline + PC/#3 staging repair: COMPLETE**
+**Umbrella Quest Slice 16 — PC/#3 production implementation: IN PROGRESS**
 
 Chapter One production is blocked.
 
-The repository previously overstated the production status of the vertical slice. The user has corrected the acceptance state:
+The repository acceptance rule remains:
 
-## What is actually production-complete
+**User-accepted production-complete: the eight environment backgrounds only.**
 
-**Only the eight environment backgrounds.**
+Slice 16 is producing a credible deployed #3 candidate. Automated completion of this slice does not automatically change that acceptance statement.
 
-Accepted production backgrounds:
+## Problem being corrected
 
-1. Exterior Entry / Awning
-2. Community Center Lobby
-3. Front Desk
-4. Lost & Found Hall
-5. Staff Office
-6. Storage Room
-7. Maintenance Corridor
-8. Loading Bay / Service Exit
+The accepted #3 source sheet is **2172x724**.
 
-Runtime location:
+The prototype runtime atlas was only:
 
-`art/demo/production/`
+**216x72**
 
-These backgrounds are the visual quality bar for everything else.
+Its individual poses retained only about 62-70 pixels of vertical source detail, then were rendered around 130-175 pixels tall in the game.
 
-## What is not production-complete
+That destructive downsample was the main reason the otherwise-correct scene-aware pose system looked soft and cheap beside the accepted backgrounds.
 
-The following remain prototype / pre-production regardless of whether their mechanics are functional or automated tests pass:
+## Slice 16 implementation
 
-- PC/#3 runtime art and presentation;
-- Alex room sprite;
-- Mina room sprite;
-- combat opponent art;
-- Alex portrait;
-- Mina portrait;
-- HUD and bottom bar;
-- Notebook / evidence / hypothesis presentation;
-- dialogue presentation;
-- Character panel;
-- combat presentation;
-- main menu;
-- Settings UI (currently absent);
-- room-transition presentation;
-- foreground/depth treatment;
-- character animation quality;
-- audio/music/ambience/SFX (currently absent);
-- save/load UX;
-- accessibility polish;
-- case-closed ending presentation;
-- final full-run QA.
+The live player source is being replaced by:
 
-Functional completeness is not production acceptance.
+`art/characters/pc3/pc3_reference_atlas_hd.webp`
 
-## Slice 15 — PC/#3 staging repair
+Dimensions:
 
-The first production-completion repair addresses a concrete runtime defect in the current protagonist implementation.
+**864x288**
 
-The accepted source character sheet is 2172x724, but the prototype runtime atlas was reduced to 216x72. The room actor then displayed those roughly 70-pixel-tall poses inside a 42x82 visual rectangle, making the protagonist implausibly small beside the environment and 168-pixel NPC staging.
+It is derived from the exact accepted source sheet. No new protagonist design or art-generation call is involved.
 
-Slice 15 keeps the same accepted identity and the same room-aware pose/perspective mechanics, but changes the rendered presentation:
+The six live pose regions now retain roughly 248-280 pixels of source height before downsampling into the room.
 
-- gameplay actor footprint remains 42x82;
-- visible character rectangle becomes 84x164;
-- visible art is bottom-centered on the unchanged gameplay foot position;
-- room-authored perspective scaling still affects only the visual;
-- linear texture filtering is used when scaling the current atlas;
-- movement angle selection remains unchanged;
-- loading-bay combat pose behavior remains unchanged.
+The following runtime behavior remains unchanged:
 
-This is a staging/runtime repair. It does **not** by itself certify the current character artwork as production-complete. Final character-art acceptance belongs to Slice 16.
+- same #3 identity;
+- same costume;
+- same six key poses;
+- same room-authored resting angles;
+- same movement-direction pose selection;
+- same horizontal mirroring;
+- same far/near perspective system;
+- same bottom-center pivot;
+- same fixed gameplay foot position;
+- same loading-bay combat-pose override;
+- same investigation/combat mechanics.
 
-## Production rule
+## Production status after Slice 16 implementation
 
-A subsystem is only called production-complete when:
+Even after technical closure, #3 remains **pending user visual acceptance**.
 
-1. it meets the accepted environment-background quality bar or its equivalent for that subsystem;
-2. it is integrated into the real player path;
-3. its Web build is verified;
-4. automated regression protects its functional contract;
-5. it has no knowingly prototype-facing presentation remaining.
+The next production slice does not assume the current Alex/Mina/opponent/portrait assets are final.
 
-## NEXT OPERATION
+## NEXT OPERATION AFTER SLICE 16
 
-**Slice 16 — Character art production**
+**Slice 17 — NPC + portrait art production**
 
-Execute without requesting design decisions:
-
-1. Keep the eight environment backgrounds exactly as the accepted production benchmark.
-2. Treat every current character-facing asset as replaceable/prototype unless it independently reaches that benchmark.
-3. Produce and integrate production-quality:
-   - PC/#3 room presentation;
-   - Alex room sprite;
-   - Mina room sprite;
-   - loading-bay opponent;
-   - Alex portrait;
-   - Mina portrait.
-4. Preserve the accepted #3 identity and costume language; do not redesign the protagonist.
-5. Preserve room-aware PC angle selection, perspective scaling, unchanged foot position, and combat-pose behavior.
-6. Make PC/NPC scale and perspective coherent within each accepted background.
-7. Ensure room sprites and portraits clearly depict the same character identities.
-8. Remove or retire placeholder/vector character assets from the live player path when production replacements exist.
-9. Keep all gameplay, evidence, RPG, dialogue, room-graph, and combat rules unchanged.
-10. Add regression coverage for character resource packaging, scale/staging, identity correspondence where mechanically testable, and Web export.
-11. Keep the title-screen label as DEVELOPMENT BUILD.
-12. Update ROADMAP.md, ARCHITECTURE.md, VISUAL_DIRECTION.md, and CURRENT.md.
-13. Commit/push, follow CI and Web deployment to terminal success, and verify exact main head.
-
-Do not begin Slice 17 or Chapter One in the same turn unless explicitly requested.
+1. Keep the accepted room backgrounds untouched.
+2. Treat Alex, Mina, the loading-bay opponent, and both dialogue portraits as prototype until replaced/accepted.
+3. Bring those characters to the environment quality bar.
+4. Make room sprite and portrait identity correspondence obvious.
+5. Stage NPC scale/perspective coherently inside their accepted rooms.
+6. Keep gameplay/witness/combat rules unchanged.
+7. Protect resource packaging and staging with tests.
+8. Keep the title screen visibly marked DEVELOPMENT BUILD.
+9. Do not claim user acceptance merely because CI passes.
+10. Do not begin UI production or Chapter One in the same turn.

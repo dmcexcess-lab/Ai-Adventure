@@ -3,14 +3,14 @@ class_name AdventurePlayerActor
 
 signal arrived
 
-const PC3_ATLAS: Texture2D = preload("res://art/characters/pc3/pc3_reference_atlas.webp")
+const PC3_ATLAS: Texture2D = preload("res://art/characters/pc3/pc3_reference_atlas_hd.webp")
 const POSE_REGIONS := {
-	"front": Rect2(3, 1, 28, 70),
-	"walk_left_3q": Rect2(38, 3, 30, 68),
-	"idle_right_3q": Rect2(76, 2, 25, 69),
-	"side_right": Rect2(107, 4, 39, 67),
-	"rear_right_3q": Rect2(147, 3, 28, 68),
-	"combat": Rect2(176, 9, 40, 62),
+	"front": Rect2(12, 4, 112, 280),
+	"walk_left_3q": Rect2(152, 12, 120, 272),
+	"idle_right_3q": Rect2(304, 8, 100, 276),
+	"side_right": Rect2(428, 16, 156, 268),
+	"rear_right_3q": Rect2(588, 12, 112, 272),
+	"combat": Rect2(704, 36, 160, 248),
 }
 
 @export var move_speed := 210.0
@@ -113,6 +113,14 @@ func get_visual_perspective_scale() -> float:
 
 func get_visual_display_size() -> Vector2:
 	return visual_display_size
+
+
+func get_source_atlas_size() -> Vector2i:
+	return Vector2i(PC3_ATLAS.get_width(), PC3_ATLAS.get_height())
+
+
+func get_current_pose_region() -> Rect2:
+	return POSE_REGIONS.get(_current_pose_id, Rect2())
 
 
 func get_visual_rendered_height() -> float:

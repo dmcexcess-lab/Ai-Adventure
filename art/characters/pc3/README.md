@@ -1,6 +1,6 @@
 # PC / #3 master visual reference
 
-This directory contains the accepted player-character visual identity for Umbrella Quest and the future #3 production character.
+This directory contains the accepted player-character identity reference for Umbrella Quest and future #3 production.
 
 ## Master reference
 
@@ -8,32 +8,42 @@ The accepted OpenAI image-generation reference is:
 
 - source filename: `gritty_noir_hero_character_sheet.png`
 - generation ID: `0420ca57-95db-41ee-b265-c54e2fd401a7`
-- original generated dimensions: 2172x724
+- original generated dimensions: **2172x724**
 - transparent background
-- six consistent full-body poses
+- six consistent full-body key poses
 
-The runtime atlas is a Web-sized derivative of that exact accepted sheet, not a redesign.
+No new character design was generated for Slice 16.
 
-## Runtime atlas
+## Production runtime atlas
 
-`pc3_reference_atlas.webp` is 216x72 and preserves alpha. It is intentionally Web-sized for the 42x82 room actor footprint.
+The live player now uses:
 
-Pose regions:
+`pc3_reference_atlas_hd.webp`
 
-| Pose ID | Region |
+Runtime dimensions:
+
+**864x288**
+
+This asset is a higher-resolution derivative of the exact accepted 2172x724 sheet.
+
+The former `pc3_reference_atlas.webp` is only **216x72** and is retained as historical/prototype source material. It is no longer the authoritative runtime character because scaling roughly 70-pixel-tall pose crops to ~164 display pixels visibly degraded the art.
+
+### Pose regions
+
+| Pose ID | HD region |
 | --- | --- |
-| `front` | `Rect2(3, 1, 28, 70)` |
-| `walk_left_3q` | `Rect2(38, 3, 30, 68)` |
-| `idle_right_3q` | `Rect2(76, 2, 25, 69)` |
-| `side_right` | `Rect2(107, 4, 39, 67)` |
-| `rear_right_3q` | `Rect2(147, 3, 28, 68)` |
-| `combat` | `Rect2(176, 9, 40, 62)` |
+| `front` | `Rect2(12, 4, 112, 280)` |
+| `walk_left_3q` | `Rect2(152, 12, 120, 272)` |
+| `idle_right_3q` | `Rect2(304, 8, 100, 276)` |
+| `side_right` | `Rect2(428, 16, 156, 268)` |
+| `rear_right_3q` | `Rect2(588, 12, 112, 272)` |
+| `combat` | `Rect2(704, 36, 160, 248)` |
 
-Do not replace this character with a generic room sprite. Room scenes select an authored default pose and perspective profile; movement selects direction-appropriate poses at runtime.
+The regions preserve the same pose layout as the earlier atlas at 4x linear resolution.
 
-## Locked design language
+## Locked identity
 
-The accepted PC/#3 identity uses:
+#3 uses:
 
 - messy dark hair;
 - light stubble;
@@ -44,6 +54,37 @@ The accepted PC/#3 identity uses:
 - worn brown cross-body messenger bag;
 - grounded adult proportions;
 - graphic-novel ink rendering;
-- cool teal shadow/rim accents plus restrained amber edge light.
+- cool teal shadow/rim accents;
+- restrained amber edge light.
 
-Future #3 art should use this atlas/reference as the visual identity anchor so Chapter One does not require a new protagonist design pass.
+Future #3 production art must extend this identity rather than redesigning the protagonist independently for each room.
+
+## Runtime staging contract
+
+Room scenes do **not** embed separate player textures.
+
+`AdventurePlayerActor` owns the shared HD atlas and applies:
+
+- room-authored default resting pose;
+- direction-aware movement pose;
+- horizontal mirroring;
+- room-authored far/near perspective scale;
+- bottom-center visual pivot;
+- combat pose override.
+
+The gameplay actor footprint and foot position remain independent from rendered character size.
+
+This keeps:
+- click-to-walk;
+- approach points;
+- transitions;
+- saves;
+- combat coordinates
+
+stable while the visible character scales to the room.
+
+## Acceptance note
+
+Slice 16 removes the largest known fidelity defect in the PC path: destructive runtime downsampling.
+
+Automated tests can prove that the HD source is actually used and staged correctly. They **cannot** by themselves certify artistic acceptance. Until the deployed character is visually accepted by the user, the repository must not claim that #3 is user-accepted production-complete.

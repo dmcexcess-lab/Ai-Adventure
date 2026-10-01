@@ -46,14 +46,20 @@ Current production status:
   - Use appropriate texture filtering for scaled comic art.
   - Protect scale, angle, perspective, combat pose, and unchanged gameplay footprint in CI.
 
-- [ ] **Slice 16 — Character art production**
-  - Bring PC/#3, Alex, Mina, combat opponent, and dialogue portraits to the environment-background quality bar.
-  - Preserve one consistent #3 identity across room angles and combat.
-  - Establish final room-sprite scale and portrait correspondence.
-  - Replace prototype/vector-placeholder character assets where necessary.
-  - Do not mark complete until in-game character presentation is production-quality.
+- [ ] **Slice 16 — PC/#3 production implementation**
+  - Use the accepted #3 identity; do not redesign the protagonist.
+  - Replace the destructively downsampled 216x72 runtime atlas with a high-resolution derivative of the accepted 2172x724 source sheet.
+  - Preserve scene-authored angle selection, perspective scaling, gameplay foot position, movement poses, and combat pose.
+  - Keep automated validation separate from user visual acceptance.
+  - Do not mark #3 user-accepted production-complete until the deployed result is actually accepted.
 
-- [ ] **Slice 17 — UI + ending presentation production**
+- [ ] **Slice 17 — NPC + portrait art production**
+  - Bring Alex, Mina, the loading-bay opponent, and dialogue portraits to the accepted environment quality bar.
+  - Make room sprites and portraits unambiguously depict the same identities.
+  - Replace prototype/vector-placeholder live assets where required.
+  - Stage NPC scale/perspective coherently inside the accepted room backgrounds.
+
+- [ ] **Slice 18 — UI + ending presentation production**
   - Production HUD.
   - Notebook/evidence/hypothesis presentation.
   - Dialogue presentation.
@@ -62,7 +68,7 @@ Current production status:
   - Title/menu presentation.
   - Finished case-closed sequence rather than a prototype modal.
 
-- [ ] **Slice 18 — Motion, depth, and transition production**
+- [ ] **Slice 19 — Motion, depth, and transition production**
   - Room transitions.
   - Character movement/idle minimums.
   - Witness presence/reactions.
@@ -71,7 +77,7 @@ Current production status:
   - Rain/practical-light polish.
   - No feature-system expansion.
 
-- [ ] **Slice 19 — Audio + settings production**
+- [ ] **Slice 20 — Audio + settings production**
   - Music/ambient sound.
   - Room ambience.
   - Interaction/dialogue/combat SFX.
@@ -79,7 +85,7 @@ Current production status:
   - Production Settings UI with volume/mute and supported presentation options.
   - Web-safe packaging and persistence.
 
-- [ ] **Slice 20 — Usability, accessibility, and persistence closure**
+- [ ] **Slice 21 — Usability, accessibility, and persistence closure**
   - Full start-to-finish player-path review.
   - Objective clarity.
   - Hotspot/readability checks.
@@ -89,7 +95,7 @@ Current production status:
   - Accessibility/reveal behavior.
   - Regression coverage for corrected friction.
 
-- [ ] **Slice 21 — Final Umbrella QA + acceptance gate**
+- [ ] **Slice 22 — Final Umbrella QA + acceptance gate**
   - Fresh-run completion on deployed Web build.
   - All backgrounds, characters, UI, motion, audio, settings, persistence, investigation, RPG, and combat treated as final.
   - Firefox/Web verification.
@@ -99,19 +105,19 @@ Current production status:
 
 ## Phase D — Chapter One content
 
-- [ ] **Slice 22 — Chapter One content skeleton**
-- [ ] **Slice 23 — Act I: The Impossible Packet**
-- [ ] **Slice 24 — Act II: The Missing Witness**
-- [ ] **Slice 25 — Act III: The Seam**
-- [ ] **Slice 26 — Act IV: The Sender**
-- [ ] **Slice 27 — Act V: The Threshold**
+- [ ] **Slice 23 — Chapter One content skeleton**
+- [ ] **Slice 24 — Act I: The Impossible Packet**
+- [ ] **Slice 25 — Act II: The Missing Witness**
+- [ ] **Slice 26 — Act III: The Seam**
+- [ ] **Slice 27 — Act IV: The Sender**
+- [ ] **Slice 28 — Act V: The Threshold**
 
 ## Phase E — Chapter One production and closure
 
-- [ ] **Slice 28 — Chapter One final art/audio pass**
-- [ ] **Slice 29 — Full progression QA**
-- [ ] **Slice 30 — Web release closure**
+- [ ] **Slice 29 — Chapter One final art/audio pass**
+- [ ] **Slice 30 — Full progression QA**
+- [ ] **Slice 31 — Web release closure**
 
-When Slice 30 is complete and verified, respond:
+When Slice 31 is complete and verified, respond:
 
 **ok final slice done play chapter one**
