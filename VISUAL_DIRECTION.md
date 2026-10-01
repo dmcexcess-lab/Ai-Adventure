@@ -306,3 +306,24 @@ The authoritative acceptance state is now:
 The accepted backgrounds are the reference-quality target these remaining visual systems must meet.
 
 The existing PC/#3 pose atlas is useful as an identity/staging prototype, but its downsampled runtime derivative and current integration must not be described as final character art until the dedicated character-production slice is accepted.
+
+
+## Slice 16 — #3 source-fidelity rule
+
+The accepted 2172x724 character sheet is the identity source.
+
+The live runtime must not destructively downsample that source below the level needed for the intended on-screen character size.
+
+The production implementation therefore uses an 864x288 transparent WebP atlas. Typical pose crops retain roughly 248-280 source pixels of vertical detail before being rendered around 130-175 pixels tall in the room.
+
+This is intentionally different from the retired 216x72 prototype atlas, whose ~62-70 pixel pose crops had to be enlarged in-game.
+
+The room-aware staging model remains authoritative:
+- fixed gameplay foot point;
+- bottom-center visual pivot;
+- authored far/near scale;
+- authored room default;
+- direction-aware movement pose;
+- combat override.
+
+Automated source-fidelity validation does not equal artistic acceptance. The deployed #3 remains pending user visual acceptance until explicitly approved.

@@ -64,8 +64,14 @@ func _run() -> void:
 				var pose_texture := sprite.get("texture") as AtlasTexture
 				if pose_texture == null:
 					failures.append("PC/#3 sprite is not sourced from the master pose atlas: %s" % path)
-				elif pose_texture.atlas == null or String(pose_texture.atlas.resource_path) != "res://art/characters/pc3/pc3_reference_atlas.webp":
+				elif pose_texture.atlas == null or String(pose_texture.atlas.resource_path) != "res://art/characters/pc3/pc3_reference_atlas_hd.webp":
 					failures.append("PC/#3 pose atlas path is wrong: %s" % path)
+			var atlas_size: Vector2i = player.call("get_source_atlas_size")
+			if atlas_size.x < 800 or atlas_size.y < 280:
+				failures.append("PC/#3 runtime atlas is still destructively downsampled: %s -> %s" % [path, atlas_size])
+			var pose_region: Rect2 = player.call("get_current_pose_region")
+			if pose_region.size.y < 240.0:
+				failures.append("PC/#3 active pose does not retain production source detail: %s -> %s" % [path, pose_region])
 			if not player.is_processing():
 				failures.append("player idle/walk animation process is not active: %s" % path)
 			var display_size: Vector2 = player.call("get_visual_display_size")
@@ -139,7 +145,7 @@ func _run() -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("PRODUCTION_VISUAL_OK: eight accepted production PNG rooms plus PC/#3 staging scale, pose, perspective, and structural presentation resources are valid")
+		print("PRODUCTION_VISUAL_OK: accepted room backgrounds plus HD PC/#3 source fidelity, staging scale, pose, perspective, and structural presentation resources are valid")
 		quit(0)
 		return
 	for failure in failures:

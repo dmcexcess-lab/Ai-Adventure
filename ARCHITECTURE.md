@@ -862,3 +862,29 @@ The following runtime systems may be functionally valid while their presentation
 Tests for these systems protect behavior and integration; they must not be interpreted as visual/artistic acceptance.
 
 The PC/#3 actor deliberately separates its **gameplay footprint** from its **rendered character size**. Slice 15 expands only the child visual rectangle while preserving the actor footprint and foot coordinate, so movement, approach points, saves, and room transitions remain stable.
+
+
+### PC/#3 HD runtime source
+
+Slice 16 keeps the existing `AdventurePlayerActor` staging architecture but replaces its lossy prototype source texture.
+
+Live atlas:
+
+`res://art/characters/pc3/pc3_reference_atlas_hd.webp`
+
+Dimensions:
+
+`864x288`
+
+The six `AtlasTexture` pose regions are 4x the dimensions of the retired 216x72 atlas regions. This lets the actor downsample high-resolution comic art to its room display size instead of enlarging a tiny crop.
+
+The gameplay actor remains 42x82. The child visual remains separately sized and bottom-centered, so the HD asset change cannot alter foot coordinates, transitions, approach points, or save positions.
+
+Production validation now checks:
+- HD atlas resource path;
+- minimum atlas dimensions;
+- minimum active-pose source height;
+- unchanged gameplay footprint;
+- scene-authored pose defaults;
+- room perspective interpolation;
+- Web PCK packaging of the HD atlas.
