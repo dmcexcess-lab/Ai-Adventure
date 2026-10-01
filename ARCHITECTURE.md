@@ -843,3 +843,22 @@ Visual regression now protects:
 - Web PCK packaging of the master atlas.
 
 The legacy `art/demo/demo_player_noir.svg` may remain as historical source material, but it is no longer the authoritative runtime protagonist.
+
+
+### Production acceptance state
+
+Automated functional validation and production acceptance are separate concerns.
+
+The eight Umbrella environment backgrounds are currently the only presentation assets accepted as production-complete.
+
+The following runtime systems may be functionally valid while their presentation remains prototype/pre-production:
+- PC/#3;
+- NPC sprites and portraits;
+- HUD/notebook/dialogue/character/combat UI;
+- animation and transitions;
+- audio/settings;
+- ending presentation.
+
+Tests for these systems protect behavior and integration; they must not be interpreted as visual/artistic acceptance.
+
+The PC/#3 actor deliberately separates its **gameplay footprint** from its **rendered character size**. Slice 15 expands only the child visual rectangle while preserving the actor footprint and foot coordinate, so movement, approach points, saves, and room transitions remain stable.

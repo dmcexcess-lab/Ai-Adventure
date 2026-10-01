@@ -68,6 +68,16 @@ func _run() -> void:
 					failures.append("PC/#3 pose atlas path is wrong: %s" % path)
 			if not player.is_processing():
 				failures.append("player idle/walk animation process is not active: %s" % path)
+			var display_size: Vector2 = player.call("get_visual_display_size")
+			if display_size.y < 150.0 or display_size.x < 70.0:
+				failures.append("PC/#3 visual is still prototype-small: %s -> %s" % [path, display_size])
+			if sprite != null:
+				if sprite.size.y < 150.0:
+					failures.append("PC/#3 sprite rectangle was not expanded to production staging size: %s -> %s" % [path, sprite.size])
+				if int(sprite.texture_filter) != int(CanvasItem.TEXTURE_FILTER_LINEAR):
+					failures.append("PC/#3 scaled atlas is not using linear filtering: %s" % path)
+			if player.size.y > 90.0:
+				failures.append("PC/#3 gameplay footprint changed while enlarging only the visual: %s" % path)
 
 			var default_pose := String(player.call("get_default_pose_id"))
 			seen_default_poses[default_pose] = true
@@ -87,6 +97,9 @@ func _run() -> void:
 			var measured_near := float(player.call("get_visual_perspective_scale"))
 			if measured_near <= measured_far:
 				failures.append("runtime PC perspective interpolation failed: %s" % path)
+			var near_rendered_height := float(player.call("get_visual_rendered_height"))
+			if near_rendered_height < 150.0:
+				failures.append("near-plane PC/#3 remains undersized against room/NPC scale: %s -> %.1f" % [path, near_rendered_height])
 
 		if path.ends_with("front_desk.tscn"):
 			var alex := room.find_child("AlexVisual", true, false)
@@ -126,7 +139,7 @@ func _run() -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("PRODUCTION_VISUAL_OK: eight production PNG rooms, PC/#3 master atlas poses/perspective, ambient layers, NPC art, portraits, and combat visual resources are valid")
+		print("PRODUCTION_VISUAL_OK: eight accepted production PNG rooms plus PC/#3 staging scale, pose, perspective, and structural presentation resources are valid")
 		quit(0)
 		return
 	for failure in failures:

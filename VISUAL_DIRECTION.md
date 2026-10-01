@@ -283,3 +283,26 @@ This rule carries forward to Chapter One/#3:
 - prefer the accepted OpenAI image-generation reference for future protagonist visual extensions rather than creating a parallel design through a separate art provider.
 
 The current six key poses are sufficient for the Umbrella vertical slice. Add future #3 poses only when an authored Chapter One scene demonstrably needs a new silhouette or camera angle.
+
+
+## Production acceptance correction
+
+Previous Slice 14 documentation used “complete production visual set” too broadly.
+
+The authoritative acceptance state is now:
+
+**Production-complete:**
+- the eight environment backgrounds under `art/demo/production/`.
+
+**Not yet production-complete:**
+- PC/#3 art/presentation;
+- NPC room sprites;
+- dialogue portraits;
+- UI;
+- animation and transitions;
+- combat presentation;
+- ending presentation.
+
+The accepted backgrounds are the reference-quality target these remaining visual systems must meet.
+
+The existing PC/#3 pose atlas is useful as an identity/staging prototype, but its downsampled runtime derivative and current integration must not be described as final character art until the dedicated character-production slice is accepted.
