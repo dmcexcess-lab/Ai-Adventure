@@ -61,11 +61,11 @@ func _run() -> void:
 			if sprite == null or sprite.get("texture") == null:
 				failures.append("production player sprite missing: %s" % path)
 			else:
-				var pose_texture := sprite.get("texture") as AtlasTexture
-				if pose_texture == null:
-					failures.append("PC/#3 sprite is not sourced from the master pose atlas: %s" % path)
-				elif pose_texture.atlas == null or String(pose_texture.atlas.resource_path) != "res://art/characters/pc3/pc3_reference_atlas.webp":
-					failures.append("PC/#3 pose atlas path is wrong: %s" % path)
+				var pose_resource_path := String((sprite.get("texture") as Resource).resource_path)
+				if not pose_resource_path.begins_with("res://art/characters/pc3/poses/"):
+					failures.append("PC/#3 sprite is not sourced from the production pose set: %s -> %s" % [path, pose_resource_path])
+				if (sprite.get("texture") as Texture2D).get_height() < 220:
+					failures.append("PC/#3 live pose is below production source resolution: %s" % path)
 			if not player.is_processing():
 				failures.append("player idle/walk animation process is not active: %s" % path)
 
@@ -126,7 +126,7 @@ func _run() -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("PRODUCTION_VISUAL_OK: eight production PNG rooms, PC/#3 master atlas poses/perspective, ambient layers, NPC art, portraits, and combat visual resources are valid")
+		print("PRODUCTION_VISUAL_OK: eight production PNG rooms and production-resolution PC/#3 pose/perspective integration are valid; other presentation layers remain separate production work")
 		quit(0)
 		return
 	for failure in failures:

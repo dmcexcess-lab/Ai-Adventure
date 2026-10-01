@@ -65,6 +65,9 @@ jobs:
       - name: Production visual smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/production_visual_smoke.gd
 
+      - name: PC #3 production smoke test
+        run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/pc3_production_smoke.gd
+
       - name: Demo world graph smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/demo_world_smoke.gd
 

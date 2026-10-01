@@ -3,14 +3,13 @@ class_name AdventurePlayerActor
 
 signal arrived
 
-const PC3_ATLAS: Texture2D = preload("res://art/characters/pc3/pc3_reference_atlas.webp")
-const POSE_REGIONS := {
-	"front": Rect2(3, 1, 28, 70),
-	"walk_left_3q": Rect2(38, 3, 30, 68),
-	"idle_right_3q": Rect2(76, 2, 25, 69),
-	"side_right": Rect2(107, 4, 39, 67),
-	"rear_right_3q": Rect2(147, 3, 28, 68),
-	"combat": Rect2(176, 9, 40, 62),
+const POSE_TEXTURES := {
+	"front": preload("res://art/characters/pc3/poses/front.webp"),
+	"walk_left_3q": preload("res://art/characters/pc3/poses/walk_3q.webp"),
+	"idle_right_3q": preload("res://art/characters/pc3/poses/idle_3q.webp"),
+	"side_right": preload("res://art/characters/pc3/poses/side.webp"),
+	"rear_right_3q": preload("res://art/characters/pc3/poses/rear_3q.webp"),
+	"combat": preload("res://art/characters/pc3/poses/combat.webp"),
 }
 
 @export var move_speed := 210.0
@@ -28,7 +27,6 @@ var _visual: TextureRect
 var _visual_base_position := Vector2.ZERO
 var _walk_phase := 0.0
 var _idle_phase := 0.0
-var _pose_cache: Dictionary = {}
 var _current_pose_id := ""
 var _current_flip_h := false
 var _context_pose_id := ""
@@ -39,8 +37,8 @@ func _ready() -> void:
 	_destination_position = position
 	_destination_foot = get_foot_position()
 	_visual = get_node_or_null("Sprite") as TextureRect
-	_build_pose_cache()
 	if _visual != null:
+		_visual.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		_visual_base_position = _visual.position
 		_visual.pivot_offset = Vector2(_visual.size.x * 0.5, _visual.size.y)
 	_apply_default_pose()
@@ -112,6 +110,40 @@ func get_visual_perspective_scale() -> float:
 	return _perspective_scale()
 
 
+func get_visual_pivot_offset() -> Vector2:
+	if _visual == null:
+		return Vector2.ZERO
+	return _visual.pivot_offset
+
+
+func get_visual_size() -> Vector2:
+	if _visual == null:
+		return Vector2.ZERO
+	return _visual.size
+
+
+func get_pose_ids() -> Array[String]:
+	var ids: Array[String] = []
+	for pose_id_value in POSE_TEXTURES.keys():
+		ids.append(String(pose_id_value))
+	ids.sort()
+	return ids
+
+
+func get_pose_source_size(pose_id: String) -> Vector2i:
+	if not POSE_TEXTURES.has(pose_id):
+		return Vector2i.ZERO
+	var texture: Texture2D = POSE_TEXTURES[pose_id]
+	return Vector2i(texture.get_width(), texture.get_height())
+
+
+func get_pose_resource_path(pose_id: String) -> String:
+	if not POSE_TEXTURES.has(pose_id):
+		return ""
+	var texture: Texture2D = POSE_TEXTURES[pose_id]
+	return texture.resource_path
+
+
 func set_combat_pose(active: bool) -> void:
 	if active:
 		_context_pose_id = "combat"
@@ -146,16 +178,6 @@ func _process(delta: float) -> void:
 	_update_visual_scale()
 
 
-func _build_pose_cache() -> void:
-	_pose_cache.clear()
-	for pose_id_value in POSE_REGIONS.keys():
-		var pose_id := String(pose_id_value)
-		var texture := AtlasTexture.new()
-		texture.atlas = PC3_ATLAS
-		texture.region = POSE_REGIONS[pose_id]
-		_pose_cache[pose_id] = texture
-
-
 func _select_movement_pose(direction: Vector2) -> void:
 	if not _context_pose_id.is_empty():
 		_apply_pose(_context_pose_id, false)
@@ -181,8 +203,8 @@ func _apply_default_pose() -> void:
 func _apply_pose(pose_id: String, flip_h: bool) -> void:
 	if _visual == null:
 		return
-	var resolved_id := pose_id if _pose_cache.has(pose_id) else "idle_right_3q"
-	_visual.texture = _pose_cache[resolved_id]
+	var resolved_id := pose_id if POSE_TEXTURES.has(pose_id) else "idle_right_3q"
+	_visual.texture = POSE_TEXTURES[resolved_id]
 	_current_pose_id = resolved_id
 	_current_flip_h = flip_h
 
