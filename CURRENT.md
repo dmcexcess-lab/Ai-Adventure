@@ -2,7 +2,7 @@
 
 ## Status
 
-**Umbrella Quest production rebaseline: ACTIVE — Slice 15 in progress**
+**Umbrella Quest Slice 15 — Production rebaseline + PC/#3 staging repair: COMPLETE**
 
 Chapter One production is blocked.
 
@@ -87,10 +87,28 @@ A subsystem is only called production-complete when:
 
 ## NEXT OPERATION
 
-Finish **Slice 15 — Production rebaseline + PC/#3 staging repair** through CI, merge, post-merge validation, and Web deployment.
-
-After Slice 15 closes, the next operation is:
-
 **Slice 16 — Character art production**
 
-Do not begin Chapter One.
+Execute without requesting design decisions:
+
+1. Keep the eight environment backgrounds exactly as the accepted production benchmark.
+2. Treat every current character-facing asset as replaceable/prototype unless it independently reaches that benchmark.
+3. Produce and integrate production-quality:
+   - PC/#3 room presentation;
+   - Alex room sprite;
+   - Mina room sprite;
+   - loading-bay opponent;
+   - Alex portrait;
+   - Mina portrait.
+4. Preserve the accepted #3 identity and costume language; do not redesign the protagonist.
+5. Preserve room-aware PC angle selection, perspective scaling, unchanged foot position, and combat-pose behavior.
+6. Make PC/NPC scale and perspective coherent within each accepted background.
+7. Ensure room sprites and portraits clearly depict the same character identities.
+8. Remove or retire placeholder/vector character assets from the live player path when production replacements exist.
+9. Keep all gameplay, evidence, RPG, dialogue, room-graph, and combat rules unchanged.
+10. Add regression coverage for character resource packaging, scale/staging, identity correspondence where mechanically testable, and Web export.
+11. Keep the title-screen label as DEVELOPMENT BUILD.
+12. Update ROADMAP.md, ARCHITECTURE.md, VISUAL_DIRECTION.md, and CURRENT.md.
+13. Commit/push, follow CI and Web deployment to terminal success, and verify exact main head.
+
+Do not begin Slice 17 or Chapter One in the same turn unless explicitly requested.

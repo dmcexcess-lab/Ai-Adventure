@@ -38,7 +38,7 @@ Current production status:
 - **Production-complete:** eight environment backgrounds only.
 - **Not production-complete:** PC/#3 art/presentation, NPC sprites, portraits, UI, notebook/dialogue/combat presentation, animation/transitions/depth, audio, settings, accessibility, save/load UX, ending presentation, final QA.
 
-- [ ] **Slice 15 — Production rebaseline + PC/#3 staging repair**
+- [x] **Slice 15 — Production rebaseline + PC/#3 staging repair**
   - Remove misleading production-complete claims.
   - Restore PC to credible human scale against the accepted backgrounds and NPC staging.
   - Preserve gameplay foot position while enlarging only the rendered character.
