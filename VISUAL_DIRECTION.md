@@ -283,3 +283,14 @@ This rule carries forward to Chapter One/#3:
 - prefer the accepted OpenAI image-generation reference for future protagonist visual extensions rather than creating a parallel design through a separate art provider.
 
 The current six key poses are sufficient for the Umbrella vertical slice. Add future #3 poses only when an authored Chapter One scene demonstrably needs a new silhouette or camera angle.
+
+
+## Production-status correction
+
+The environment backgrounds are currently the **only production-complete visual layer** in Umbrella Quest.
+
+The eight files under `art/demo/production/` are the accepted finished-product reference.
+
+Character sprites, portraits, animation, UI, combat presentation, menus/settings, transitions/depth effects, audio, and the case-ending presentation must not be described as production-complete until their dedicated production slices are closed.
+
+The accepted #3 source character sheet remains a useful identity reference, but the first scene-aware runtime implementation used an over-downsampled atlas and is therefore prototype-quality until Slice 15 replaces it.

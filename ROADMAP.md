@@ -13,97 +13,107 @@ The user normally says **next slice** / **continue**. The assistant executes the
 - [x] **Slice 7 — Dialogue and witness framework**
 - [x] **Slice 8 — Light RPG layer**
 
-## Phase B — Umbrella Quest vertical slice
+## Phase B — Umbrella Quest systems and environment proof
 
-Umbrella Quest is deliberately non-canon, but it is the authoritative compact proof of the finished game. It must eventually exercise the complete gameplay language—including investigation, dialogue, RPG routing, combat, persistence, and final-style presentation—before Chapter One production resumes.
+Umbrella Quest is deliberately non-canon, but it is the authoritative compact proof of the finished game. Chapter One production remains blocked until the Umbrella Quest itself is production-complete.
 
 - [x] **Slice 9 — Visual direction foundation**
-  - Lock polished comic-book / dark gritty city art direction.
-  - Add authoritative visual-production rules.
-  - Replace the demo lobby greybox with the first reference-quality illustrated room pass.
-  - Establish final-style UI skin.
-  - Establish player/NPC sprite and portrait language.
-  - Preserve all existing demo interactions and canon isolation.
-
 - [x] **Slice 10 — Multi-room Umbrella Quest world skeleton**
-  - Exterior entry / awning.
-  - Lobby.
-  - Front desk.
-  - Lost & Found hall.
-  - Staff office.
-  - Storage room.
-  - Maintenance corridor.
-  - Loading bay / service exit.
-  - Final-style composition from the start.
-  - Full navigation and transitions.
-
 - [x] **Slice 11 — Umbrella investigation loop**
-  - Complete umbrella case spine.
-  - Authored clues.
-  - Witnesses.
-  - Notebook progression.
-  - Hypotheses/deductions.
-  - Alternate evidence routes.
-  - Quest resolution skeleton.
-
 - [x] **Slice 12 — Umbrella RPG integration**
-  - Meaningful Observation route.
-  - Meaningful Reasoning route.
-  - Meaningful Empathy route.
-  - Meaningful Resolve route.
-  - Deterministic failures with alternate progress.
-  - Background choice reflected through the full mini-quest.
-
 - [x] **Slice 13 — Umbrella combat slice**
-  - Compact representative combat encounter.
-  - Exploration-to-combat transition.
-  - Final intended combat grammar.
-  - Combat UI and feedback.
-  - Failure/consequence handling.
-  - Return to investigation flow.
+- [x] **Slice 14 — Umbrella environment production pass**
+  - All eight room backgrounds reached the accepted production comic-book quality bar.
+  - Background composition, lighting, grit, city/institutional tone, and interaction readability are the visual reference for the finished game.
+  - Earlier Slice 14 claims that characters, portraits, UI, animation, combat presentation, or other presentation layers were also production-complete are superseded.
+- [x] **Post-Slice 14 prototype integration — scene-aware PC / #3**
+  - Proved room-specific pose selection and perspective scaling.
+  - Proved one reusable #3 identity can drive all rooms.
+  - This was a prototype integration, **not** a production-complete character pass.
 
-- [x] **Slice 14 — Umbrella full graphics production pass**
-  - Finished-quality background pass across all demo rooms.
-  - Finished demo character sprites.
-  - Dialogue portraits.
-  - Animation minimum set.
-  - Lighting/FX polish.
-  - Combat presentation polish.
+## Phase C — Umbrella Quest production completion
 
-- [x] **Post-Slice 14 visual maintenance — PC / #3 scene-aware integration**
-  - Accept one master PC/#3 visual identity reference.
-  - Package a single six-pose runtime atlas from that accepted reference.
-  - Give each room an authored default PC angle.
-  - Select direction-appropriate walking poses at runtime.
-  - Scale the PC by authored room perspective while preserving foot position.
-  - Use the combat key pose during the loading-bay encounter.
-  - Keep the exact movement, investigation, RPG, and combat rules unchanged.
+**Production baseline correction:** as of the start of Slice 15, the eight environment backgrounds are the only production-complete presentation layer. Everything listed below must independently clear its production slice before Chapter One begins.
 
-- [ ] **Slice 15 — Umbrella polish and usability closure**
-  - Full start-to-finish vertical-slice playtest.
-  - UI/UX corrections from user feedback.
-  - Pacing and readability cleanup.
-  - Save/load regression.
-  - Firefox/Web verification.
-  - Mark Umbrella Quest vertical slice complete.
+- [ ] **Slice 15 — PC / #3 production character pass**
+  - Use the accepted full-resolution #3 reference already created; no new art-generation call is required for this slice.
+  - Replace the severely downsampled runtime atlas with a high-resolution Web-sized derivative.
+  - Preserve scene-aware pose selection, room-specific resting angles, and foot-Y perspective scale.
+  - Correct pose framing/aspect so the character reads naturally rather than as a stretched atlas crop.
+  - Keep player gameplay coordinates invariant.
+  - Protect all eight rooms, movement directions, perspective range, and combat-pose restoration with tests.
+  - Treat #3 as production-complete only after runtime quality and integration pass CI and live Web verification.
 
-## Phase C — Chapter One content
+- [ ] **Slice 16 — NPC and portrait production pass**
+  - Alex room character.
+  - Mina room character.
+  - loading-bay opponent.
+  - Alex/Mina dialogue portraits.
+  - Match production backgrounds and #3 in line weight, scale, lighting, and silhouette.
+  - Add scene-specific staging/perspective rather than pasted fixed-size figures.
+  - Preserve dialogue/combat mechanics exactly.
 
-Chapter One resumes only after the Umbrella Quest vertical slice proves the visual and gameplay language.
+- [ ] **Slice 17 — UI, menus, notebook, dialogue, combat HUD, and ending production pass**
+  - Replace remaining prototype/tool-panel presentation.
+  - Production title/menu flow.
+  - production background-choice screen.
+  - notebook/evidence/hypothesis hierarchy.
+  - character panel.
+  - dialogue/evidence presentation.
+  - combat HUD.
+  - save/load messaging.
+  - settings screen appropriate to the Web build.
+  - finished case-resolution / end-of-demo presentation.
 
-- [ ] **Slice 16 — Chapter One content skeleton**
-- [ ] **Slice 17 — Act I: The Impossible Packet**
-- [ ] **Slice 18 — Act II: The Missing Witness**
-- [ ] **Slice 19 — Act III: The Seam**
-- [ ] **Slice 20 — Act IV: The Sender**
-- [ ] **Slice 21 — Act V: The Threshold**
+- [ ] **Slice 18 — Animation, depth, transitions, and room presentation pass**
+  - Production movement/idle minimum.
+  - witness presence animation where justified.
+  - room-to-room transitions.
+  - foreground occlusion/depth planes where backgrounds call for them.
+  - environmental motion.
+  - combat feedback integrated into the loading-bay panel.
+  - no gameplay-system expansion.
 
-## Phase D — Chapter One presentation and closure
+- [ ] **Slice 19 — Audio production pass**
+  - room ambience;
+  - rain/exterior bed;
+  - UI feedback;
+  - footsteps/interaction cues;
+  - dialogue presentation cues where useful;
+  - combat impacts/guard/maneuver/disengage;
+  - restrained music or tonal bed only if it materially improves the finished experience;
+  - volume/settings integration and Web-safe packaging.
 
-- [ ] **Slice 22 — Chapter One final art/audio pass**
-- [ ] **Slice 23 — Full progression QA**
-- [ ] **Slice 24 — Web release closure**
+- [ ] **Slice 20 — Umbrella Quest final production QA and acceptance build**
+  - Full fresh-start-to-case-closed playthrough.
+  - hotspot/art alignment.
+  - pacing/readability.
+  - keyboard/mouse parity.
+  - save/load across rooms and after combat.
+  - 640x480 layout safety.
+  - Firefox/Web performance.
+  - no prototype labels, placeholder copy, or unfinished panels.
+  - all automated regressions.
+  - deploy a final acceptance build.
+  - **Do not mark Umbrella Quest production-complete until the user has played this build and accepted it or requested only bounded fixes.**
 
-When Slice 24 is complete and verified, respond:
+## Phase D — Chapter One content
+
+Chapter One starts only after Slice 20 acceptance.
+
+- [ ] **Slice 21 — Chapter One content skeleton**
+- [ ] **Slice 22 — Act I: The Impossible Packet**
+- [ ] **Slice 23 — Act II: The Missing Witness**
+- [ ] **Slice 24 — Act III: The Seam**
+- [ ] **Slice 25 — Act IV: The Sender**
+- [ ] **Slice 26 — Act V: The Threshold**
+
+## Phase E — Chapter One presentation and closure
+
+- [ ] **Slice 27 — Chapter One final art/audio pass**
+- [ ] **Slice 28 — Full progression QA**
+- [ ] **Slice 29 — Web release closure**
+
+When Slice 29 is complete and verified, respond:
 
 **ok final slice done play chapter one**

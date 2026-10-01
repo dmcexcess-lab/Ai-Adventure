@@ -843,3 +843,18 @@ Visual regression now protects:
 - Web PCK packaging of the master atlas.
 
 The legacy `art/demo/demo_player_noir.svg` may remain as historical source material, but it is no longer the authoritative runtime protagonist.
+
+
+### Production-status gate
+
+Production completeness is tracked per presentation layer rather than inferred from feature existence.
+
+At the start of Slice 15:
+
+- **production-complete:** eight Umbrella environment backgrounds under `art/demo/production/`;
+- **mechanically implemented but presentation still pre-production:** PC/#3, NPCs, portraits, animation, UI, combat presentation, persistence feedback, and case ending;
+- **missing production layer:** audio and settings.
+
+Chapter One content production is blocked until the finite Umbrella production slices in `ROADMAP.md` reach the acceptance gate.
+
+The scene-aware PC architecture remains valid, but the 216×72 runtime atlas is explicitly considered a prototype derivative because it is enlarged well beyond native resolution at runtime. Slice 15 replaces the asset/crop layer while preserving gameplay foot coordinates and room-authored perspective logic.
