@@ -19,6 +19,18 @@ The target experience is closer to a compact investigative CRPG/adventure hybrid
 9. **Finite scope.** The engine exists to ship the Umbrella Quest vertical slice, Chapter One, and later chapters—not to become a general adventure framework.
 10. **Combat is bounded, not dominant.** Combat is part of the finished concept and must be proven in Umbrella Quest, but investigation remains the primary grammar.\n11. **Repository handoff.** Every completed slice ends with an updated `CURRENT.md` containing the exact next operation.
 
+## Umbrella production gate
+
+Umbrella Quest is the production proof for the finished game, not merely a mechanics prototype.
+
+Automated correctness is necessary but not sufficient. Chapter One production remains blocked until:
+- every Umbrella production category is finished;
+- the complete deployed demo is playable start to finish;
+- the user has reviewed the production candidate;
+- the user explicitly accepts the Umbrella Quest as production-complete.
+
+As of the current rebaseline, **only the eight environment backgrounds are production-complete**. Character art/animation, UI, scene staging/transitions, audio, menus/settings/accessibility, and final ending presentation remain unfinished.
+
 ## Chapter One completion definition
 
 Chapter One is done when a fresh player can open the deployed web build, start a new game, complete the full investigation, reach the chapter ending, save/load reliably, and encounter no progression blocker in the protected test path.

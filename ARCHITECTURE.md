@@ -843,3 +843,25 @@ Visual regression now protects:
 - Web PCK packaging of the master atlas.
 
 The legacy `art/demo/demo_player_noir.svg` may remain as historical source material, but it is no longer the authoritative runtime protagonist.
+
+
+### Umbrella production-status semantics
+
+The repository now distinguishes **functional completion** from **production completion**.
+
+Functional completion means:
+- the gameplay contract exists;
+- tests protect it;
+- it survives Web export.
+
+Production completion additionally requires:
+- final-quality assets/presentation;
+- correct integration with the production backgrounds;
+- user-visible review;
+- user acceptance.
+
+The current PC/#3 atlas runtime, NPC sprites, portraits, UI, animation scaffolding, combat presentation, and case-resolution panel remain valid implementation prototypes but must not be described as production-complete.
+
+As of the production rebaseline, the only accepted production category is the eight-room environment background set under `art/demo/production/`.
+
+Chapter One work is hard-gated behind the explicit Umbrella production acceptance slice.

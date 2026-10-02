@@ -283,3 +283,40 @@ This rule carries forward to Chapter One/#3:
 - prefer the accepted OpenAI image-generation reference for future protagonist visual extensions rather than creating a parallel design through a separate art provider.
 
 The current six key poses are sufficient for the Umbrella vertical slice. Add future #3 poses only when an authored Chapter One scene demonstrably needs a new silhouette or camera angle.
+
+
+## Production-readiness correction
+
+The eight finished environment backgrounds are currently the **only** Umbrella Quest visual category accepted as production-complete.
+
+The following existing assets/behaviors are reference or prototype material until later production slices close them:
+
+- PC/#3 pose atlases and runtime staging;
+- Alex/Mina in-world sprites;
+- Alex/Mina portraits;
+- loading-bay opponent art;
+- player walk/idle motion;
+- combat reaction Tweens;
+- HUD and modal layouts;
+- notebook/dialogue/combat presentation;
+- ambient FX implementation;
+- case-closed presentation.
+
+The production environment backgrounds are the comparison bar for all of those categories.
+
+A passing resource test means an asset loads. It does not mean the asset meets the art-direction bar.
+
+### Character-production rule
+
+The accepted PC/#3 reference defines identity, but final sprite production must be authored for the actual room/game use.
+
+Production character work should use OpenAI image generation, not fal, and should preserve:
+- face;
+- hair;
+- stubble;
+- jacket/sweater/trousers/boots;
+- messenger bag;
+- grounded adult proportions;
+- noir-comic ink/color language.
+
+The final runtime can use atlases/sheets, but must not visibly read as a stretched character-sheet cutout. Scene angle, perspective, grounding, animation, and silhouette quality must survive direct comparison with the finished backgrounds.
