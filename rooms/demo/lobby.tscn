@@ -19,6 +19,7 @@ room_id = "lobby"
 room_title = "COMMUNITY CENTER LOBBY"
 room_subtitle = "WESTSIDE COMMUNITY CENTER // MAIN LOBBY"
 walk_bounds = Rect2(26, 236, 588, 154)
+walk_polygon = PackedVector2Array(150, 270, 500, 245, 590, 390, 45, 390)
 default_spawn = Vector2(320, 365)
 
 [node name="ArtBackground" type="TextureRect" parent="."]
@@ -58,9 +59,9 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "idle_right_3q"
-perspective_far_scale = 0.64
-perspective_near_scale = 1.16
-perspective_top_y = 236.0
+perspective_far_scale = 0.6
+perspective_near_scale = 1.1
+perspective_top_y = 245.0
 perspective_bottom_y = 390.0
 
 [node name="Sprite" type="TextureRect" parent="PlayerActor"]

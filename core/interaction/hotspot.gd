@@ -26,10 +26,11 @@ signal action_requested(hotspot: Node, action: StringName)
 
 var _hovered := false
 var _reveal_active := false
+var _input_enabled := true
 
 
 func _ready() -> void:
-	mouse_filter = Control.MOUSE_FILTER_STOP
+	mouse_filter = Control.MOUSE_FILTER_STOP if enabled and _input_enabled else Control.MOUSE_FILTER_IGNORE
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
@@ -41,7 +42,16 @@ func set_hotspot_enabled(value: bool) -> void:
 	if not enabled and _hovered:
 		_hovered = false
 		hover_changed.emit("")
+	mouse_filter = Control.MOUSE_FILTER_STOP if enabled and _input_enabled else Control.MOUSE_FILTER_IGNORE
 	queue_redraw()
+
+
+func set_input_enabled(value: bool) -> void:
+	_input_enabled = value
+	if not _input_enabled and _hovered:
+		_hovered = false
+		hover_changed.emit("")
+	mouse_filter = Control.MOUSE_FILTER_STOP if enabled and _input_enabled else Control.MOUSE_FILTER_IGNORE
 
 
 func set_reveal(value: bool) -> void:
@@ -54,17 +64,17 @@ func is_reveal_active() -> bool:
 
 
 func trigger_primary() -> void:
-	if enabled:
+	if enabled and _input_enabled:
 		action_requested.emit(self, &"primary")
 
 
 func trigger_inspect() -> void:
-	if enabled:
+	if enabled and _input_enabled:
 		action_requested.emit(self, &"inspect")
 
 
 func _gui_input(event: InputEvent) -> void:
-	if not enabled:
+	if not enabled or not _input_enabled:
 		return
 
 	if event is InputEventMouseButton and event.pressed:
@@ -77,7 +87,7 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _on_mouse_entered() -> void:
-	if not enabled:
+	if not enabled or not _input_enabled:
 		return
 	_hovered = true
 	hover_changed.emit(display_name)

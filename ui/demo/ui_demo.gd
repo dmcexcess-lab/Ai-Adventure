@@ -127,6 +127,7 @@ var _saved_skill_checks: Dictionary = {}
 var _saved_combat_completed := false
 var _saved_combat_outcome := ""
 var _saved_combat_consequence := ""
+var _room_input_enabled := true
 
 
 func _ready() -> void:
@@ -170,6 +171,16 @@ func _ready() -> void:
 	_load_demo_room(FIRST_ROOM)
 	_open_demo_background_choice()
 	_set_status("Choose how you approach problems. The profile is fixed for this Umbrella Quest run.")
+	set_process(true)
+
+
+func _process(_delta: float) -> void:
+	var should_enable := not _modal_open()
+	if should_enable == _room_input_enabled:
+		return
+	_room_input_enabled = should_enable
+	if is_instance_valid(_current_room) and _current_room.has_method("set_interaction_enabled"):
+		_current_room.call("set_interaction_enabled", should_enable)
 
 
 func _load_combat_catalog() -> void:
@@ -695,6 +706,10 @@ func _load_demo_room(room_path: String, spawn_marker: String = "", restore_foot 
 		_current_room.call("restore_player_foot", restore_foot)
 	else:
 		_current_room.call("enter_at", spawn_marker)
+	_room_input_enabled = not _modal_open()
+	if _current_room.has_method("set_interaction_enabled"):
+		_current_room.call("set_interaction_enabled", _room_input_enabled)
+	_refresh_room_story_visuals()
 	context_label.text = _room_context()
 	_set_status("Entered %s. Click to walk; hover objects; right-click to inspect." % String(_current_room.get("room_title")).to_lower())
 	_maybe_trigger_demo_combat()
@@ -789,6 +804,14 @@ func _room_context() -> String:
 	if is_instance_valid(_current_room):
 		return "UMBRELLA QUEST // %s" % String(_current_room.get("room_title"))
 	return "UMBRELLA QUEST // COMMUNITY CENTER"
+
+
+func _refresh_room_story_visuals() -> void:
+	if not is_instance_valid(_current_room):
+		return
+	var umbrella := _current_room.find_child("RecoveredUmbrellaVisual", true, false) as CanvasItem
+	if umbrella != null:
+		umbrella.visible = _case_resolved or _is_demo_deduction_established("drying_not_theft")
 
 
 func _load_case_catalog() -> void:
@@ -897,6 +920,7 @@ func _select_demo_hypothesis(deduction_id: String) -> Dictionary:
 	else:
 		_set_status("Hypothesis recorded: %s" % String(evaluation.get("status", "unsupported")).to_upper())
 	_refresh_hypotheses()
+	_refresh_room_story_visuals()
 	_maybe_trigger_demo_combat()
 	return evaluation
 
@@ -948,6 +972,7 @@ func _resolve_demo_case() -> void:
 		return
 	_acquire_demo_clue("umbrella_recovered", false)
 	_case_resolved = true
+	_refresh_room_story_visuals()
 	_combat_feedback_locked = false
 	_set_demo_player_combat_pose(false)
 	_refresh_notebook()

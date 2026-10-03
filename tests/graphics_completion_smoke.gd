@@ -15,6 +15,8 @@ func _run() -> void:
 	await _test_player_contract()
 	_test_identity_correspondence()
 	await _test_combat_input_lock()
+	await _test_story_visual_visibility()
+	await _test_modal_stops_room_motion()
 	if failures.is_empty():
 		print("GRAPHICS_COMPLETION_OK: recovered atlases, crops, perspective, walking, actions, identity correspondence, and combat feedback lock are valid")
 		quit(0)
@@ -84,6 +86,36 @@ func _test_combat_input_lock() -> void:
 	var second_call: Variant = demo.call("_request_combat_action", "guard")
 	_expect(second_call is Dictionary and String((second_call as Dictionary).get("error", "")) == "combat_feedback_locked", "combat accepted repeat input during feedback")
 	demo.queue_free()
+
+
+func _test_story_visual_visibility() -> void:
+	var demo: Control = load("res://ui/demo/ui_demo.tscn").instantiate()
+	root.add_child(demo)
+	await process_frame
+	demo.call("_choose_demo_background", "anchor")
+	demo.call("_load_demo_room", "res://rooms/demo/loading_bay.tscn")
+	await process_frame
+	var umbrella := demo.find_child("RecoveredUmbrellaVisual", true, false) as CanvasItem
+	_expect(umbrella != null and not umbrella.visible, "recovered umbrella appears before the story reveals it")
+	demo.set("_case_resolved", true)
+	demo.call("_refresh_room_story_visuals")
+	_expect(umbrella != null and umbrella.visible, "recovered umbrella stays hidden after the case resolves")
+	demo.queue_free()
+
+
+func _test_modal_stops_room_motion() -> void:
+	var room: Control = load("res://rooms/demo/lobby.tscn").instantiate()
+	root.add_child(room)
+	await process_frame
+	var player: Control = room.get("player")
+	player.call("move_to", room.call("_clamp_to_walk_bounds", Vector2(500, 350)), room.get("walk_bounds"))
+	_expect(bool(player.call("is_moving")), "room movement did not start for modal lock check")
+	room.call("set_interaction_enabled", false)
+	_expect(not bool(player.call("is_moving")), "player keeps moving behind an open modal")
+	var hotspots: Control = room.get("hotspots")
+	for child in hotspots.get_children():
+		_expect(child.mouse_filter == Control.MOUSE_FILTER_IGNORE, "hidden modal left a hotspot clickable")
+	room.queue_free()
 
 
 func _expect(condition: bool, message: String) -> void:

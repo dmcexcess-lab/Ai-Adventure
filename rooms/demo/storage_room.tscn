@@ -19,6 +19,7 @@ room_id = "storage_room"
 room_title = "STORAGE ROOM"
 room_subtitle = "WESTSIDE COMMUNITY CENTER // LOST PROPERTY OVERFLOW"
 walk_bounds = Rect2(54, 248, 532, 130)
+walk_polygon = PackedVector2Array(145, 280, 530, 275, 570, 390, 130, 390)
 default_spawn = Vector2(96, 354)
 
 [node name="ArtBackground" type="TextureRect" parent="."]
@@ -58,10 +59,10 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "rear_right_3q"
-perspective_far_scale = 0.64
-perspective_near_scale = 1.16
-perspective_top_y = 248.0
-perspective_bottom_y = 378.0
+perspective_far_scale = 0.62
+perspective_near_scale = 1.1
+perspective_top_y = 275.0
+perspective_bottom_y = 390.0
 
 [node name="Sprite" type="TextureRect" parent="PlayerActor"]
 layout_mode = 1

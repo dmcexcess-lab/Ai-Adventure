@@ -24,6 +24,7 @@ room_id = "front_desk"
 room_title = "FRONT DESK"
 room_subtitle = "WESTSIDE COMMUNITY CENTER // RECEPTION ALCOVE"
 walk_bounds = Rect2(54, 250, 532, 126)
+walk_polygon = PackedVector2Array(90, 292, 545, 292, 585, 390, 55, 390)
 default_spawn = Vector2(120, 354)
 
 [node name="ArtBackground" type="TextureRect" parent="."]
@@ -75,10 +76,10 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "idle_right_3q"
-perspective_far_scale = 0.64
-perspective_near_scale = 1.16
-perspective_top_y = 250.0
-perspective_bottom_y = 376.0
+perspective_far_scale = 0.72
+perspective_near_scale = 1.08
+perspective_top_y = 292.0
+perspective_bottom_y = 390.0
 
 [node name="Sprite" type="TextureRect" parent="PlayerActor"]
 layout_mode = 1

@@ -19,6 +19,7 @@ room_id = "lost_found_hall"
 room_title = "LOST & FOUND HALL"
 room_subtitle = "WESTSIDE COMMUNITY CENTER // EAST SERVICE HALL"
 walk_bounds = Rect2(48, 246, 544, 132)
+walk_polygon = PackedVector2Array(70, 258, 570, 258, 610, 390, 35, 390)
 default_spawn = Vector2(92, 354)
 
 [node name="ArtBackground" type="TextureRect" parent="."]
@@ -58,10 +59,10 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "side_right"
-perspective_far_scale = 0.64
-perspective_near_scale = 1.16
-perspective_top_y = 246.0
-perspective_bottom_y = 378.0
+perspective_far_scale = 0.62
+perspective_near_scale = 1.08
+perspective_top_y = 258.0
+perspective_bottom_y = 390.0
 
 [node name="Sprite" type="TextureRect" parent="PlayerActor"]
 layout_mode = 1

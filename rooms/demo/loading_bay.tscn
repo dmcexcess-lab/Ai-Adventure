@@ -20,6 +20,7 @@ room_id = "loading_bay"
 room_title = "LOADING BAY / SERVICE EXIT"
 room_subtitle = "WESTSIDE COMMUNITY CENTER // REAR ALLEY"
 walk_bounds = Rect2(46, 246, 548, 132)
+walk_polygon = PackedVector2Array(105, 270, 530, 270, 585, 390, 80, 390)
 default_spawn = Vector2(118, 354)
 
 [node name="ArtBackground" type="TextureRect" parent="."]
@@ -59,10 +60,10 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "idle_right_3q"
-perspective_far_scale = 0.64
-perspective_near_scale = 1.16
-perspective_top_y = 246.0
-perspective_bottom_y = 378.0
+perspective_far_scale = 0.66
+perspective_near_scale = 1.1
+perspective_top_y = 270.0
+perspective_bottom_y = 390.0
 
 [node name="Sprite" type="TextureRect" parent="PlayerActor"]
 layout_mode = 1
@@ -76,6 +77,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="RecoveredUmbrellaVisual" type="TextureRect" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 378.0
 offset_top = 145.0

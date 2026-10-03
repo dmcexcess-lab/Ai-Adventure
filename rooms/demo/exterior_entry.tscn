@@ -19,6 +19,7 @@ room_id = "exterior_entry"
 room_title = "EXTERIOR ENTRY / AWNING"
 room_subtitle = "WESTSIDE COMMUNITY CENTER // RAIN, 9:17 PM"
 walk_bounds = Rect2(40, 255, 560, 125)
+walk_polygon = PackedVector2Array(85, 292, 555, 285, 610, 390, 30, 390)
 default_spawn = Vector2(320, 356)
 
 [node name="ArtBackground" type="TextureRect" parent="."]
@@ -58,10 +59,10 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "side_right"
-perspective_far_scale = 0.64
-perspective_near_scale = 1.16
-perspective_top_y = 255.0
-perspective_bottom_y = 380.0
+perspective_far_scale = 0.72
+perspective_near_scale = 1.12
+perspective_top_y = 285.0
+perspective_bottom_y = 390.0
 
 [node name="Sprite" type="TextureRect" parent="PlayerActor"]
 layout_mode = 1

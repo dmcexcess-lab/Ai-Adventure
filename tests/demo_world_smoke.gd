@@ -34,6 +34,7 @@ func _run() -> void:
 
 	var adjacency: Dictionary = {}
 	var room_ids: Dictionary = {}
+	var perspective_profiles: Dictionary = {}
 
 	for path in ROOM_PATHS:
 		var scene: PackedScene = scenes[path]
@@ -57,6 +58,24 @@ func _run() -> void:
 		var sprite := room.find_child("Sprite", true, false)
 		if player == null or sprite == null or sprite.get("texture") == null:
 			failures.append("room missing shared player visual contract: %s" % path)
+		else:
+			var polygon: PackedVector2Array = room.get("walk_polygon")
+			if polygon.size() < 4:
+				failures.append("room lacks a background-specific walk polygon: %s" % path)
+			else:
+				var foot: Vector2 = room.call("get_player_foot")
+				if not _point_in_or_on_polygon(foot, polygon):
+					failures.append("default spawn clips outside the walkable floor: %s at %s" % [path, foot])
+				var clamped: Vector2 = room.call("_clamp_to_walk_bounds", Vector2(-200, -200))
+				if not _point_in_or_on_polygon(clamped, polygon):
+					failures.append("off-floor movement was not clamped to room geometry: %s" % path)
+			var profile := "%s/%s/%s/%s" % [
+				player.get("perspective_far_scale"),
+				player.get("perspective_near_scale"),
+				player.get("perspective_top_y"),
+				player.get("perspective_bottom_y"),
+			]
+			perspective_profiles[profile] = true
 
 		var hotspots := room.find_child("Hotspots", true, false)
 		if hotspots == null or hotspots.get_child_count() < 3:
@@ -107,7 +126,20 @@ func _run() -> void:
 			if not visited.has(path):
 				failures.append("demo room graph cannot reach %s from lobby" % path)
 
+	if perspective_profiles.size() < 6:
+		failures.append("room backgrounds still share too many generic perspective profiles")
+
 	_finish()
+
+
+func _point_in_or_on_polygon(point: Vector2, polygon: PackedVector2Array) -> bool:
+	if Geometry2D.is_point_in_polygon(point, polygon):
+		return true
+	for index in range(polygon.size()):
+		var closest := Geometry2D.get_closest_point_to_segment(point, polygon[index], polygon[(index + 1) % polygon.size()])
+		if point.distance_squared_to(closest) < 0.01:
+			return true
+	return false
 
 
 func _finish() -> void:

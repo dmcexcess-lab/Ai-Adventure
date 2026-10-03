@@ -20,6 +20,7 @@ room_id = "staff_office"
 room_title = "STAFF OFFICE"
 room_subtitle = "WESTSIDE COMMUNITY CENTER // AFTER HOURS"
 walk_bounds = Rect2(54, 250, 532, 126)
+walk_polygon = PackedVector2Array(80, 280, 540, 280, 580, 390, 50, 390)
 default_spawn = Vector2(94, 354)
 
 [node name="ArtBackground" type="TextureRect" parent="."]
@@ -71,10 +72,10 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "idle_right_3q"
-perspective_far_scale = 0.64
-perspective_near_scale = 1.16
-perspective_top_y = 250.0
-perspective_bottom_y = 376.0
+perspective_far_scale = 0.68
+perspective_near_scale = 1.1
+perspective_top_y = 280.0
+perspective_bottom_y = 390.0
 
 [node name="Sprite" type="TextureRect" parent="PlayerActor"]
 layout_mode = 1

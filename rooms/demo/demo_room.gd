@@ -10,6 +10,7 @@ signal hotspot_activated(hotspot: Node)
 @export var room_title := ""
 @export var room_subtitle := ""
 @export var walk_bounds := Rect2(24.0, 238.0, 592.0, 150.0)
+@export var walk_polygon := PackedVector2Array()
 @export var default_spawn := Vector2(320.0, 360.0)
 
 @onready var player: Control = %PlayerActor
@@ -20,6 +21,7 @@ var _pending_hotspot: Node
 var _pending_serial := -1
 var _reveal_active := false
 var _witness_visuals: Array[Control] = []
+var _interaction_enabled := true
 
 
 func _ready() -> void:
@@ -34,7 +36,7 @@ func _ready() -> void:
 	for child in get_children():
 		if child.has_method("show_pose"):
 			_witness_visuals.append(child)
-	player.call("place_at_foot", default_spawn)
+	player.call("place_at_foot", _clamp_to_walk_bounds(default_spawn))
 	modulate.a = 0.0
 	create_tween().tween_property(self, "modulate:a", 1.0, 0.18)
 	set_process(true)
@@ -91,10 +93,12 @@ func is_hotspot_reveal_active() -> bool:
 
 
 func _gui_input(event: InputEvent) -> void:
+	if not _interaction_enabled:
+		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_interaction_serial += 1
 		_clear_pending_interaction()
-		player.call("move_to", get_local_mouse_position(), walk_bounds)
+		player.call("move_to", _clamp_to_walk_bounds(get_local_mouse_position()), walk_bounds)
 		status_requested.emit("Walking.")
 		accept_event()
 
@@ -105,6 +109,7 @@ func _on_hotspot_hover_changed(label: String) -> void:
 
 func _on_hotspot_action_requested(hotspot: Node, action: StringName) -> void:
 	if action == &"inspect":
+		player.call("play_action", "inspect")
 		var inspect_text := String(hotspot.get("inspect_text"))
 		if inspect_text.is_empty():
 			inspect_text = "Nothing else stands out."
@@ -115,7 +120,7 @@ func _on_hotspot_action_requested(hotspot: Node, action: StringName) -> void:
 	var serial := _interaction_serial
 	var approach: Vector2 = hotspot.get("approach_point")
 	if approach.x >= 0.0 and approach.y >= 0.0:
-		if bool(player.call("move_to", approach, walk_bounds)):
+		if bool(player.call("move_to", _clamp_to_walk_bounds(approach), walk_bounds)):
 			_pending_hotspot = hotspot
 			_pending_serial = serial
 			status_requested.emit("Approaching %s." % String(hotspot.get("display_name")))
@@ -161,10 +166,37 @@ func _clear_pending_interaction() -> void:
 
 func _clamp_to_walk_bounds(point: Vector2) -> Vector2:
 	var max_point := walk_bounds.position + walk_bounds.size
-	return Vector2(
+	var rect_clamped := Vector2(
 		clampf(point.x, walk_bounds.position.x, max_point.x),
 		clampf(point.y, walk_bounds.position.y, max_point.y)
 	)
+	if walk_polygon.size() < 3 or Geometry2D.is_point_in_polygon(rect_clamped, walk_polygon):
+		return rect_clamped
+	var closest := walk_polygon[0]
+	var closest_distance := INF
+	for index in range(walk_polygon.size()):
+		var edge_start := walk_polygon[index]
+		var edge_end := walk_polygon[(index + 1) % walk_polygon.size()]
+		var candidate := Geometry2D.get_closest_point_to_segment(rect_clamped, edge_start, edge_end)
+		var distance := rect_clamped.distance_squared_to(candidate)
+		if distance < closest_distance:
+			closest_distance = distance
+			closest = candidate
+	return closest
+
+
+func set_interaction_enabled(value: bool) -> void:
+	if _interaction_enabled == value:
+		return
+	_interaction_enabled = value
+	mouse_filter = Control.MOUSE_FILTER_STOP if value else Control.MOUSE_FILTER_IGNORE
+	if not value:
+		_interaction_serial += 1
+		_clear_pending_interaction()
+		player.call("stop")
+	for child in hotspots.get_children():
+		if child.has_method("set_input_enabled"):
+			child.call("set_input_enabled", value)
 
 
 func set_witness_expression(witness_id: String, pose_id: String) -> void:
