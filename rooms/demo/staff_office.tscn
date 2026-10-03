@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
 [ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
 [ext_resource type="Texture2D" path="res://art/demo/production/staff_office_production.png" id="4_bg"]
-[ext_resource type="Texture2D" path="res://art/demo/mina_sprite_noir.svg" id="6_mina"]
+[ext_resource type="Script" path="res://rooms/demo/witness_visual.gd" id="6_mina"]
 [ext_resource type="Script" path="res://rooms/demo/ambient_fx.gd" id="7_fx"]
 
 [node name="DemoRoom" type="Control"]
@@ -51,11 +51,12 @@ glow_strength = 0.03
 [node name="MinaVisual" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 396.0
-offset_top = 116.0
-offset_right = 480.0
+offset_top = 98.0
+offset_right = 492.0
 offset_bottom = 284.0
 mouse_filter = 2
-texture = ExtResource("6_mina")
+script = ExtResource("6_mina")
+witness_id = "mina"
 expand_mode = 1
 stretch_mode = 5
 
@@ -70,8 +71,8 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "idle_right_3q"
-perspective_far_scale = 0.82
-perspective_near_scale = 1.03
+perspective_far_scale = 0.64
+perspective_near_scale = 1.16
 perspective_top_y = 250.0
 perspective_bottom_y = 376.0
 

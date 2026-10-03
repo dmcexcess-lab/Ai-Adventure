@@ -34,6 +34,7 @@ offset_top = 12.0
 offset_right = 390.0
 offset_bottom = 54.0
 mouse_filter = 2
+z_index = 500
 
 [node name="Margin" type="MarginContainer" parent="TopCaption"]
 layout_mode = 2
@@ -68,6 +69,7 @@ offset_top = -58.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
+z_index = 500
 
 [node name="HudGrid" type="HBoxContainer" parent="HudBar"]
 layout_mode = 2
@@ -140,6 +142,7 @@ offset_left = 24.0
 offset_top = 30.0
 offset_right = 616.0
 offset_bottom = 410.0
+z_index = 1000
 
 [node name="Margin" type="MarginContainer" parent="NotebookPanel"]
 layout_mode = 2
@@ -215,6 +218,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 8
+
+[node name="EvidenceIllustration" type="TextureRect" parent="NotebookPanel/Margin/Stack/EvidencePanel/Body/Detail"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 112)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="EvidenceTitle" type="Label" parent="NotebookPanel/Margin/Stack/EvidencePanel/Body/Detail"]
 unique_name_in_owner = true
@@ -310,6 +321,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 color = Color(0.025, 0.035, 0.04, 0.94)
+z_index = 1000
 
 [node name="Center" type="CenterContainer" parent="BackgroundOverlay"]
 layout_mode = 1
@@ -371,6 +383,7 @@ offset_left = 38.0
 offset_top = 42.0
 offset_right = 602.0
 offset_bottom = 402.0
+z_index = 1000
 
 [node name="Margin" type="MarginContainer" parent="CharacterPanel"]
 layout_mode = 2
@@ -443,6 +456,21 @@ theme_override_font_sizes/font_size = 10
 text = "FAILED APPROACHES\nNone yet."
 autowrap_mode = 2
 
+[node name="PortraitLayer" type="Control" parent="CharacterPanel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CharacterPortrait" type="TextureRect" parent="CharacterPanel/PortraitLayer"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 416.0
+offset_top = 46.0
+offset_right = 522.0
+offset_bottom = 132.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
 [node name="DialoguePanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
@@ -451,6 +479,7 @@ offset_left = 28.0
 offset_top = 32.0
 offset_right = 612.0
 offset_bottom = 408.0
+z_index = 1000
 
 [node name="Margin" type="MarginContainer" parent="DialoguePanel"]
 layout_mode = 2
@@ -556,6 +585,7 @@ offset_left = 72.0
 offset_top = 72.0
 offset_right = 568.0
 offset_bottom = 380.0
+z_index = 1100
 
 [node name="Margin" type="MarginContainer" parent="ResolutionPanel"]
 layout_mode = 2
@@ -585,6 +615,14 @@ text = "Case resolution."
 autowrap_mode = 2
 vertical_alignment = 1
 
+[node name="ResolutionIllustration" type="TextureRect" parent="ResolutionPanel/Margin/Stack"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 108)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
 [node name="ResolutionCloseButton" type="Button" parent="ResolutionPanel/Margin/Stack"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -602,37 +640,49 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 color = Color(0.015, 0.02, 0.025, 0.34)
+z_index = 1000
 
 [node name="CombatOpponentVisual" type="TextureRect" parent="CombatOverlay"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 442.0
-offset_top = 130.0
-offset_right = 574.0
-offset_bottom = 350.0
+offset_left = 392.0
+offset_top = 18.0
+offset_right = 566.0
+offset_bottom = 224.0
 mouse_filter = 2
 texture = ExtResource("8_intruder")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CombatPlayerVisual" type="TextureRect" parent="CombatOverlay"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 74.0
+offset_top = 18.0
+offset_right = 248.0
+offset_bottom = 224.0
+mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
 [node name="CombatPanel" type="PanelContainer" parent="CombatOverlay"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 22.0
-offset_top = 54.0
-offset_right = 404.0
-offset_bottom = 408.0
+offset_left = 26.0
+offset_top = 218.0
+offset_right = 614.0
+offset_bottom = 414.0
 
 [node name="Margin" type="MarginContainer" parent="CombatOverlay/CombatPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="Stack" type="VBoxContainer" parent="CombatOverlay/CombatPanel/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 7
+theme_override_constants/separation = 2
 
 [node name="Header" type="HBoxContainer" parent="CombatOverlay/CombatPanel/Margin/Stack"]
 layout_mode = 2
@@ -641,7 +691,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "COMBAT // LOADING BAY"
 
 [node name="CombatRound" type="Label" parent="CombatOverlay/CombatPanel/Margin/Stack/Header"]
@@ -662,6 +712,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "YOU  - / -"
+theme_override_font_sizes/font_size = 9
 
 [node name="CombatOpponentCondition" type="Label" parent="CombatOverlay/CombatPanel/Margin/Stack/Conditions"]
 unique_name_in_owner = true
@@ -669,26 +720,29 @@ layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 2
 text = "OPPONENT  - / -"
+theme_override_font_sizes/font_size = 9
 
 [node name="CombatLeverage" type="Label" parent="CombatOverlay/CombatPanel/Margin/Stack"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.63, 0.82, 0.72, 1)
 text = "LEVERAGE -"
+theme_override_font_sizes/font_size = 9
 
 [node name="CombatIntent" type="Label" parent="CombatOverlay/CombatPanel/Margin/Stack"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.58, 0.48, 1)
 text = "NEXT INTENT // -"
+theme_override_font_sizes/font_size = 9
 
 [node name="CombatLog" type="Label" parent="CombatOverlay/CombatPanel/Margin/Stack"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 126)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.82, 0.82, 0.76, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 8
 text = "Combat has not started."
 autowrap_mode = 2
 vertical_alignment = 2
@@ -698,7 +752,7 @@ layout_mode = 2
 
 [node name="Actions" type="GridContainer" parent="CombatOverlay/CombatPanel/Margin/Stack"]
 layout_mode = 2
-columns = 2
+columns = 4
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
 
@@ -706,23 +760,28 @@ theme_override_constants/v_separation = 6
 unique_name_in_owner = true
 layout_mode = 2
 text = "1 // STRIKE"
+theme_override_font_sizes/font_size = 8
 
 [node name="CombatGuardButton" type="Button" parent="CombatOverlay/CombatPanel/Margin/Stack/Actions"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "2 // GUARD"
+theme_override_font_sizes/font_size = 8
 
 [node name="CombatManeuverButton" type="Button" parent="CombatOverlay/CombatPanel/Margin/Stack/Actions"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "3 // MANEUVER"
+theme_override_font_sizes/font_size = 8
 
 [node name="CombatDisengageButton" type="Button" parent="CombatOverlay/CombatPanel/Margin/Stack/Actions"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "4 // DISENGAGE"
+theme_override_font_sizes/font_size = 8
 
 [node name="Hint" type="Label" parent="CombatOverlay/CombatPanel/Margin/Stack"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.52, 0.58, 0.56, 1)
 theme_override_font_sizes/font_size = 8

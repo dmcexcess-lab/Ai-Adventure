@@ -1,4 +1,7 @@
 .godot/
 build/
+work/
+*.import
+*.uid
 *.tmp
 .DS_Store

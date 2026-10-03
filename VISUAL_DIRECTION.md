@@ -316,6 +316,14 @@ The live runtime must not destructively downsample that source below the level n
 
 The production implementation therefore uses an 864x288 transparent WebP atlas. Typical pose crops retain roughly 248-280 source pixels of vertical detail before being rendered around 130-175 pixels tall in the room.
 
+## Recovered graphics-completion implementation
+
+The finished Umbrella Quest character and object pass uses seven transparent PNG atlases documented in `art/demo/GRAPHICS_MANIFEST.md`. Alex and Mina room poses and portraits share their respective source atlases so identity, clothing, and lighting remain coherent. Evidence art uses a twelve-cell object atlas; no generic icon substitutes are used for collected clues.
+
+Movement uses four-key side/front/rear cycles. Investigation and combat use brief readable pose sequences rather than decorative continuous motion. Perspective is deliberately strong (0.64 far, 1.16 near) but always pivots at the fixed foot point.
+
+The accepted room paintings are not repainted. Occlusion elements such as the front desk are cropped directly from the accepted source, and world props use source-size-independent layout so large atlas cells cannot expand the authored scene geometry.
+
 This is intentionally different from the retired 216x72 prototype atlas, whose ~62-70 pixel pose crops had to be enlarged in-game.
 
 The room-aware staging model remains authoritative:

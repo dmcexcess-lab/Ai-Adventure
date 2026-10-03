@@ -878,6 +878,16 @@ Dimensions:
 
 The six `AtlasTexture` pose regions are 4x the dimensions of the retired 216x72 atlas regions. This lets the actor downsample high-resolution comic art to its room display size instead of enlarging a tiny crop.
 
+### Graphics completion runtime contracts
+
+`art/demo/visual_catalog.gd` preloads seven PNG atlases. `atlas_regions.gd` supplies non-destructive `AtlasTexture` crops, preserving the generated source pixels. The accepted HD reference atlas remains the room-authored idle/angle source.
+
+`AdventurePlayerActor` selects side, front, and rear four-frame walk cycles at 12 frames per second. Nine named action clips cover investigative gestures and bounded combat. Actions only change the child visual; the original 42×82 actor and foot point remain authoritative. Perspective interpolates from 0.64 to 1.16 over each room's authored Y interval.
+
+`witness_visual.gd` selects idle, talking, and thoughtful poses from the same atlas used for that witness's portraits. The room controller orders actors by their feet. The front-desk foreground is a crop of the accepted background, not a repaint.
+
+The demo shell renders illustrations for every evidence entry, the player and opponent, the recovered umbrella, and the ending. `_combat_action` remains the synchronous mechanical operation. `_request_combat_action` is the presentation wrapper that locks repeat input while a committed result is shown. No intermediate animation state is serialized.
+
 The gameplay actor remains 42x82. The child visual remains separately sized and bottom-centered, so the HD asset change cannot alter foot coordinates, transitions, approach points, or save positions.
 
 Production validation now checks:

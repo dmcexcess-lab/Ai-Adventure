@@ -3,8 +3,7 @@ extends Control
 const MAIN_MENU := "res://ui/menus/main_menu.tscn"
 const FIRST_ROOM := "res://rooms/demo/lobby.tscn"
 const CASE_CATALOG := preload("res://content/demo/umbrella_case.gd")
-const ALEX_PORTRAIT := preload("res://art/demo/alex_portrait_noir.svg")
-const MINA_PORTRAIT := preload("res://art/demo/mina_portrait_noir.svg")
+const VISUALS := preload("res://art/demo/visual_catalog.gd")
 const COMBAT_ENGINE := preload("res://core/combat/bounded_combat.gd")
 const COMBAT_CATALOG := preload("res://content/demo/umbrella_combat.gd")
 
@@ -32,6 +31,7 @@ const COMBAT_CATALOG := preload("res://content/demo/umbrella_combat.gd")
 @onready var evidence_meta: Label = %EvidenceMeta
 @onready var evidence_body: Label = %EvidenceBody
 @onready var evidence_tags: Label = %EvidenceTags
+@onready var evidence_illustration: TextureRect = %EvidenceIllustration
 @onready var hypothesis_panel: Control = %HypothesisPanel
 @onready var hypothesis_list: ItemList = %HypothesisList
 @onready var hypothesis_title: Label = %HypothesisTitle
@@ -47,6 +47,7 @@ const COMBAT_CATALOG := preload("res://content/demo/umbrella_combat.gd")
 @onready var character_skills: Label = %CharacterSkills
 @onready var character_descriptions: Label = %CharacterDescriptions
 @onready var character_failures: Label = %CharacterFailures
+@onready var character_portrait: TextureRect = %CharacterPortrait
 
 @onready var background_overlay: Control = %BackgroundOverlay
 @onready var background_choices: VBoxContainer = %BackgroundChoices
@@ -65,6 +66,7 @@ const COMBAT_CATALOG := preload("res://content/demo/umbrella_combat.gd")
 @onready var resolution_panel: PanelContainer = %ResolutionPanel
 @onready var resolution_text: Label = %ResolutionText
 @onready var resolution_close_button: Button = %ResolutionCloseButton
+@onready var resolution_illustration: TextureRect = %ResolutionIllustration
 
 @onready var combat_overlay: Control = %CombatOverlay
 @onready var combat_round: Label = %CombatRound
@@ -78,6 +80,7 @@ const COMBAT_CATALOG := preload("res://content/demo/umbrella_combat.gd")
 @onready var combat_maneuver_button: Button = %CombatManeuverButton
 @onready var combat_disengage_button: Button = %CombatDisengageButton
 @onready var combat_opponent_visual: TextureRect = %CombatOpponentVisual
+@onready var combat_player_visual: TextureRect = %CombatPlayerVisual
 @onready var combat_panel: PanelContainer = %CombatPanel
 
 var _current_room: Control
@@ -107,6 +110,7 @@ var _combat_state: Dictionary = {}
 var _combat_completed := false
 var _combat_outcome := ""
 var _combat_consequence := ""
+var _combat_feedback_locked := false
 
 var _has_demo_save := false
 var _saved_room_path := ""
@@ -150,10 +154,12 @@ func _ready() -> void:
 	present_button.pressed.connect(_toggle_dialogue_evidence)
 	resolution_close_button.pressed.connect(_close_all_modals)
 
-	combat_strike_button.pressed.connect(_combat_action.bind("strike"))
-	combat_guard_button.pressed.connect(_combat_action.bind("guard"))
-	combat_maneuver_button.pressed.connect(_combat_action.bind("maneuver"))
-	combat_disengage_button.pressed.connect(_combat_action.bind("disengage"))
+	combat_strike_button.pressed.connect(_request_combat_action.bind("strike"))
+	combat_guard_button.pressed.connect(_request_combat_action.bind("guard"))
+	combat_maneuver_button.pressed.connect(_request_combat_action.bind("maneuver"))
+	combat_disengage_button.pressed.connect(_request_combat_action.bind("disengage"))
+	character_portrait.texture = VISUALS.player_combat("portrait")
+	resolution_illustration.texture = VISUALS.recovered_umbrella()
 
 	_build_demo_background_choices()
 	_setup_filters()
@@ -179,6 +185,7 @@ func _reset_demo_combat() -> void:
 	_combat_completed = false
 	_combat_outcome = ""
 	_combat_consequence = ""
+	_combat_feedback_locked = false
 	if combat_overlay != null:
 		combat_overlay.visible = false
 	if save_button != null:
@@ -212,6 +219,7 @@ func _set_demo_player_combat_pose(active: bool) -> void:
 	var player := _current_room.find_child("PlayerActor", true, false)
 	if player != null and player.has_method("set_combat_pose"):
 		player.call("set_combat_pose", active)
+		player.visible = not active
 
 
 func _start_demo_combat() -> void:
@@ -221,6 +229,8 @@ func _start_demo_combat() -> void:
 	_combat_engine = COMBAT_ENGINE.new()
 	_combat_state = _combat_engine.call("start", _combat_definition, _demo_skill_values)
 	_set_demo_player_combat_pose(true)
+	combat_player_visual.texture = VISUALS.player_combat("combat_ready")
+	combat_opponent_visual.texture = VISUALS.intruder_pose("ready")
 	combat_overlay.visible = true
 	save_button.disabled = true
 	load_button.disabled = true
@@ -234,11 +244,56 @@ func _combat_action(action_id: String) -> Dictionary:
 		return {"ok": false, "error": "combat_not_active"}
 	var result: Dictionary = _combat_engine.call("perform_action", action_id)
 	_combat_state = _combat_engine.call("get_state")
-	_play_combat_feedback(action_id)
 	_refresh_combat_ui()
 	if bool(_combat_state.get("completed", false)):
 		_finish_demo_combat()
 	return result
+
+
+func _request_combat_action(action_id: String) -> Dictionary:
+	if _combat_feedback_locked:
+		return {"ok": false, "error": "combat_feedback_locked"}
+	if not _combat_is_active():
+		return {"ok": false, "error": "combat_not_active"}
+	_combat_feedback_locked = true
+	_refresh_combat_ui()
+	combat_player_visual.texture = VISUALS.player_combat(_player_combat_pose(action_id))
+	combat_opponent_visual.texture = VISUALS.intruder_pose(_opponent_reaction_pose(action_id))
+	var room_player := _demo_player()
+	if room_player != null:
+		room_player.call("play_action", action_id)
+	var result := _combat_action(action_id)
+	if _combat_is_active():
+		await get_tree().create_timer(0.56).timeout
+		combat_player_visual.texture = VISUALS.player_combat("combat_ready")
+		combat_opponent_visual.texture = VISUALS.intruder_pose("ready")
+		_combat_feedback_locked = false
+		_refresh_combat_ui()
+	return result
+
+
+func _demo_player() -> Control:
+	if not is_instance_valid(_current_room):
+		return null
+	return _current_room.find_child("PlayerActor", true, false) as Control
+
+
+func _player_combat_pose(action_id: String) -> String:
+	match action_id:
+		"strike": return "strike"
+		"guard": return "guard"
+		"maneuver": return "maneuver"
+		"disengage": return "disengage"
+	return "combat_ready"
+
+
+func _opponent_reaction_pose(action_id: String) -> String:
+	match action_id:
+		"strike": return "recoil"
+		"guard": return "strike"
+		"maneuver": return "hurt"
+		"disengage": return "advance"
+	return "ready"
 
 
 func _play_combat_feedback(action_id: String) -> void:
@@ -275,6 +330,7 @@ func _finish_demo_combat() -> void:
 	_combat_completed = true
 	_combat_outcome = String(_combat_state.get("outcome", ""))
 	_combat_consequence = String(_combat_state.get("consequence", ""))
+	_combat_feedback_locked = false
 	_set_demo_player_combat_pose(false)
 	combat_overlay.visible = false
 	save_button.disabled = false
@@ -327,7 +383,7 @@ func _refresh_combat_ui() -> void:
 		combat_log.text = "\n".join(log_lines)
 	for button in [combat_strike_button, combat_guard_button, combat_maneuver_button, combat_disengage_button]:
 		if button != null:
-			button.disabled = not active
+			button.disabled = not active or _combat_feedback_locked
 
 
 func _next_combat_intent_label() -> String:
@@ -892,9 +948,13 @@ func _resolve_demo_case() -> void:
 		return
 	_acquire_demo_clue("umbrella_recovered", false)
 	_case_resolved = true
+	_combat_feedback_locked = false
+	_set_demo_player_combat_pose(false)
 	_refresh_notebook()
 	resolution_text.text = "CASE CLOSED\n\nBehind the folded safety curtain hangs Nora Vale's navy umbrella: yellow-taped handle, brass duck-head cap, still damp but intact.\n\nAlex made the routine first transfer to Lost & Found. Mina made the undocumented second transfer to the rear drying rail so the soaking umbrella would not damage claim files and donation cartons.\n\nNothing supernatural. Nothing stolen. Just a broken handoff reconstructed from evidence."
+	resolution_illustration.texture = VISUALS.recovered_umbrella()
 	_close_all_modals()
+	combat_overlay.visible = false
 	resolution_panel.visible = true
 	context_label.text = "UMBRELLA QUEST // CASE CLOSED"
 	_set_status("Case resolved: 47B recovered from the rear drying rail.")
@@ -979,6 +1039,7 @@ func _show_clue(clue_id: String) -> void:
 	]
 	evidence_body.text = String(clue.get("detail", ""))
 	evidence_tags.text = "TAGS: %s" % _join_values(clue.get("tags", []))
+	evidence_illustration.texture = VISUALS.evidence_art(clue_id)
 
 
 func _selected_filter() -> String:
@@ -1085,7 +1146,9 @@ func _open_dialogue(witness_id: String = "alex") -> void:
 	_dialogue_evidence_mode = false
 	dialogue_name.text = String(witness.get("name", witness_id)).to_upper()
 	dialogue_role.text = String(witness.get("role", ""))
-	dialogue_portrait.texture = MINA_PORTRAIT if witness_id == "mina" else ALEX_PORTRAIT
+	dialogue_portrait.texture = VISUALS.witness_portrait(witness_id, "portrait_talking")
+	if is_instance_valid(_current_room) and _current_room.has_method("set_witness_expression"):
+		_current_room.call("set_witness_expression", witness_id, "talking")
 	dialogue_line.text = String(witness.get("opening", ""))
 	dialogue_trust.text = "TRUST %d" % _get_demo_trust(witness_id)
 	dialogue_mode.text = "TOPICS / RESPONSES"

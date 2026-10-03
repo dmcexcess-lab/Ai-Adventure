@@ -33,10 +33,11 @@ These slices established the complete gameplay grammar. Their mechanics remain a
 
 **Chapter One is blocked until this entire phase is complete and the deployed Umbrella Quest has been accepted as production-complete.**
 
-Current production status:
+Current production status (updated by the recovered graphics-completion pass):
 
 - **Production-complete:** eight environment backgrounds only.
-- **Not production-complete:** PC/#3 art/presentation, NPC sprites, portraits, UI, notebook/dialogue/combat presentation, animation/transitions/depth, audio, settings, accessibility, save/load UX, ending presentation, final QA.
+- **Implemented and locally render-verified, pending user acceptance:** PC/#3 art/presentation, NPC sprites, portraits, illustrated evidence, UI, notebook/dialogue/combat presentation, animation/transitions/depth, and ending presentation.
+- **Still outstanding:** audio, settings, accessibility, final deployed acceptance, and final QA.
 
 - [x] **Slice 15 — Production rebaseline + PC/#3 staging repair**
   - Remove misleading production-complete claims.
@@ -53,13 +54,13 @@ Current production status:
   - Keep automated validation separate from user visual acceptance.
   - Do not mark #3 user-accepted production-complete until the deployed result is actually accepted.
 
-- [ ] **Slice 17 — NPC + portrait art production**
+- [x] **Slice 17 — NPC + portrait art production**
   - Bring Alex, Mina, the loading-bay opponent, and dialogue portraits to the accepted environment quality bar.
   - Make room sprites and portraits unambiguously depict the same identities.
   - Replace prototype/vector-placeholder live assets where required.
   - Stage NPC scale/perspective coherently inside the accepted room backgrounds.
 
-- [ ] **Slice 18 — UI + ending presentation production**
+- [x] **Slice 18 — UI + ending presentation production**
   - Production HUD.
   - Notebook/evidence/hypothesis presentation.
   - Dialogue presentation.
@@ -68,7 +69,7 @@ Current production status:
   - Title/menu presentation.
   - Finished case-closed sequence rather than a prototype modal.
 
-- [ ] **Slice 19 — Motion, depth, and transition production**
+- [x] **Slice 19 — Motion, depth, and transition production**
   - Room transitions.
   - Character movement/idle minimums.
   - Witness presence/reactions.

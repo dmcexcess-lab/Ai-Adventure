@@ -2,120 +2,42 @@
 
 ## Status
 
-**Umbrella Quest Slice 16 — PC/#3 production implementation: COMPLETE**
+**Umbrella Quest graphics-completion pass: IMPLEMENTED AND RENDER-VERIFIED**
 
-Chapter One production is blocked.
+The work lost from the “Finish Umbrella Adventure Graphics” task has been reconstructed from its rendered work log and original generated assets. The eight previously accepted environment paintings remain unchanged.
 
-## User-accepted production status
+Automated success and local render review do not constitute user artistic acceptance. Chapter One remains blocked until the full Umbrella Quest production gate is accepted.
 
-**Still accepted as production-complete: the eight environment backgrounds only.**
+## Completed graphics work
 
-Slice 16 is technically complete and deployed-candidate ready, but #3 remains pending user visual acceptance. CI success is not treated as artistic approval.
+- Restored all seven production runtime atlases from the exact recovered PNG bytes.
+- PC/#3 has side, front, and rear four-frame walk cycles at 12 frames per second.
+- Nine named clips cover conversation, reading, inspection, pickup, strike, guard, maneuver, hurt, and disengage.
+- Room perspective now interpolates from 0.64 at the back plane to 1.16 at the front.
+- The visible character scales around the foot pivot; the 42×82 actor, foot coordinate, approach points, transitions, and save positions remain unchanged.
+- Alex and Mina each use one atlas for three room poses and three matching dialogue portraits.
+- The loading-bay opponent has staged actions, reactions, and a matching portrait.
+- Every evidence entry resolves to illustrated art from the twelve-object evidence atlas.
+- The recovered umbrella appears in the loading bay and case-closed presentation.
+- Alex is correctly occluded by a crop of the accepted front-desk painting.
+- Room actors sort by foot position, and modal UI now stays above world actors.
+- Combat uses staged player/opponent art above compact controls and locks repeat input during committed feedback.
+- The main menu uses the accepted exterior painting and shared noir theme while retaining DEVELOPMENT BUILD labeling.
 
-## What Slice 16 fixed
+## Validation
 
-The accepted #3 source sheet is **2172x724**.
+- All existing smoke suites pass under Godot 4.7.2.
+- `tests/graphics_completion_smoke.gd` protects atlas transparency/dimensions, clue coverage, foot/pivot invariance, strong depth scaling, walk advancement, nine actions, NPC/portrait correspondence, and combat repeat-input rejection.
+- `tests/graphics_capture.gd` rendered and reviewed all eight rooms plus far/near depth, walking, both witnesses, notebook, character profile, combat, action feedback, and ending at 640×480.
+- Render review repaired world-over-modal layering, character-profile overflow, combat/HUD overlap, duplicate room/combat staging, and case-closed overlay cleanup.
 
-The previous live runtime atlas was only:
+## Authoritative references
 
-**216x72**
+- `art/demo/GRAPHICS_MANIFEST.md` — recovered asset provenance and runtime role.
+- `art/demo/visual_catalog.gd` — runtime atlas and clue/identity correspondence.
+- `art/demo/atlas_regions.gd` — non-destructive atlas crops.
+- `art/recovered/finish_umbrella_graphics/` — raw recovered chat outputs, including rejected variants.
 
-Its individual pose crops retained roughly 62-70 pixels of vertical detail and were then enlarged to a much larger on-screen figure.
+## Next operation
 
-The live player now uses:
-
-`art/characters/pc3/pc3_reference_atlas_hd.webp`
-
-Runtime dimensions:
-
-**864x288**
-
-The six live pose crops now retain roughly **248-280 pixels** of source height before the engine downsamples them into the room.
-
-This removes the biggest known fidelity defect in the PC pipeline without redesigning #3.
-
-## Preserved runtime contract
-
-The following remain unchanged:
-
-- accepted #3 identity and clothing;
-- six key poses;
-- room-authored idle angle;
-- direction-aware movement pose;
-- horizontal mirroring;
-- room-authored far/near perspective scaling;
-- bottom-center visual pivot;
-- fixed 42x82 gameplay actor footprint;
-- foot coordinate;
-- approach points;
-- transition positions;
-- save positions;
-- loading-bay combat pose override;
-- all investigation/RPG/combat rules.
-
-The character-art change is therefore presentation-only.
-
-## Protected source-fidelity contract
-
-The production-visual regression now fails if:
-
-- the live PC stops using the HD atlas;
-- the atlas drops below roughly 800x280;
-- the active pose source crop falls below 240 pixels high;
-- the visible PC returns to prototype-small staging;
-- the gameplay footprint grows with the visual;
-- room-authored default angles drift;
-- near perspective stops being larger than far perspective;
-- the Web export omits the HD atlas.
-
-The Pages packaging gate now explicitly requires:
-
-`pc3_reference_atlas_hd.webp`
-
-## Production acceptance note
-
-Automated tests prove that the accepted source is being used at sufficient runtime fidelity and that the actor is staged correctly.
-
-They do **not** prove that the result has been artistically accepted.
-
-Until the user approves #3 in the deployed build, repository language must continue to distinguish:
-
-- **Slice 16 implementation complete**
-from
-- **#3 user-accepted production-complete**
-
-## NEXT OPERATION
-
-**Slice 17 — NPC + portrait art production**
-
-Execute without requesting design decisions:
-
-1. Keep the eight accepted environment backgrounds unchanged.
-2. Keep the Slice 16 #3 runtime unchanged unless a concrete integration defect is discovered.
-3. Treat these current live assets as prototype until replaced/accepted:
-   - Alex room sprite;
-   - Mina room sprite;
-   - loading-bay opponent;
-   - Alex dialogue portrait;
-   - Mina dialogue portrait.
-4. Bring the NPC room art to the accepted environment quality bar:
-   - strong comic silhouette;
-   - believable anatomy;
-   - scene-coherent lighting;
-   - proper room scale/perspective;
-   - no flat placeholder/vector look.
-5. Make each portrait unmistakably depict the same identity as its room sprite.
-6. Preserve Alex/Mina witness logic, trust, evidence presentation, and all dialogue content.
-7. Preserve combat rules and only replace the opponent presentation.
-8. Remove prototype character resources from the live player path when production replacements exist.
-9. Keep the title screen visibly marked **DEVELOPMENT BUILD**.
-10. Add regression coverage for:
-    - live NPC resource paths;
-    - room staging;
-    - portrait correspondence metadata where mechanically representable;
-    - Web PCK packaging.
-11. Do not claim user visual acceptance merely because CI passes.
-12. Update `ROADMAP.md`, `ARCHITECTURE.md`, `VISUAL_DIRECTION.md`, and `CURRENT.md`.
-13. Commit/push, follow CI and Web deployment to terminal success, and verify exact `main` head.
-
-Do not begin Slice 18 or Chapter One in the same turn unless explicitly requested.
+After user graphics review, proceed with **Slice 20 — Audio + settings production**. Correct any reported visual defects first. Do not describe the graphics as user-accepted until they are actually accepted.

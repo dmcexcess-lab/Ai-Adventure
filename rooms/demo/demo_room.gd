@@ -19,6 +19,7 @@ var _interaction_serial := 0
 var _pending_hotspot: Node
 var _pending_serial := -1
 var _reveal_active := false
+var _witness_visuals: Array[Control] = []
 
 
 func _ready() -> void:
@@ -30,7 +31,19 @@ func _ready() -> void:
 			child.connect("action_requested", Callable(self, "_on_hotspot_action_requested"))
 	if player.has_signal("arrived"):
 		player.connect("arrived", Callable(self, "_on_player_arrived"))
+	for child in get_children():
+		if child.has_method("show_pose"):
+			_witness_visuals.append(child)
 	player.call("place_at_foot", default_spawn)
+	modulate.a = 0.0
+	create_tween().tween_property(self, "modulate:a", 1.0, 0.18)
+	set_process(true)
+
+
+func _process(_delta: float) -> void:
+	player.z_index = int(player.call("get_foot_position").y)
+	for witness in _witness_visuals:
+		witness.z_index = int(witness.position.y + witness.size.y)
 
 
 func enter_at(spawn_marker: String = "") -> void:
@@ -132,9 +145,12 @@ func _complete_primary_action(hotspot: Node, serial: int) -> void:
 
 	var witness_id := String(hotspot.get("witness_id"))
 	if not witness_id.is_empty():
+		player.call("play_action", "dialogue")
+		_set_witness_pose(witness_id, "talking")
 		conversation_requested.emit(witness_id)
 		return
 
+	player.call("play_action", _action_for_hotspot(String(hotspot.get("hotspot_id"))))
 	hotspot_activated.emit(hotspot)
 
 
@@ -149,3 +165,22 @@ func _clamp_to_walk_bounds(point: Vector2) -> Vector2:
 		clampf(point.x, walk_bounds.position.x, max_point.x),
 		clampf(point.y, walk_bounds.position.y, max_point.y)
 	)
+
+
+func set_witness_expression(witness_id: String, pose_id: String) -> void:
+	_set_witness_pose(witness_id, pose_id)
+
+
+func _set_witness_pose(witness_id: String, pose_id: String) -> void:
+	for witness in _witness_visuals:
+		if String(witness.get("witness_id")) == witness_id:
+			witness.call("show_pose", pose_id)
+
+
+func _action_for_hotspot(hotspot_id: String) -> String:
+	var lowered := hotspot_id.to_lower()
+	if "record" in lowered or "log" in lowered or "board" in lowered or "policy" in lowered or "handbook" in lowered:
+		return "read"
+	if "umbrella" in lowered or "ticket" in lowered or "tag" in lowered:
+		return "pick_up"
+	return "inspect"

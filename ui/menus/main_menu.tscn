@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://ui/menus/main_menu.gd" id="1_menu"]
+[ext_resource type="Texture2D" path="res://art/demo/production/exterior_entry_production.png" id="2_backdrop"]
+[ext_resource type="Theme" path="res://ui/theme/comic_noir_theme.tres" id="3_theme"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -9,16 +11,30 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("3_theme")
 script = ExtResource("1_menu")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.035, 0.045, 0.06, 1)
+mouse_filter = 2
+texture = ExtResource("2_backdrop")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="Shade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.015, 0.025, 0.03, 0.68)
 
 [node name="TopRule" type="ColorRect" parent="."]
 layout_mode = 1

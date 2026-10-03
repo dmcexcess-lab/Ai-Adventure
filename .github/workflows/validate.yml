@@ -68,6 +68,9 @@ jobs:
       - name: Demo world graph smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/demo_world_smoke.gd
 
+      - name: Graphics completion regression
+        run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/graphics_completion_smoke.gd
+
       - name: Umbrella investigation smoke test
         run: .tools/godot/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 --headless --path . --script tests/umbrella_case_smoke.gd
 

@@ -58,8 +58,8 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "side_right"
-perspective_far_scale = 0.77
-perspective_near_scale = 1.04
+perspective_far_scale = 0.64
+perspective_near_scale = 1.16
 perspective_top_y = 246.0
 perspective_bottom_y = 378.0
 

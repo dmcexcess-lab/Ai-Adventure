@@ -1,11 +1,15 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
 [ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
 [ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
 [ext_resource type="Texture2D" path="res://art/demo/production/front_desk_production.png" id="4_bg"]
 [ext_resource type="Script" path="res://rooms/demo/ambient_fx.gd" id="6_fx"]
-[ext_resource type="Texture2D" path="res://art/demo/alex_sprite_noir.svg" id="7_alex"]
+[ext_resource type="Script" path="res://rooms/demo/witness_visual.gd" id="7_alex"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_desk"]
+atlas = ExtResource("4_bg")
+region = Rect2(256, 270, 600, 220)
 
 [node name="DemoRoom" type="Control"]
 layout_mode = 3
@@ -51,11 +55,12 @@ glow_strength = 0.028
 [node name="AlexVisual" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 296.0
-offset_top = 103.0
-offset_right = 380.0
+offset_top = 88.0
+offset_right = 392.0
 offset_bottom = 271.0
 mouse_filter = 2
-texture = ExtResource("7_alex")
+script = ExtResource("7_alex")
+witness_id = "alex"
 expand_mode = 1
 stretch_mode = 5
 
@@ -70,8 +75,8 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "idle_right_3q"
-perspective_far_scale = 0.83
-perspective_near_scale = 1.02
+perspective_far_scale = 0.64
+perspective_near_scale = 1.16
 perspective_top_y = 250.0
 perspective_bottom_y = 376.0
 
@@ -85,6 +90,18 @@ grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
+
+[node name="DeskForeground" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 160.0
+offset_top = 168.0
+offset_right = 535.0
+offset_bottom = 306.0
+mouse_filter = 2
+z_index = 360
+texture = SubResource("AtlasTexture_desk")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="Hotspots" type="Control" parent="."]
 unique_name_in_owner = true

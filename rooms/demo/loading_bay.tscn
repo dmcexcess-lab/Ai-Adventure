@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://rooms/demo/demo_room.gd" id="1_room"]
 [ext_resource type="Script" path="res://core/interaction/player_actor.gd" id="2_player"]
 [ext_resource type="Script" path="res://core/interaction/hotspot.gd" id="3_hotspot"]
 [ext_resource type="Texture2D" path="res://art/demo/production/loading_bay_production.png" id="4_bg"]
 [ext_resource type="Script" path="res://rooms/demo/ambient_fx.gd" id="6_fx"]
+[ext_resource type="Script" path="res://rooms/demo/evidence_visual.gd" id="7_evidence"]
 
 [node name="DemoRoom" type="Control"]
 layout_mode = 3
@@ -58,8 +59,8 @@ mouse_filter = 2
 script = ExtResource("2_player")
 move_speed = 185.0
 default_pose_id = "idle_right_3q"
-perspective_far_scale = 0.78
-perspective_near_scale = 1.07
+perspective_far_scale = 0.64
+perspective_near_scale = 1.16
 perspective_top_y = 246.0
 perspective_bottom_y = 378.0
 
@@ -73,6 +74,16 @@ grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
+
+[node name="RecoveredUmbrellaVisual" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 378.0
+offset_top = 145.0
+offset_right = 450.0
+offset_bottom = 250.0
+mouse_filter = 2
+script = ExtResource("7_evidence")
+clue_id = "umbrella_recovered"
 
 [node name="Hotspots" type="Control" parent="."]
 unique_name_in_owner = true
